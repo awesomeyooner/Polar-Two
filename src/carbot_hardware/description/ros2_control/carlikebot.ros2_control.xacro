@@ -1,0 +1,230 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="carlikebot_ros2_control" params="name prefix">
+
+  <xacro:property name="speed_multiplier" value="1"/>
+
+    <xacro:unless value="$(arg sim_mode)">
+
+      <ros2_control name="${name}" type="system">
+        <hardware>
+          <plugin>carbot_hardware/CarlikeBotSystemHardware</plugin>
+          <param name="example_param_hw_start_duration_sec">0</param>
+          <param name="example_param_hw_stop_duration_sec">3.0</param>
+
+          <param name="port">/dev/ttyUSB0</param>
+
+          <param name="drive_id">virtual_rear_wheel_joint</param>
+          <param name="steer_id">virtual_front_wheel_joint</param>
+
+          <param name="voltage_sensor_id">voltage_sensor</param>
+
+          <param name="heartbeat_id">heartbeat</param>
+          
+          <param name="baud_rate">115200</param>
+          <param name="loop_rate">60</param>
+          <param name="timeout_ms">0</param>
+
+        </hardware>
+
+        <joint name="${prefix}virtual_rear_wheel_joint">
+          <command_interface name="velocity"/>
+
+          <state_interface name="velocity"/>
+          <state_interface name="position"/>
+          <state_interface name="effort"/>
+        </joint>
+
+        <joint name="${prefix}virtual_front_wheel_joint">
+          <command_interface name="position"/>
+
+          <state_interface name="position"/>
+          <state_interface name="effort"/>
+        </joint>
+
+        <sensor name="${prefix}heartbeat">
+          <state_interface name="raw"/>
+          <state_interface name="latency"/>
+          <state_interface name="hertz"/>
+        </sensor>
+
+        <sensor name="${prefix}voltage_sensor">
+          <state_interface name="voltage"/>
+        </sensor>
+
+      </ros2_control>
+
+    </xacro:unless>
+
+    <!-- if in sim mode then use the sim stuff -->
+    <xacro:if value="$(arg sim_mode)">
+
+      <ros2_control name="GazeboSystem" type="system">
+        <hardware>
+          <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+        </hardware>
+  
+        <!-- drive joint -->
+        <joint name="${prefix}virtual_rear_wheel_joint">
+  
+          <command_interface name="velocity">
+            <param name="min">-1000</param>
+            <param name="max">1000</param>
+          </command_interface>
+  
+          <state_interface name="velocity">
+            <param name="initial_value">0.0</param>
+          </state_interface>
+            
+
+          <state_interface name="position">
+            <param name="initial_value">0.0</param>
+          </state_interface>
+
+          <state_interface name="effort">
+            <param name="initial_value">0.0</param>
+          </state_interface>
+            
+        </joint>
+
+        <joint name="${prefix}rear_left_wheel_joint">
+
+          <param name="mimic">virtual_rear_wheel_joint</param>
+          <param name="multiplier">${speed_multiplier}</param>
+  
+          <state_interface name="velocity">
+            <param name="initial_value">0.0</param>
+          </state_interface>
+            
+
+          <state_interface name="position">
+            <param name="initial_value">0.0</param>
+          </state_interface>
+
+          <state_interface name="effort">
+            <param name="initial_value">0.0</param>
+          </state_interface>
+            
+        </joint>
+
+        <joint name="${prefix}rear_right_wheel_joint">
+
+          <param name="mimic">virtual_rear_wheel_joint</param>
+          <param name="multiplier">${speed_multiplier}</param>
+  
+          <state_interface name="velocity">
+            <param name="initial_value">0.0</param>
+          </state_interface>
+
+          <state_interface name="position">
+            <param name="initial_value">0.0</param>
+          </state_interface>
+
+          <state_interface name="effort">
+            <param name="initial_value">0.0</param>
+          </state_interface>
+            
+        </joint>
+  
+        <!-- steer joint -->
+        <joint name="${prefix}virtual_front_wheel_joint">
+  
+          <command_interface name="position">
+            <param name="min">-1000</param>
+            <param name="max">1000</param>
+          </command_interface>
+          
+          <state_interface name="position">
+            <param name="initial_value">0.0</param>
+          </state_interface>
+
+          <state_interface name="effort">
+            <param name="initial_value">0.0</param>
+          </state_interface>
+  
+        </joint>
+
+        <joint name="${prefix}front_right_wheel_joint">
+
+          <param name="mimic">virtual_rear_wheel_joint</param>
+          <param name="multiplier">${speed_multiplier}</param>
+  
+          <state_interface name="velocity">
+            <param name="initial_value">0.0</param>
+          </state_interface>
+
+          <state_interface name="position">
+            <param name="initial_value">0.0</param>
+          </state_interface>
+
+          <state_interface name="effort">
+            <param name="initial_value">0.0</param>
+          </state_interface>
+  
+        </joint>
+
+        <joint name="${prefix}front_left_wheel_joint">
+
+          <param name="mimic">virtual_rear_wheel_joint</param>
+          <param name="multiplier">${speed_multiplier}</param>
+
+          <state_interface name="velocity">
+            <param name="initial_value">0.0</param>
+          </state_interface>
+
+          <state_interface name="position">
+            <param name="initial_value">0.0</param>
+          </state_interface>
+
+          <state_interface name="effort">
+            <param name="initial_value">0.0</param>
+          </state_interface>
+  
+        </joint>
+
+        <joint name="${prefix}front_left_steer_joint">
+
+          <param name="mimic">virtual_front_wheel_joint</param>
+          <param name="multiplier">1</param>
+          
+          <state_interface name="position">
+            <param name="initial_value">0.0</param>
+          </state_interface>
+
+          <state_interface name="effort">
+            <param name="initial_value">0.0</param>
+          </state_interface>
+  
+        </joint>
+
+        <joint name="${prefix}front_right_steer_joint">
+
+          <param name="mimic">virtual_front_wheel_joint</param>
+          <param name="multiplier">1</param>
+          
+          <state_interface name="position">
+            <param name="initial_value">0.0</param>
+          </state_interface>
+
+          <state_interface name="effort">
+            <param name="initial_value">0.0</param>
+          </state_interface>
+  
+        </joint>
+  
+      </ros2_control>
+  
+      <gazebo>
+        <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+          <parameters>$(find carbot_hardware)/bringup/config/carlikebot_controllers.yaml</parameters>
+          <parameters>$(find carbot_hardware)/bringup/config/gazebo_controller.yaml</parameters>
+        </plugin>
+      </gazebo>
+
+    </xacro:if>
+
+
+  </xacro:macro>
+
+</robot>

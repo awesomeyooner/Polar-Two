@@ -1,0 +1,17 @@
+twist_mux:
+  ros__parameters:
+    topics:
+      auto_pilot:
+        topic   : cmd_vel
+        timeout : 0.5
+        priority: 10
+      joystick:
+        topic   : cmd_vel_joy
+        timeout : 0.5
+        priority: 100
+
+    locks:
+      enable_auto:
+        topic: enable_auto
+        timeout: 0.5
+        priority: 95

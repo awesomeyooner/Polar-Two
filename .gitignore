@@ -1,0 +1,12 @@
+#ignore build folder
+build/
+
+#ignore install folder
+install/
+
+#ignore log folder
+log/
+
+**/__pycache__/
+
+*.pyc 

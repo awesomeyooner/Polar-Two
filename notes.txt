@@ -1,0 +1,42 @@
+to make a package CMAKE:
+ros2 pkg create --build-type ament_cmake <package_name>
+
+to make a package PYTHON:
+ros2 pkg create --build-type ament_python <package_name>
+
+to run things in general:
+ros2 run <package name> <executable name>
+
+to launch:
+ros2 launch <package_name> <launch_file_name>
+or (cd in launch directory)
+ros2 launch <launch_file_name>
+
+to run joystick:
+ros2 run joy joy_node
+
+to listen to topics:
+ros2 topic echo /<topic name>
+
+to listen to joystick topic:
+ros2 topic echo /joy
+
+to build:
+colcon build --symlink-install
+
+to setup:
+. install/setup.bash
+
+to run main launch:
+ros2 launch my_robot main.launch.py
+
+when making a new file or executable, add this to CMake, example joystick:
+add_executable(joystick src/Joystick.cpp)
+ament_target_dependencies(joystick rclcpp std_msgs sensor_msgs geometry_msgs)
+
+make sure to add the executable name to:
+install(TARGETS
+  talker
+  listener
+  joystick
+  DESTINATION lib/${PROJECT_NAME})

@@ -1,12 +1,11 @@
 joystick_teleop:
   ros__parameters:
     max_speed: 1.0
-    reduced_speed: 0.3
+    reduced_speed: 1.0
 
     toggle_boost: 6
     toggle_freeze: 0
 
-    default_max: 0.5
     boost_amount: 1.0 
     boost_toggle: 6
     freeze_toggle: 1

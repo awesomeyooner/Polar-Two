@@ -26,7 +26,7 @@ def generate_launch_description():
             PathJoinSubstitution([FindExecutable(name="xacro")]),
             " ",
             PathJoinSubstitution(
-                [FindPackageShare("carbot_hardware"), "urdf", "carlikebot.urdf.xacro"]
+                [FindPackageShare("carbot_hardware"), "urdf", "core.urdf.xacro"]
             ),
         ]
     )

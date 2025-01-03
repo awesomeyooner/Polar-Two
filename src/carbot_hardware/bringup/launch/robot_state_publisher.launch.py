@@ -17,7 +17,7 @@ def generate_launch_description():
 
     # Process the URDF file
     pkg_path = os.path.join(get_package_share_directory('carbot_hardware'))
-    xacro_file = os.path.join(pkg_path, 'urdf', 'carlikebot.urdf.xacro')
+    xacro_file = os.path.join(pkg_path, 'urdf', 'core.urdf.xacro')
   
     robot_description_config = Command(['xacro ', xacro_file, ' sim_mode:=', use_sim_time])
     

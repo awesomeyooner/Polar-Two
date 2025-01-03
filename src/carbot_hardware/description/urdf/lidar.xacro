@@ -4,19 +4,17 @@
 
         <xacro:property name="x_transform" value="0"/>
         <xacro:property name="y_transform" value="0"/>
-        <xacro:property name="z_transform" value="0.05"/>
+        <xacro:property name="z_transform" value="${0.140 + 0.01}"/>
 
-        <xacro:property name="r_transform" value="0"/>
-        <xacro:property name="p_transform" value="0"/>
-        <xacro:property name="y_transform" value="0"/>
-
-        <xacro:property name="PI" value="3.1415926535897931"/>
-
+        <xacro:property name="roll_transform" value="0"/>
+        <xacro:property name="pitch_transform" value="0"/>
+        <xacro:property name="yaw_transform" value="0"/>
+        
         <joint name="laser_joint" type="fixed">
             <parent link="${prefix}chassis_link"/>
             <child link="${prefix}laser_frame"/>
 
-            <origin xyz="${x_transform} ${y_transform} ${z_transform}" rpy="${r_transform} ${p_transform} ${y_transform}"/>
+            <origin xyz="${x_transform} ${y_transform} ${base_height}" rpy="${roll_transform} ${pitch_transform} ${yaw_transform}"/>
         </joint>
 
         <link name="${prefix}laser_frame">
@@ -33,7 +31,7 @@
     
             <sensor name="laser" type="ray">
                 <pose> 0 0 0 0 0 0 </pose>
-                <visualize>true</visualize>
+                <visualize>false</visualize>
                 <update_rate>20</update_rate>
 
                 <ray>

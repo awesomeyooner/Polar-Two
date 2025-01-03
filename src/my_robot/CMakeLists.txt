@@ -12,7 +12,6 @@ find_package(std_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 
-
 add_executable(talker src/test/Publisher.cpp)
 ament_target_dependencies(talker rclcpp std_msgs)
 
@@ -28,7 +27,8 @@ ament_target_dependencies(joystick_teleop rclcpp std_msgs geometry_msgs sensor_m
 add_executable(gazebo_translator src/util/GazeboTranslator.cpp)
 ament_target_dependencies(gazebo_translator rclcpp std_msgs geometry_msgs sensor_msgs)
 
-
+add_executable(hardware_translator src/util/HardwareTranslator.cpp)
+ament_target_dependencies(hardware_translator rclcpp std_msgs geometry_msgs sensor_msgs)
 
 install(TARGETS
   talker
@@ -36,6 +36,7 @@ install(TARGETS
   effort_translator
   joystick_teleop
   gazebo_translator
+  hardware_translator
   DESTINATION lib/${PROJECT_NAME})
 
 install(DIRECTORY

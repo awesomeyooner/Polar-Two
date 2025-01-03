@@ -25,12 +25,17 @@ ament_target_dependencies(effort_translator rclcpp std_msgs geometry_msgs sensor
 add_executable(joystick_teleop src/util/Joystick.cpp)
 ament_target_dependencies(joystick_teleop rclcpp std_msgs geometry_msgs sensor_msgs)
 
+add_executable(gazebo_translator src/util/GazeboTranslator.cpp)
+ament_target_dependencies(gazebo_translator rclcpp std_msgs geometry_msgs sensor_msgs)
+
+
 
 install(TARGETS
   talker
   listener
   effort_translator
   joystick_teleop
+  gazebo_translator
   DESTINATION lib/${PROJECT_NAME})
 
 install(DIRECTORY

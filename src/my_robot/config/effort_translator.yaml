@@ -1,0 +1,11 @@
+effort_translator:
+  ros__parameters:
+    prefix: "esp32"
+    left_joint_names: [
+      "front_left_wheel_joint",
+      "rear_left_wheel_joint"
+    ]
+    right_joint_names: [
+      "front_right_wheel_joint",
+      "rear_right_wheel_joint"
+    ]

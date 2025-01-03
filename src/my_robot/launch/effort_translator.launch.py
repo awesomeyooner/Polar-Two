@@ -12,13 +12,13 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
 
-    translator = Node(
-        package="my_robot",
-        executable="effort_translator",
-        name="effort_translator"
-    )
+    params = os.path.join(get_package_share_directory('my_robot'),'config','effort_translator.yaml')
 
     return launch.LaunchDescription([
-        translator
-            #('/cmd_vel', '/diffbot_base_controller/cmd_vel')
+        launch_ros.actions.Node(
+            package='my_robot',
+            executable='effort_translator',
+            name='effort_translator',
+            parameters=[params]
+            )
   ])

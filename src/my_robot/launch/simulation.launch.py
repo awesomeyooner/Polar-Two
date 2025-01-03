@@ -44,6 +44,10 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(os.path.join(get_package_share_directory(robot_package), "launch", "effort_translator.launch.py"))
     )
 
+    gazebo_translator_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(os.path.join(get_package_share_directory(robot_package), "launch", "gazebo_translator.launch.py"))
+    )
+
     # ===================================================================================
 
     joint_state_broadcaster_spawner = Node(
@@ -59,23 +63,10 @@ def generate_launch_description():
             # "effort_controllers",
             # "-c", "/controller_manager",
             # "-t", "effort_controllers/JointGroupEffortController", 
-            "position_controller",
             "velocity_controller",
             "--controller-manager", 
             "/controller_manager"
             ],
-    )
-
-    # =====================================================================================================
-
-    vision_package = "lane_detector"
-
-    camera_compressor_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(get_package_share_directory(vision_package), "launch", "camera_compressor.launch.py"))
-    )
-
-    detection_model_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(get_package_share_directory(vision_package), "launch", "detection_model.launch.py"))
     )
 
     # ===================================================================================================
@@ -112,6 +103,7 @@ def generate_launch_description():
         #joint_state_publisher_node,
         joystick_launch,
         translator_launch,
+        gazebo_translator_launch,
 
         gazebo,
         spawn_entity,

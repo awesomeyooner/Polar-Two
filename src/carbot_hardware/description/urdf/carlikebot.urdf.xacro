@@ -5,7 +5,6 @@
   <xacro:arg name="sim_mode" default="false"/>
 
   <!-- Import Robot Description -->
-  <!-- <xacro:include filename="$(find carbot_hardware)/urdf/carlikebot_description.urdf.xacro" /> -->
   <xacro:include filename="$(find carbot_hardware)/urdf/bigbrain.urdf.xacro" />
 
   <!-- Import Rviz colors -->
@@ -19,14 +18,14 @@
   <!-- <xacro:include filename="$(find carbot_hardware)/urdf/camera.xacro" /> -->
 
   <!-- Import Depth Camera -->
-  <xacro:include filename="$(find carbot_hardware)/urdf/depth_camera.xacro" />
+  <!-- <xacro:include filename="$(find carbot_hardware)/urdf/depth_camera.xacro" /> -->
 
   <!-- Import LiDAR -->
-  <xacro:include filename="$(find carbot_hardware)/urdf/lidar.xacro" />
+  <!-- <xacro:include filename="$(find carbot_hardware)/urdf/lidar.xacro" /> -->
 
   <xacro:carlikebot prefix="$(arg prefix)" />
-  <xacro:camera prefix="$(arg prefix)"/>
-  <xacro:lidar prefix="$(arg prefix)"/>
+  <!-- <xacro:camera prefix="$(arg prefix)"/> -->
+  <!-- <xacro:lidar prefix="$(arg prefix)"/> -->
 
   <xacro:carlikebot_ros2_control name="CarlikeBot" prefix="$(arg prefix)" />
 

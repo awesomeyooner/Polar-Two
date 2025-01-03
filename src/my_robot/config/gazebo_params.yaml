@@ -1,3 +1,15 @@
 gazebo:
   ros__parameters:
     publish_rate: 400.0
+
+gazebo_translator:
+  ros__parameters:
+    prefix: "esp32"
+    publish_rate: 50.0
+    publish_topic: "velocity_controller/commands"
+    joint_names: [
+      "front_left_wheel_joint",
+      "front_right_wheel_joint",
+      "rear_left_wheel_joint",
+      "rear_right_wheel_joint"
+    ]

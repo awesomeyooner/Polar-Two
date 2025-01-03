@@ -79,7 +79,7 @@ def generate_launch_description():
     robot_description = {"robot_description": robot_description_content}
 
     rviz_config_file = PathJoinSubstitution(
-        [FindPackageShare(description_package), "description/rviz", "carlikebot_view.rviz"]
+        [FindPackageShare(description_package), "description/rviz", "view.rviz"]
     )
 
     joint_state_publisher_node = Node(
@@ -105,7 +105,7 @@ def generate_launch_description():
     nodes = [
         joint_state_publisher_node,
         robot_state_publisher_node,
-        rviz_node,
+        #rviz_node,
     ]
 
     return LaunchDescription(declared_arguments + nodes)

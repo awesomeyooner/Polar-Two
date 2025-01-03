@@ -5,26 +5,26 @@
   <xacro:arg name="sim_mode" default="false"/>
 
   <!-- Import Constants -->
-  <xacro:include filename="$(find carbot_hardware)/urdf/constants.xacro" />
+  <xacro:include filename="$(find carbot_hardware)/urdf/util/constants.xacro" />
 
   <!-- Import Robot Description -->
-  <xacro:include filename="$(find carbot_hardware)/urdf/main.urdf.xacro" />
+  <xacro:include filename="$(find carbot_hardware)/urdf/robot.urdf.xacro" />
 
   <!-- Import Rviz colors -->
-  <xacro:include filename="$(find carbot_hardware)/urdf/carlikebot.materials.xacro" />
+  <xacro:include filename="$(find carbot_hardware)/urdf/util/carlikebot.materials.xacro" />
 
   <!-- Import Hardware Interface -->
   <xacro:include filename="$(find carbot_hardware)/ros2_control/carlikebot.ros2_control.xacro" />
   <!-- <xacro:include filename="$(find carbot_hardware)/ros2_control/sim.xacro"/> -->
 
   <!-- Import Camera -->
-  <!-- <xacro:include filename="$(find carbot_hardware)/urdf/camera.xacro" /> -->
+  <!-- <xacro:include filename="$(find carbot_hardware)/urdf/components/camera.xacro" /> -->
 
   <!-- Import Depth Camera -->
-  <!-- <xacro:include filename="$(find carbot_hardware)/urdf/depth_camera.xacro" /> -->
+  <!-- <xacro:include filename="$(find carbot_hardware)/urdf/components/depth_camera.xacro" /> -->
 
   <!-- Import LiDAR -->
-  <xacro:include filename="$(find carbot_hardware)/urdf/lidar.xacro" />
+  <xacro:include filename="$(find carbot_hardware)/urdf/components/lidar.xacro" />
 
   <xacro:carlikebot prefix="$(arg prefix)" />
   <!-- <xacro:camera prefix="$(arg prefix)"/> -->

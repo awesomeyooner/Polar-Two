@@ -1,5 +1,5 @@
 {
-    "cmake.sourceDirectory": "/home/dev/Documents/GitHub/Polar-Two/src/carbot_hardware",
+    // "cmake.sourceDirectory": "/home/dev/Documents/GitHub/Polar-Two/src/carbot_hardware",
     "files.associations": {
         "cctype": "cpp",
         "clocale": "cpp",
@@ -79,5 +79,6 @@
         "typeinfo": "cpp",
         "valarray": "cpp",
         "variant": "cpp"
-    }
+    },
+    "cmake.sourceDirectory": "/home/dev/Documents/GitHub/Polar-Two/src/joystick_handler"
 }

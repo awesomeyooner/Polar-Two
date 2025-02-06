@@ -5,23 +5,51 @@
 
 namespace hid_devices{
 
-    namespace gamepads{
-        const GamepadMapping MAPPING_PS4_CONTROLLER{
-            .stick_left_x_index = 0,
-            .stick_left_y_index = 1,
-            .stick_right_x_index = 3,
-            .stick_right_y_index = 4,
+    namespace PS4{
+        enum {
+            X = 0,
+            CIRCLE = 1,
+            SQUARE = 2,
+            TRIANGLE = 3,
 
-            .trigger_left_index = 2,
-            .trigger_right_index = 5,
+            LEFT_BUMPER = 4,
+            RIGHT_BUMPER = 5,
 
-            .bumper_left_index = 5,
-            .bumper_right_index = 6,
+            LEFT_STICK = 6,
+            RIGHT_STICK = 7
+        };
 
-            .button_a_index = 0,
-            .button_b_index = 1,
-            .button_x_index = 3,
-            .button_y_index = 2
+        const GamepadMapping MAP{
+            .stick_left_x = 0,
+            .stick_left_y = 1,
+            .stick_right_x = 3,
+            .stick_right_y = 4,
+
+            .trigger_left = 2,
+            .trigger_right = 5,
+
+            .bumper_left = 5,
+            .bumper_right = 6,
+
+            .button_down = 0,
+            .button_right = 1,
+            .button_left = 3,
+            .button_up = 2
+        };
+    };
+
+    namespace Xbox{
+        enum {
+            A = 0,
+            B = 1,
+            X = 2,
+            Y = 3,
+
+            LEFT_BUMPER = 4,
+            RIGHT_BUMPER = 5,
+
+            LEFT_STICK = 6,
+            RIGHT_STICK = 7
         };
     };
 };

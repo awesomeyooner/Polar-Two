@@ -21,14 +21,12 @@ class Joystick : public rclcpp::Node
   //3 right x
   //4 right y
   //5 right trigger
-    Joystick() : Node("joystick_teleop")
+    Joystick() : Node("joystick_teleop"), gamepad(hid_devices::PS4::MAP)
     {
         this->declare_parameter<double>("max_speed", 1);
         this->declare_parameter<double>("reduced_speed", 0.5);
         this->declare_parameter<int>("toggle_boost", 6);
         this->declare_parameter<int>("toggle_freeze", 0);
-
-        gamepad = hid_devices::Gamepad(hid_devices::gamepads::MAPPING_PS4_CONTROLLER);
 
         // rclcpp::Parameter
         max_speed = this->get_parameter("max_speed").as_double();
@@ -47,9 +45,21 @@ class Joystick : public rclcpp::Node
 
       gamepad.update(msg);
 
-      if(gamepad.current_status.button_a_on_release)
-        RCLCPP_INFO(this->get_logger(), "current press");
+      if(gamepad.get_button(hid_devices::PS4::X)->on_press)
+        RCLCPP_INFO(this->get_logger(), "pressed X");
+      
+      if(gamepad.get_button(hid_devices::PS4::X)->on_release)
+        RCLCPP_INFO(this->get_logger(), "released X");
 
+      if(gamepad.get_button(hid_devices::PS4::CIRCLE)->on_press)
+        RCLCPP_INFO(this->get_logger(), "pressed CIRCLE");
+
+      if(gamepad.get_button(hid_devices::PS4::SQUARE)->on_press)
+        RCLCPP_INFO(this->get_logger(), "pressed SQUARE");
+
+      if(gamepad.get_button(hid_devices::PS4::TRIANGLE)->on_press)
+        RCLCPP_INFO(this->get_logger(), "pressed TRIANGLE");
+        
       auto twist_stamped = geometry_msgs::msg::TwistStamped();
 
       twist_stamped.header.frame_id = "command_velocity";

@@ -2,167 +2,220 @@
 #define GAMEPAD_INTERFACE_HPP
 
 #include "sensor_msgs/msg/joy.hpp"
+#include <map>
 
 namespace hid_devices{
 
+    enum GamepadButton{
+        ACTION_DOWN = 0,
+        ACTION_RIGHT = 1,
+        ACTION_LEFT = 2,
+        ACTION_UP = 3,
+
+        LEFT_BUMPER = 4,
+        RIGHT_BUMPER = 5,
+
+        LEFT_STICK = 6,
+        RIGHT_STICK = 7
+    };
+
+    enum GamepadAxis{
+        LEFT_X = 0,
+        LEFT_Y = 1,
+        RIGHT_X = 2,
+        RIGHT_Y = 3,
+
+        LEFT_TRIGGER = 4,
+        RIGHT_TRIGGER = 5
+    };
+
+    struct Button{
+        int id;
+        int index;
+
+        Button(){}
+        Button(int index, int id) : index(index), id(id){}
+
+        bool pressed = false;
+        bool on_press = false;
+        bool on_release = false;
+
+        bool get(){
+            return pressed;
+        }
+
+        void update(std::vector<int> buttons){
+            bool status = buttons.at(index) == 1 ? true : false;
+
+            update(status);
+        }
+
+        void update(bool status){
+            previous = pressed;
+
+            pressed = status;
+
+            on_press = false;
+            if(pressed && !previous) //if pressed and not previously pressed aka ON PRESS
+                on_press = true;
+
+            on_release = false;
+            if(!pressed && previous) //if not pressed and previously was pressed aka ON RELEASE
+                on_release = true;
+        }
+
+        private:
+            bool previous = false;
+            //int index;
+    };
+
+    struct Axis{
+        int id;
+
+        Axis(){}
+        Axis(int index, int id) : index(index), id(id){}
+
+        double value = 0;
+
+        double get(){
+            return value;
+        }
+
+        void update(std::vector<float> axes){
+            update(axes.at(index));
+        }
+
+        void update(double status){
+            value = status;
+        }
+
+        private:
+            int index;
+    };
+
     struct GamepadMapping{
-        int stick_left_x_index;
-        int stick_left_y_index;
-        int stick_right_x_index;
-        int stick_right_y_index;
+        int stick_left_x;
+        int stick_left_y;
+        int stick_right_x;
+        int stick_right_y;
 
-        int trigger_left_index;
-        int trigger_right_index;
+        int trigger_left;
+        int trigger_right;
 
-        int bumper_left_index;
-        int bumper_right_index;
+        int bumper_left;
+        int bumper_right;
 
-        int button_a_index;
-        int button_b_index;
-        int button_x_index;
-        int button_y_index;
+        int button_down;
+        int button_right;
+        int button_left;
+        int button_up;
     };
 
     struct GamepadStatus{
-        double stick_left_x = 0;
-        double stick_left_y = 0;
-        double stick_right_x = 0;
-        double stick_right_y = 0;
 
-        double trigger_left = 0;
-        double trigger_right = 0;
+        GamepadStatus(){}
 
-        bool bumper_left;
-        bool bumper_right;
+        GamepadStatus(GamepadMapping map) : 
+            stick_left_x(map.stick_left_x, GamepadAxis::LEFT_X),
+            stick_left_y(map.stick_left_y, GamepadAxis::LEFT_Y),
+            stick_right_x(map.stick_right_x, GamepadAxis::RIGHT_X),
+            stick_right_y(map.stick_right_y, GamepadAxis::RIGHT_Y),
 
-        bool button_a = false;
-        bool button_b = false;
-        bool button_x = false;
-        bool button_y = false;
+            trigger_left(map.trigger_left, GamepadAxis::LEFT_TRIGGER),
+            trigger_right(map.trigger_right, GamepadAxis::RIGHT_TRIGGER),
 
-        bool bumper_left_on_press = false;
-        bool bumper_left_on_release = false;
+            bumper_left(map.bumper_left, GamepadButton::LEFT_BUMPER),
+            bumper_right(map.bumper_left, GamepadButton::RIGHT_BUMPER),
 
-        bool bumper_right_on_press = false;
-        bool bumper_right_on_release = false;
+            button_down(map.button_down, GamepadButton::ACTION_DOWN),
+            button_right(map.button_right, GamepadButton::ACTION_RIGHT),
+            button_left(map.button_left, GamepadButton::ACTION_LEFT),
+            button_up(map.button_up, GamepadButton::ACTION_UP){}
 
-        bool button_a_on_press = false;
-        bool button_a_on_release = false;
+        void update(sensor_msgs::msg::Joy joy_packet){
+            update(joy_packet.axes, joy_packet.buttons);
+        }
 
-        bool button_b_on_press = false;
-        bool button_b_on_release = false;
+        void update(std::vector<float> axes, std::vector<int> buttons){
+            stick_left_x.update(axes);
+            stick_left_y.update(axes);
+            stick_right_x.update(axes);
+            stick_right_y.update(axes);
 
-        bool button_x_on_press;
-        bool button_x_on_release = false;
+            trigger_left.update(axes);
+            trigger_right.update(axes);
 
-        bool button_y_on_press = false;
-        bool button_y_on_release = false;
+            bumper_left.update(buttons);
+            bumper_right.update(buttons);
+
+            button_down.update(buttons);
+            button_right.update(buttons);
+            button_left.update(buttons);
+            button_up.update(buttons);
+        }
+
+        Axis stick_left_x;
+        Axis stick_left_y;
+        Axis stick_right_x;
+        Axis stick_right_y;
+
+        Axis trigger_left;
+        Axis trigger_right;
+
+        Button bumper_left;
+        Button bumper_right;
+
+        Button button_down;
+        Button button_right;
+        Button button_left;
+        Button button_up;
     };
 
     class Gamepad{
 
         public:
-            GamepadStatus current_status;
-            GamepadStatus previous_status;
+            GamepadStatus status;
 
-            Gamepad(GamepadMapping mapping){
-                map = mapping;
+            Gamepad(GamepadMapping mapping) : status(mapping){
+                axes[status.stick_left_x.id] = &status.stick_left_x;
+                axes[status.stick_left_y.id] = &status.stick_left_y;
+
+                axes[status.stick_right_x.id] = &status.stick_right_x;
+                axes[status.stick_right_y.id] = &status.stick_right_y;
+
+                axes[status.trigger_left.id] = &status.trigger_left;
+                axes[status.trigger_right.id] = &status.trigger_right;
+
+                buttons[status.bumper_left.id] = &status.bumper_left;
+                buttons[status.bumper_right.id] = &status.bumper_right;
+
+                buttons[status.button_down.id] = &status.button_down;
+                buttons[status.button_right.id] = &status.button_right;
+                buttons[status.button_left.id] = &status.button_left;
+                buttons[status.button_up.id] = &status.button_up;
             }
 
-            Gamepad(){}
+            // void initialize(GamepadMapping mapping){
+                
+            // }
 
             void update(const sensor_msgs::msg::Joy &joy_packet){
-
-                previous_status = current_status;
-
-                current_status.stick_left_x = joy_packet.axes.at(map.stick_left_x_index);
-                current_status.stick_left_y = joy_packet.axes.at(map.stick_left_y_index);
-                current_status.stick_right_x = joy_packet.axes.at(map.stick_right_x_index);
-                current_status.stick_right_y = joy_packet.axes.at(map.stick_right_y_index);
-
-                current_status.trigger_left = joy_packet.axes.at(map.trigger_left_index);
-                current_status.trigger_right = joy_packet.axes.at(map.trigger_right_index);
-
-                current_status.bumper_left = joy_packet.buttons.at(map.bumper_left_index) == 1 ? true : false;
-                current_status.bumper_right = joy_packet.buttons.at(map.bumper_right_index) == 1 ? true : false;
-
-                current_status.button_a = joy_packet.buttons.at(map.button_a_index) == 1 ? true : false;
-                current_status.button_b = joy_packet.buttons.at(map.button_b_index) == 1 ? true : false;
-                current_status.button_x = joy_packet.buttons.at(map.button_x_index) == 1 ? true : false;
-                current_status.button_y = joy_packet.buttons.at(map.button_y_index) == 1 ? true : false;
-
-                //left bumper
-                current_status.bumper_left_on_press = false;
-                if(current_status.bumper_left && !previous_status.bumper_left){ //if previously not press and now is pressed
-                    current_status.bumper_left_on_press = true;
-                }
-                
-                current_status.bumper_left_on_release = false;
-                if(!current_status.bumper_left && previous_status.bumper_left){ //if previously pressed and is now not pressed
-                    current_status.bumper_left_on_release = true;
-                }
-
-                //right bumper
-                current_status.bumper_right_on_press = false;
-                if(current_status.bumper_right && !previous_status.bumper_right){ //if previously not press and now is pressed
-                    current_status.bumper_right_on_press = true;
-                }
-
-                current_status.bumper_right_on_release = false;
-                if(!current_status.bumper_right && previous_status.bumper_right){ //if previously pressed and is now not pressed
-                    current_status.bumper_right_on_release = true;
-                }
-
-                //button A
-                current_status.button_a_on_press = false;
-                if(current_status.button_a && !previous_status.button_a){ //if previously not press and now is pressed
-                    current_status.button_a_on_press = true;
-                }
-
-                current_status.button_a_on_release = false;
-                if(!current_status.button_a && previous_status.button_a){ //if previously pressed and is now not pressed
-                    current_status.button_a_on_release = true;
-                }
-
-                //button B
-                current_status.button_b_on_press = false;
-                if(current_status.button_b && !previous_status.button_b){ //if previously not press and now is pressed
-                    current_status.button_b_on_press = true;
-                }
-
-                current_status.button_b_on_release = false;
-                if(!current_status.button_b && previous_status.button_b){ //if previously pressed and is now not pressed
-                    current_status.button_b_on_release = true;
-                }
-
-                //button X
-                current_status.button_x_on_press = false;
-                if(current_status.button_x && !previous_status.button_x){ //if previously not press and now is pressed
-                    current_status.button_x_on_press = true;
-                }
-
-                current_status.button_x_on_release = false;
-                if(!current_status.button_x && previous_status.button_x){ //if previously pressed and is now not pressed
-                    current_status.button_x_on_release = true;
-                }
-
-                //button Y
-                current_status.button_y_on_press = false;
-                if(current_status.button_y && !previous_status.button_y){ //if previously not press and now is pressed
-                    current_status.button_y_on_press = true;
-                }
-
-                current_status.button_y_on_release = false;
-                if(!current_status.button_y && previous_status.button_y){ //if previously pressed and is now not pressed
-                    current_status.button_y_on_release = true;
-                }
-
+                status.update(joy_packet);
             }
 
-            
+            Button* get_button(int id){
+                return buttons[id];
+            }
 
+            Axis* get_axis(int id){
+                return axes[id];
+            }
+            
         private:
-            GamepadMapping map;
+            std::map<int, Button*> buttons;
+            std::map<int, Axis*> axes;
+
+            
 
     };
 };

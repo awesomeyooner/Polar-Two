@@ -89,6 +89,14 @@ namespace hid_devices{
             value = status;
         }
 
+        bool greater_than(double threshold){
+            return value > threshold;
+        }
+
+        bool less_than(double threshold){
+            return value < threshold;
+        }
+
         private:
             int index;
     };
@@ -109,6 +117,9 @@ namespace hid_devices{
         int button_right;
         int button_left;
         int button_up;
+
+        int button_left_stick;
+        int button_right_stick;
     };
 
     struct GamepadStatus{
@@ -130,7 +141,9 @@ namespace hid_devices{
             button_down(map.button_down, GamepadButton::ACTION_DOWN),
             button_right(map.button_right, GamepadButton::ACTION_RIGHT),
             button_left(map.button_left, GamepadButton::ACTION_LEFT),
-            button_up(map.button_up, GamepadButton::ACTION_UP){}
+            button_up(map.button_up, GamepadButton::ACTION_UP),
+            button_left_stick(map.button_left_stick, GamepadButton::LEFT_STICK),
+            button_right_stick(map.button_right_stick, GamepadButton::RIGHT_STICK){}
 
         void update(sensor_msgs::msg::Joy joy_packet){
             update(joy_packet.axes, joy_packet.buttons);
@@ -152,6 +165,9 @@ namespace hid_devices{
             button_right.update(buttons);
             button_left.update(buttons);
             button_up.update(buttons);
+
+            button_left_stick.update(buttons);
+            button_right_stick.update(buttons);
         }
 
         Axis stick_left_x;
@@ -169,6 +185,9 @@ namespace hid_devices{
         Button button_right;
         Button button_left;
         Button button_up;
+
+        Button button_left_stick;
+        Button button_right_stick;
     };
 
     class Gamepad{
@@ -176,7 +195,14 @@ namespace hid_devices{
         public:
             GamepadStatus status;
 
-            Gamepad(GamepadMapping mapping) : status(mapping){
+            Gamepad(){}
+            Gamepad(GamepadMapping mapping){
+                initialize(mapping);
+            }
+
+            void initialize(GamepadMapping mapping){
+                status = GamepadStatus(mapping);
+
                 axes[status.stick_left_x.id] = &status.stick_left_x;
                 axes[status.stick_left_y.id] = &status.stick_left_y;
 
@@ -193,11 +219,10 @@ namespace hid_devices{
                 buttons[status.button_right.id] = &status.button_right;
                 buttons[status.button_left.id] = &status.button_left;
                 buttons[status.button_up.id] = &status.button_up;
-            }
 
-            // void initialize(GamepadMapping mapping){
-                
-            // }
+                buttons[status.button_left_stick.id] = &status.button_left_stick;
+                buttons[status.button_right_stick.id] = &status.button_right_stick;
+            }
 
             void update(const sensor_msgs::msg::Joy &joy_packet){
                 status.update(joy_packet);

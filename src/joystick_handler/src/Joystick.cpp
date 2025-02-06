@@ -21,13 +21,21 @@ class Joystick : public rclcpp::Node
   //3 right x
   //4 right y
   //5 right trigger
-    Joystick() : Node("joystick_teleop"), gamepad(hid_devices::PS4::MAP)
+    Joystick() : Node("joystick_teleop")
     {
+        this->declare_parameter<std::string>("joystick_type", "ps4");
         this->declare_parameter<double>("max_speed", 1);
         this->declare_parameter<double>("reduced_speed", 0.5);
         this->declare_parameter<int>("toggle_boost", 6);
         this->declare_parameter<int>("toggle_freeze", 0);
 
+        std::string joystick_type = this->get_parameter("joystick_type").as_string();
+
+        if(joystick_type == "ps4")
+          gamepad.initialize(hid_devices::PS4::MAP);
+        else if(joystick_type == "xbox")
+          gamepad.initialize(hid_devices::Xbox::MAP);
+        
         // rclcpp::Parameter
         max_speed = this->get_parameter("max_speed").as_double();
         reduced_speed = this->get_parameter("reduced_speed").as_double();
@@ -59,7 +67,13 @@ class Joystick : public rclcpp::Node
 
       if(gamepad.get_button(hid_devices::PS4::TRIANGLE)->on_press)
         RCLCPP_INFO(this->get_logger(), "pressed TRIANGLE");
-        
+
+      if(gamepad.get_button(hid_devices::PS4::LEFT_STICK)->on_press)
+        RCLCPP_INFO(this->get_logger(), "pressed LEFT STICk");
+
+      if(gamepad.get_button(hid_devices::PS4::RIGHT_STICK)->on_press)
+        RCLCPP_INFO(this->get_logger(), "pressed RIGHT STICK");
+
       auto twist_stamped = geometry_msgs::msg::TwistStamped();
 
       twist_stamped.header.frame_id = "command_velocity";

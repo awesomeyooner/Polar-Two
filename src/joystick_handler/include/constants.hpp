@@ -34,7 +34,10 @@ namespace hid_devices{
             .button_down = 0,
             .button_right = 1,
             .button_left = 3,
-            .button_up = 2
+            .button_up = 2,
+
+            .button_left_stick = 11,
+            .button_right_stick = 12
         };
     };
 
@@ -50,6 +53,27 @@ namespace hid_devices{
 
             LEFT_STICK = 6,
             RIGHT_STICK = 7
+        };
+    // I don't actually know the real map for xbox controllers this is just a placeholder
+        const GamepadMapping MAP{
+            .stick_left_x = 0,
+            .stick_left_y = 1,
+            .stick_right_x = 3,
+            .stick_right_y = 4,
+
+            .trigger_left = 2,
+            .trigger_right = 5,
+
+            .bumper_left = 5,
+            .bumper_right = 6,
+
+            .button_down = 0,
+            .button_right = 1,
+            .button_left = 3,
+            .button_up = 2,
+
+            .button_left_stick = 11,
+            .button_right_stick = 12
         };
     };
 };

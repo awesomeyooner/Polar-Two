@@ -1,0 +1,57 @@
+import os
+
+from launch import LaunchDescription
+from launch.actions import DeclareLaunchArgument, RegisterEventHandler
+from launch.conditions import IfCondition, UnlessCondition
+from launch.event_handlers import OnProcessExit
+from launch.substitutions import Command, FindExecutable, PathJoinSubstitution, LaunchConfiguration
+
+import launch
+from launch import LaunchDescription
+from launch.actions import IncludeLaunchDescription
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+import os
+from launch_ros.substitutions import FindPackageShare
+
+from ament_index_python.packages import get_package_share_directory
+
+from launch_ros.actions import Node
+
+from launch_ros.actions import Node
+from launch_ros.substitutions import FindPackageShare
+
+def generate_launch_description():
+
+    hardware_package = "microros_hardware_interface"
+
+    robot_description_content = Command(
+        [
+            PathJoinSubstitution([FindExecutable(name="xacro")]),
+            " ",
+            PathJoinSubstitution(
+                [FindPackageShare(hardware_package), "urdf", "core.urdf.xacro"]
+            ),
+        ]
+    )
+
+    robot_description = {"robot_description": robot_description_content}
+
+    # Check if we're told to use sim time
+    use_sim_time = LaunchConfiguration('use_sim_time')
+
+    robot_state_publisher_node = Node(
+        package="robot_state_publisher",
+        executable="robot_state_publisher",
+        output="both",
+        parameters=[robot_description],
+    )
+
+    # Launch!
+    return LaunchDescription([
+        DeclareLaunchArgument(
+            'use_sim_time',
+            default_value='false',
+            description='Use sim time if true'),
+
+        robot_state_publisher_node
+    ])

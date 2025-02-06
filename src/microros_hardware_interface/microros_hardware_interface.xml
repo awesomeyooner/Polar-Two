@@ -1,0 +1,9 @@
+<library path="microros_hardware_interface">
+  <class name="microros_hardware_interface/MicroSystemHardware"
+         type="microros_hardware_interface::MicroSystemHardware"
+         base_class_type="hardware_interface::SystemInterface">
+    <description>
+      A hardware interface used to expose topics, typically from MicroROS, to the ros2_control ecosystem
+    </description>
+  </class>
+</library>

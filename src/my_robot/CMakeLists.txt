@@ -42,6 +42,8 @@ install(TARGETS
 install(DIRECTORY
   launch
   config
+  rviz
+  worlds
   DESTINATION share/${PROJECT_NAME}/
 )
 

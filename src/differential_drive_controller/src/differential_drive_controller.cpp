@@ -11,6 +11,5 @@ namespace differential_drive_controller{
 
     
     // DifferentialDriveController::DifferentialDriveController() : controller_interface::ControllerInterface(){
-        
     // }
 }

@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!-- 4 Wheel Robot with front steering and rear drive -->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="carlikebot_robot">
+  <xacro:arg name="prefix" default="" />
+  <xacro:arg name="sim_mode" default="false"/>
+
+  <!-- Import Constants -->
+  <xacro:include filename="$(find microros_hardware_interface)/urdf/util/constants.xacro" />
+
+  <!-- Import Robot Description -->
+  <xacro:include filename="$(find microros_hardware_interface)/urdf/robot.urdf.xacro" />
+
+  <!-- Import Rviz colors -->
+  <xacro:include filename="$(find microros_hardware_interface)/urdf/util/carlikebot.materials.xacro" />
+
+  <!-- Import Hardware Interface -->
+  <xacro:include filename="$(find microros_hardware_interface)/ros2_control/carlikebot.ros2_control.xacro" />
+  <!-- <xacro:include filename="$(find microros_hardware_interface)/ros2_control/sim.xacro"/> -->
+
+  <!-- Import Camera -->
+  <!-- <xacro:include filename="$(find microros_hardware_interface)/urdf/components/camera.xacro" /> -->
+
+  <!-- Import Depth Camera -->
+  <!-- <xacro:include filename="$(find microros_hardware_interface)/urdf/components/depth_camera.xacro" /> -->
+
+  <!-- Import LiDAR -->
+  <xacro:include filename="$(find microros_hardware_interface)/urdf/components/lidar.xacro" />
+
+  <xacro:carlikebot prefix="$(arg prefix)" />
+  <!-- <xacro:camera prefix="$(arg prefix)"/> -->
+  <xacro:lidar prefix="$(arg prefix)"/>
+
+  <xacro:carlikebot_ros2_control name="CarlikeBot" prefix="$(arg prefix)" />
+
+</robot>

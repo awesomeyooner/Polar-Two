@@ -23,41 +23,48 @@ namespace microros_hardware_interface{
         double conversion = 1;
 
         HardwareTopic(std::string topic_name, std::string interface) : topic_name(topic_name), interface(interface){}
+        HardwareTopic(std::string topic_name, std::string interface, double conversion) : topic_name(topic_name), interface(interface), conversion(conversion){}
+
+        void set_inverted(bool invert){
+            conversion *= invert ? -1 : 1; //if inverted then negate
+        }
     };
 
-    class TopicInterface : public rclcpp::Node{
+    class TopicInterface : public rclcpp::Node {
 
-        public:
-
+        private:
             std::vector<HardwareTopic> states;
             HardwareTopic command;
 
-            // std::vector<rclcpp::Time> timestamps;
+        public:
 
-            TopicInterface(std::string name, std::string prefix, HardwareTopic command_topic, std::vector<HardwareTopic> state_topics) : 
+            std::vector<rclcpp::Time> timestamps;
+
+            TopicInterface(const std::string& name, const std::string& prefix, const HardwareTopic& command_topic, const std::vector<HardwareTopic>& state_topics) : 
                 Node(name + "_node"),
                 command(command_topic), states(state_topics){
 
-                // states.resize(state_topics.size());
+                RCLCPP_INFO(rclcpp::get_logger("MicroSystemHardware"), "=============TopicInterface: Constructor============");
 
-                //timestamps.resize(state_topics.size());
+                timestamps.resize(state_topics.size());
 
-                RCLCPP_INFO(this->get_logger(), "Topic Size: '%f'", state_topics.size());
-                // subscriptions.resize(state_topics.size());
+                RCLCPP_INFO(rclcpp::get_logger("MicroSystemHardware"), name.c_str());
+                RCLCPP_INFO(rclcpp::get_logger("MicroSystemHardware"), "Topic Size: '%d'", static_cast<int>(states.size()));
+                RCLCPP_INFO(rclcpp::get_logger("MicroSystemHardware"), "Topic Size: '%f'", state_topics.at(0).conversion);
                 
                 //populates subscriptions
                 for(int i = 0; i < state_topics.size(); i++){
                     
-                    //subscribers
+                    // subscribers
                     rclcpp::Subscription<std_msgs::msg::Float64>::SharedPtr subscription = this->create_subscription<std_msgs::msg::Float64>(
-                        prefix + state_topics.at(i).topic_name, rclcpp::SystemDefaultsQoS(), 
+                        prefix + name + state_topics.at(i).topic_name, rclcpp::SystemDefaultsQoS(), 
                         [this, i](const std_msgs::msg::Float64 &message) {
                             states.at(i).data = states.at(i).conversion * message.data;
-                            // timestamps.at(i) = this->now();
+                            timestamps.at(i) = this->now();
                         }
                     );
 
-                    subscriptions.emplace_back(subscription);
+                    subscriptions.push_back(subscription);
                 }
 
                 //publisher
@@ -66,7 +73,7 @@ namespace microros_hardware_interface{
             }
 
             //defaults name to just the name with _node appended
-            TopicInterface(std::string name, HardwareTopic command_topic, std::vector<HardwareTopic> state_topics) : 
+            TopicInterface(const std::string& name, const HardwareTopic& command_topic, const std::vector<HardwareTopic>& state_topics) : 
                 TopicInterface(name, "", command_topic, state_topics){}
 
             void send_command(){
@@ -77,7 +84,7 @@ namespace microros_hardware_interface{
                 publisher->publish(message);
             }
 
-            std::vector<hardware_interface::StateInterface> get_state_interfaces(std::string owner){
+            virtual std::vector<hardware_interface::StateInterface> get_state_interfaces(std::string owner){
                 std::vector<hardware_interface::StateInterface> state_interfaces;
 
                 for(int i = 0; i < states.size(); i++){
@@ -93,7 +100,7 @@ namespace microros_hardware_interface{
                 return state_interfaces;
             }
 
-            hardware_interface::CommandInterface get_command_interface(std::string owner){
+            virtual hardware_interface::CommandInterface get_command_interface(std::string owner){
                 return hardware_interface::CommandInterface(
                     owner,
                     command.interface,
@@ -102,7 +109,7 @@ namespace microros_hardware_interface{
             }
         
         private:
-
+            //rclcpp::Subscription<std_msgs::msg::Float64>::SharedPtr bob;
             std::vector<rclcpp::Subscription<std_msgs::msg::Float64>::SharedPtr> subscriptions;
             rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr publisher;
     };

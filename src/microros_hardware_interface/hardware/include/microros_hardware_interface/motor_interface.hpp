@@ -21,11 +21,15 @@ namespace microros_hardware_interface{
             HardwareTopic command_interface = HardwareTopic("/command", hardware_interface::HW_IF_EFFORT);
 
             std::string joint_name;
-            std::string topic_namespace;
 
-            MotorInterface(std::string joint, std::string topic, double conversion) : joint_name(joint), topic_namespace(topic), 
-                TopicInterface(topic, command_interface, state_interfaces/*set_conversion_to_states(conversion, state_interfaces)*/){
-                    // RCLCPP_INFO(this->get_logger(), "Topic Size: '%f'", states.size());
+            MotorInterface(const std::string& joint, const std::string& topic, const double& conversion) : 
+                TopicInterface(topic, command_interface, state_interfaces),
+                joint_name(joint){}
+
+            MotorInterface(const std::string& joint, const std::string& topic, const HardwareTopic& command, const std::vector<HardwareTopic>& states) : 
+                TopicInterface(topic, command, state_interfaces),
+                joint_name(topic){
+                    RCLCPP_INFO(rclcpp::get_logger("MicroSystemHardware"), "saijdodsa: '%i'", static_cast<int>(state_interfaces.size()));
                 }
 
             std::vector<hardware_interface::StateInterface> get_state_interfaces(){
@@ -36,15 +40,25 @@ namespace microros_hardware_interface{
                 return TopicInterface::get_command_interface(joint_name);
             }
 
-        private:
+            static std::vector<HardwareTopic>& set_conversion_for_states(const double& conversion, std::vector<HardwareTopic>& convert){
 
-            std::vector<HardwareTopic> set_conversion_to_states(double conversion, std::vector<HardwareTopic> convert){
                 for(int i = 0; i < convert.size(); i++){
                     convert.at(i).conversion = conversion; 
                 }
 
                 return convert;
             }
+
+            static std::vector<HardwareTopic>& set_inverted(const bool& invert, std::vector<HardwareTopic>& convert){
+
+                for(int i = 0; i < convert.size(); i++){
+                    convert.at(i).set_inverted(invert); 
+                }
+
+                return convert;
+            }
+
+        private:
 
     };
 

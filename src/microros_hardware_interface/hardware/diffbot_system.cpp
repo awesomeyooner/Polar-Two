@@ -34,6 +34,8 @@ hardware_interface::CallbackReturn MicroSystemHardware::on_init(const hardware_i
     return hardware_interface::CallbackReturn::ERROR;
   }
 
+  RCLCPP_INFO(rclcpp::get_logger("MicroSystemHardware"), "============================Start================");
+
   std::string front_left_joint = info_.hardware_parameters["front_left_joint"];
   std::string front_right_joint = info_.hardware_parameters["front_right_joint"];
   std::string rear_left_joint = info_.hardware_parameters["rear_left_joint"];
@@ -44,20 +46,35 @@ hardware_interface::CallbackReturn MicroSystemHardware::on_init(const hardware_i
   std::string rear_left_topic = info_.hardware_parameters["rear_left_topic"];
   std::string rear_right_topic = info_.hardware_parameters["rear_right_topic"];
 
+  RCLCPP_INFO(rclcpp::get_logger("MicroSystemHardware"), front_left_joint.c_str());
+
   double front_left_conversion = std::stod(info_.hardware_parameters["front_left_conversion"]);
   double front_right_conversion = std::stod(info_.hardware_parameters["front_right_conversion"]);
   double rear_left_conversion = std::stod(info_.hardware_parameters["rear_left_conversion"]);
   double rear_right_conversion = std::stod(info_.hardware_parameters["rear_right_conversion"]);
 
-  front_left_motor = std::make_shared<MotorInterface>(front_left_joint, front_left_topic, front_left_conversion);
-  front_right_motor = std::make_shared<MotorInterface>(front_right_joint, front_right_topic, front_right_conversion);
-  rear_left_motor = std::make_shared<MotorInterface>(rear_left_joint, rear_left_topic, rear_left_conversion);
-  rear_right_motor = std::make_shared<MotorInterface>(rear_right_joint, rear_right_topic, rear_right_conversion);
+  RCLCPP_INFO(rclcpp::get_logger("MicroSystemHardware"), "=============start checkpoint============");
+  RCLCPP_INFO(rclcpp::get_logger("MicroSystemHardware"), front_left_joint.c_str());
+  RCLCPP_INFO(rclcpp::get_logger("MicroSystemHardware"), front_left_topic.c_str());
+  RCLCPP_INFO(rclcpp::get_logger("MicroSystemHardware"), "=============end checkpoint============");
 
-  motors.emplace_back(front_left_motor);
-  motors.emplace_back(front_right_motor);
-  motors.emplace_back(rear_left_motor);
-  motors.emplace_back(rear_right_motor);
+  //this is stupid but i can't think of any other solution to doing it like this
+  std::vector<HardwareTopic> state_interfaces = {
+      HardwareTopic("/velocity", hardware_interface::HW_IF_VELOCITY),
+      HardwareTopic("/position", hardware_interface::HW_IF_POSITION),
+      HardwareTopic("/effort", hardware_interface::HW_IF_EFFORT)
+  };
+
+  HardwareTopic command_interface = HardwareTopic("/command", hardware_interface::HW_IF_EFFORT);
+
+  // MotorInterface::set_conversion_for_states(-1, state_interfaces);
+
+  front_left_motor = std::make_shared<MotorInterface>(front_left_joint, front_left_topic, command_interface, state_interfaces);
+
+  // motors.emplace_back(front_left_motor);
+  // motors.emplace_back(front_right_motor);
+  // motors.emplace_back(rear_left_motor);
+  // motors.emplace_back(rear_right_motor);
 
   //motors = {front_left_motor, front_right_motor, rear_left_motor, rear_right_motor};
 
@@ -111,11 +128,11 @@ hardware_interface::CallbackReturn MicroSystemHardware::on_deactivate(const rclc
 
 hardware_interface::return_type MicroSystemHardware::read(const rclcpp::Time & /*time*/, const rclcpp::Duration & period){
 
-  if(rclcpp::ok()){
-    for(int i = 0; i < motors.size(); i++){
-      rclcpp::spin_some(motors.at(i));
-    }
-  }
+  // if(rclcpp::ok()){
+  //   for(int i = 0; i < motors.size(); i++){
+  //     rclcpp::spin_some(motors.at(i));
+  //   }
+  // }
 
   return hardware_interface::return_type::OK;
 }

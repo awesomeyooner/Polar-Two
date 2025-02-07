@@ -69,7 +69,10 @@ hardware_interface::CallbackReturn MicroSystemHardware::on_init(const hardware_i
 
   // MotorInterface::set_conversion_for_states(-1, state_interfaces);
 
-  front_left_motor = std::make_shared<MotorInterface>(front_left_joint, front_left_topic, command_interface, state_interfaces);
+  std::shared_ptr<TopicInterface> bob = std::make_shared<TopicInterface>(front_left_topic, &command_interface, &state_interfaces);
+
+  //front_left_motor = std::make_shared<MotorInterface>(front_left_joint, front_left_topic, command_interface, state_interfaces);
+  //front_left_motor = std::make_shared<MotorInterface>(front_left_joint, front_left_topic, front_left_conversion);
 
   // motors.emplace_back(front_left_motor);
   // motors.emplace_back(front_right_motor);

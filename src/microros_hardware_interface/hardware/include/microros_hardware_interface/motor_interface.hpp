@@ -12,23 +12,30 @@ namespace microros_hardware_interface{
 
         public:
 
-            std::vector<HardwareTopic> state_interfaces = {
-                HardwareTopic("/velocity", hardware_interface::HW_IF_VELOCITY),
-                HardwareTopic("/position", hardware_interface::HW_IF_POSITION),
-                HardwareTopic("/effort", hardware_interface::HW_IF_EFFORT)
-            };
-
+            std::vector<HardwareTopic> state_interfaces;
             HardwareTopic command_interface = HardwareTopic("/command", hardware_interface::HW_IF_EFFORT);
 
             std::string joint_name;
 
             MotorInterface(const std::string& joint, const std::string& topic, const double& conversion) : 
-                TopicInterface(topic, command_interface, state_interfaces),
-                joint_name(joint){}
+                state_interfaces{
+                    HardwareTopic("/velocity", hardware_interface::HW_IF_VELOCITY),
+                    HardwareTopic("/position", hardware_interface::HW_IF_POSITION),
+                    HardwareTopic("/effort", hardware_interface::HW_IF_EFFORT)
+                },
+                joint_name(joint),
+                TopicInterface(topic, &command_interface, &state_interfaces){
+                    RCLCPP_INFO(rclcpp::get_logger("MicroSystemHardware"), "saijdodsa: '%i'", static_cast<int>(state_interfaces.size()));
+                }
 
-            MotorInterface(const std::string& joint, const std::string& topic, const HardwareTopic& command, const std::vector<HardwareTopic>& states) : 
-                TopicInterface(topic, command, state_interfaces),
-                joint_name(topic){
+            MotorInterface(const std::string& joint, const std::string& topic, HardwareTopic* command, std::vector<HardwareTopic>* states) : 
+                state_interfaces{
+                    HardwareTopic("/velocity", hardware_interface::HW_IF_VELOCITY),
+                    HardwareTopic("/position", hardware_interface::HW_IF_POSITION),
+                    HardwareTopic("/effort", hardware_interface::HW_IF_EFFORT)
+                },
+                joint_name(topic),
+                TopicInterface(topic, command, states){
                     RCLCPP_INFO(rclcpp::get_logger("MicroSystemHardware"), "saijdodsa: '%i'", static_cast<int>(state_interfaces.size()));
                 }
 

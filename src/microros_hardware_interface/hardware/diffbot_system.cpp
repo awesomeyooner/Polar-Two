@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "microros_hardware_interface/diffbot_system.hpp"
+#include "include/microros_hardware_interface/diffbot_system.hpp"
 
 #include <chrono>
 #include <cmath>
@@ -23,7 +23,6 @@
 
 #include "hardware_interface/lexical_casts.hpp"
 #include "hardware_interface/types/hardware_interface_type_values.hpp"
-#include "include/microros_hardware_interface/arduino_interface_types.hpp"
 #include "rclcpp/rclcpp.hpp"
 #include "include/microros_hardware_interface/constants.hpp"
 
@@ -35,39 +34,53 @@ hardware_interface::CallbackReturn MicroSystemHardware::on_init(const hardware_i
     return hardware_interface::CallbackReturn::ERROR;
   }
 
-  //set values to config
-  config.port = info_.hardware_parameters["port"];
+  std::string front_left_name = info_.hardware_parameters["front_left_name"];
+  std::string front_right_name = info_.hardware_parameters["front_right+name"];
+  std::string rear_left_name = info_.hardware_parameters["rear_left_name"];
+  std::string rear_right_name = info_.hardware_parameters["rear_right_name"];
 
-  config.drive_id = info_.hardware_parameters["drive_id"];
-  config.steer_id = info_.hardware_parameters["steer_id"];
+  double conversion = std::stod(info_.hardware_parameters["conversion"]);
 
-  config.voltage_sensor_id = info_.hardware_parameters["voltage_sensor_id"];
+  front_left_motor = std::make_shared<MotorInterface>(front_left_name, conversion);
+  front_right_motor = std::make_shared<MotorInterface>(front_right_name, conversion);
+  rear_left_motor = std::make_shared<MotorInterface>(rear_left_name, conversion);
+  rear_right_motor = std::make_shared<MotorInterface>(rear_right_name, conversion);
 
-  config.heartbeat_id = info_.hardware_parameters["heartbeat_id"];
-
-  config.baud_rate = std::stoi(info_.hardware_parameters["baud_rate"]);
-  config.loop_rate = std::stoi(info_.hardware_parameters["loop_rate"]);
-  config.timeout_ms = std::stoi(info_.hardware_parameters["timeout_ms"]);
-
-  superstructure.initialize(config);
+  motors = {front_left_motor, front_right_motor, rear_left_motor, rear_right_motor};
 
   return hardware_interface::CallbackReturn::SUCCESS;
 }
 
 std::vector<hardware_interface::StateInterface> MicroSystemHardware::export_state_interfaces(){
-  return superstructure.getStateInterfaces();
+
+  std::vector<hardware_interface::StateInterface> state_interfaces;
+
+  for(int i = 0; i < motors.size(); i++){
+    
+    for(hardware_interface::StateInterface state_interface : motors.at(i)->get_state_interfaces()){
+      state_interfaces.emplace_back(state_interface);
+    }
+  }
+
+  return state_interfaces;
 }
 
 std::vector<hardware_interface::CommandInterface> MicroSystemHardware::export_command_interfaces(){
-  return superstructure.getCommandInterfaces();
+
+  std::vector<hardware_interface::CommandInterface> command_interfaces;
+
+  for(int i = 0; i < motors.size(); i++){
+    command_interfaces.emplace_back(motors.at(i)->get_command_interface());
+  }
+
+  return command_interfaces;
 }
 
 hardware_interface::CallbackReturn MicroSystemHardware::on_activate(const rclcpp_lifecycle::State & /*previous_state*/){
   RCLCPP_INFO(rclcpp::get_logger("MicroSystemHardware"), "Activating ...please wait...");
-  comms.connect(config.port, config.baud_rate, config.timeout_ms);
-
-  comms.send_message(superstructure.configDevices()); 
   
+  rclcpp::sleep_for(std::chrono::seconds(2));
+
   RCLCPP_INFO(rclcpp::get_logger("MicroSystemHardware"), "Successfully activated!");
 
   return hardware_interface::CallbackReturn::SUCCESS;
@@ -75,7 +88,9 @@ hardware_interface::CallbackReturn MicroSystemHardware::on_activate(const rclcpp
 
 hardware_interface::CallbackReturn MicroSystemHardware::on_deactivate(const rclcpp_lifecycle::State & /*previous_state*/){
   RCLCPP_INFO(rclcpp::get_logger("MicroSystemHardware"), "Deactivating ...please wait...");
-  comms.disconnect();
+  
+  rclcpp::sleep_for(std::chrono::seconds(2));
+
   RCLCPP_INFO(rclcpp::get_logger("MicroSystemHardware"), "Successfully deactivated!");
 
   return hardware_interface::CallbackReturn::SUCCESS;
@@ -83,19 +98,20 @@ hardware_interface::CallbackReturn MicroSystemHardware::on_deactivate(const rclc
 
 hardware_interface::return_type MicroSystemHardware::read(const rclcpp::Time & /*time*/, const rclcpp::Duration & period){
 
-  std::vector<ArduinoUtility::ArduinoMessage> messages = comms.get_message_dump();
- 
-  for(ArduinoUtility::ArduinoMessage message : messages){
-    superstructure.applyToAll(message);
+  if(rclcpp::ok()){
+    for(int i = 0; i < motors.size(); i++){
+      rclcpp::spin_some(motors.at(i));
+    }
   }
 
   return hardware_interface::return_type::OK;
 }
 
 hardware_interface::return_type microros_hardware_interface ::MicroSystemHardware::write(const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/){
-  std::vector<ArduinoUtility::ArduinoMessage> messages = superstructure.getMessagesToSend();
-
-  comms.send_message(messages); 
+ 
+  for(int i = 0; i < motors.size(); i++){
+    motors.at(i)->send_command();
+  }
 
   return hardware_interface::return_type::OK;
 }

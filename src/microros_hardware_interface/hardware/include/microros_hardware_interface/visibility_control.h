@@ -19,38 +19,38 @@
  * library cannot have, but the consuming code must have inorder to link.
  */
 
-#ifndef microros_hardware_interface__VISIBILITY_CONTROL_H_
-#define microros_hardware_interface__VISIBILITY_CONTROL_H_
+#ifndef MICROROS_HARDWARE_INTERFACE__VISIBILITY_CONTROL_H_
+#define MICROROS_HARDWARE_INTERFACE__VISIBILITY_CONTROL_H_
 
 // This logic was borrowed (then namespaced) from the examples on the gcc wiki:
 //     https://gcc.gnu.org/wiki/Visibility
 
 #if defined _WIN32 || defined __CYGWIN__
 #ifdef __GNUC__
-#define microros_hardware_interface_EXPORT __attribute__((dllexport))
-#define microros_hardware_interface_IMPORT __attribute__((dllimport))
+#define MICROROS_HARDWARE_INTERFACE_EXPORT __attribute__((dllexport))
+#define MICROROS_HARDWARE_INTERFACE_IMPORT __attribute__((dllimport))
 #else
-#define microros_hardware_interface_EXPORT __declspec(dllexport)
-#define microros_hardware_interface_IMPORT __declspec(dllimport)
+#define MICROROS_HARDWARE_INTERFACE_EXPORT __declspec(dllexport)
+#define MICROROS_HARDWARE_INTERFACE_IMPORT __declspec(dllimport)
 #endif
-#ifdef microros_hardware_interface_BUILDING_DLL
-#define microros_hardware_interface_PUBLIC microros_hardware_interface_EXPORT
+#ifdef MICROROS_HARDWARE_INTERFACE_BUILDING_DLL
+#define MICROROS_HARDWARE_INTERFACE_PUBLIC MICROROS_HARDWARE_INTERFACE_EXPORT
 #else
-#define microros_hardware_interface_PUBLIC microros_hardware_interface_IMPORT
+#define MICROROS_HARDWARE_INTERFACE_PUBLIC MICROROS_HARDWARE_INTERFACE_IMPORT
 #endif
-#define microros_hardware_interface_PUBLIC_TYPE microros_hardware_interface_PUBLIC
-#define microros_hardware_interface_LOCAL
+#define MICROROS_HARDWARE_INTERFACE_PUBLIC_TYPE MICROROS_HARDWARE_INTERFACE_PUBLIC
+#define MICROROS_HARDWARE_INTERFACE_LOCAL
 #else
-#define microros_hardware_interface_EXPORT __attribute__((visibility("default")))
-#define microros_hardware_interface_IMPORT
+#define MICROROS_HARDWARE_INTERFACE_EXPORT __attribute__((visibility("default")))
+#define MICROROS_HARDWARE_INTERFACE_IMPORT
 #if __GNUC__ >= 4
-#define microros_hardware_interface_PUBLIC __attribute__((visibility("default")))
-#define microros_hardware_interface_LOCAL __attribute__((visibility("hidden")))
+#define MICROROS_HARDWARE_INTERFACE_PUBLIC __attribute__((visibility("default")))
+#define MICROROS_HARDWARE_INTERFACE_LOCAL __attribute__((visibility("hidden")))
 #else
-#define microros_hardware_interface_PUBLIC
-#define microros_hardware_interface_LOCAL
+#define MICROROS_HARDWARE_INTERFACE_PUBLIC
+#define MICROROS_HARDWARE_INTERFACE_LOCAL
 #endif
-#define microros_hardware_interface_PUBLIC_TYPE
+#define MICROROS_HARDWARE_INTERFACE_PUBLIC_TYPE
 #endif
 
-#endif  // microros_hardware_interface__VISIBILITY_CONTROL_H_
+#endif  // MICROROS_HARDWARE_INTERFACE__VISIBILITY_CONTROL_H_

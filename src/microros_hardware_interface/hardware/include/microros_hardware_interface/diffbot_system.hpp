@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef microros_hardware_interface__DIFFBOT_SYSTEM_HPP_
-#define microros_hardware_interface__DIFFBOT_SYSTEM_HPP_
+#ifndef MICROROS_HARDWARE_INTERFACE__DIFFBOT_SYSTEM_HPP_
+#define MICROROS_HARDWARE_INTERFACE__DIFFBOT_SYSTEM_HPP_
 
 #include <memory>
 #include <string>
@@ -30,14 +30,9 @@
 #include "rclcpp_lifecycle/node_interfaces/lifecycle_node_interface.hpp"
 #include "rclcpp_lifecycle/state.hpp"
 
-#include "microros_hardware_interface/visibility_control.h"
+#include "../include/microros_hardware_interface/visibility_control.h"
 
-#include "arduino_comms.hpp"
-#include "arduino_interface_types.hpp"
-#include "devices/Motor.hpp"
-#include "devices/Sensor.hpp"
-
-#include "subsystems/Superstructure.hpp"
+#include "motor_interface.hpp"
 
 namespace microros_hardware_interface{
     
@@ -45,36 +40,38 @@ namespace microros_hardware_interface{
 
     private:
   
-      ArduinoComms comms;
-      ArduinoUtility::Config config;
+    std::shared_ptr<MotorInterface> front_left_motor;
+    std::shared_ptr<MotorInterface> front_right_motor;
+    std::shared_ptr<MotorInterface> rear_left_motor;
+    std::shared_ptr<MotorInterface> rear_right_motor;
 
-      subsystem::Superstructure superstructure;
+    std::vector<std::shared_ptr<MotorInterface>> motors;
       
     public:
       RCLCPP_SHARED_PTR_DEFINITIONS(MicroSystemHardware);
 
-      microros_hardware_interface_PUBLIC
+      MICROROS_HARDWARE_INTERFACE_PUBLIC
       hardware_interface::CallbackReturn on_init(const hardware_interface::HardwareInfo & info) override;
 
-      microros_hardware_interface_PUBLIC
+      MICROROS_HARDWARE_INTERFACE_PUBLIC
       std::vector<hardware_interface::StateInterface> export_state_interfaces() override;
 
-      microros_hardware_interface_PUBLIC
+      MICROROS_HARDWARE_INTERFACE_PUBLIC
       std::vector<hardware_interface::CommandInterface> export_command_interfaces() override;
 
-      microros_hardware_interface_PUBLIC
+      MICROROS_HARDWARE_INTERFACE_PUBLIC
       hardware_interface::CallbackReturn on_activate(const rclcpp_lifecycle::State & previous_state) override;
 
-      microros_hardware_interface_PUBLIC
+      MICROROS_HARDWARE_INTERFACE_PUBLIC
       hardware_interface::CallbackReturn on_deactivate(const rclcpp_lifecycle::State & previous_state) override;
 
-      microros_hardware_interface_PUBLIC
+      MICROROS_HARDWARE_INTERFACE_PUBLIC
       hardware_interface::return_type read(const rclcpp::Time & time, const rclcpp::Duration & period) override;
 
-      microros_hardware_interface_PUBLIC
+      MICROROS_HARDWARE_INTERFACE_PUBLIC
       hardware_interface::return_type write(const rclcpp::Time & time, const rclcpp::Duration & period) override;
   };
 
-}  // namespace microros_hardware_interface
+}  // namespace MICROROS_HARDWARE_INTERFACE
 
-#endif  // microros_hardware_interface__DIFFBOT_SYSTEM_HPP_
+#endif  // MICROROS_HARDWARE_INTERFACE__DIFFBOT_SYSTEM_HPP_

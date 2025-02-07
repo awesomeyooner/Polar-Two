@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!-- 4 Wheel Robot with front steering and rear drive -->
-<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="carlikebot_robot">
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="microros_hardware">
   <xacro:arg name="prefix" default="" />
   <xacro:arg name="sim_mode" default="false"/>
 

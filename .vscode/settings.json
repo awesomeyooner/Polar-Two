@@ -80,5 +80,6 @@
         "valarray": "cpp",
         "variant": "cpp"
     },
-    "cmake.sourceDirectory": "/home/dev/Documents/GitHub/Polar-Two/src/joystick_handler"
+    "cmake.sourceDirectory": "/home/dev/Documents/GitHub/Polar-Two/src/microros_hardware_interface",
+    //"cmake.sourceDirectory": "/home/dev/Documents/GitHub/Polar-Two/src/joystick_handler"
 }

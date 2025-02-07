@@ -59,7 +59,7 @@ pluginlib_export_plugin_description_file(hardware_interface microros_hardware_in
 
 # INSTALL
 install(
-  DIRECTORY hardware/include/
+  DIRECTORY hardware/include
   DESTINATION include/microros_hardware_interface
 )
 install(

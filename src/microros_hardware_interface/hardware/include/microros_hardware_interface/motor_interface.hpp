@@ -13,7 +13,7 @@ namespace microros_hardware_interface{
         public:
 
             std::vector<HardwareTopic> state_interfaces;
-            HardwareTopic command_interface = HardwareTopic("/command", hardware_interface::HW_IF_EFFORT);
+            HardwareTopic command_interface = HardwareTopic("/command", hardware_interface::HW_IF_VELOCITY);
 
             std::string joint_name;
 

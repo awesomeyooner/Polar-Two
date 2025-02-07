@@ -68,5 +68,5 @@ def generate_launch_description():
         controller_manager_launch,
         joint_state_broadcaster_launch,
         robot_state_publisher_launch,
-        # external_controllers
+        external_controllers
     ])

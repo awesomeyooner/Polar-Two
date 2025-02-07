@@ -34,7 +34,7 @@ hardware_interface::CallbackReturn MicroSystemHardware::on_init(const hardware_i
     return hardware_interface::CallbackReturn::ERROR;
   }
 
-  std::string prefix = "/esp32";
+  std::string prefix = info_.hardware_parameters["prefix"];
 
   std::string front_left_joint = info_.hardware_parameters["front_left_joint"];
   std::string front_right_joint = info_.hardware_parameters["front_right_joint"];
@@ -51,8 +51,6 @@ hardware_interface::CallbackReturn MicroSystemHardware::on_init(const hardware_i
   double rear_left_conversion = std::stod(info_.hardware_parameters["rear_left_conversion"]);
   double rear_right_conversion = std::stod(info_.hardware_parameters["rear_right_conversion"]);
 
-  RCLCPP_INFO(rclcpp::get_logger("MicroSystemHardware"), "=============start checkpoint============");
-
   // MotorInterface::set_conversion_for_states(-1, state_interfaces);
 
   front_left_motor = std::make_shared<MotorInterface>(front_left_joint, front_left_topic, prefix, front_left_conversion);
@@ -65,18 +63,12 @@ hardware_interface::CallbackReturn MicroSystemHardware::on_init(const hardware_i
   motors.emplace_back(rear_left_motor);
   motors.emplace_back(rear_right_motor);
 
-  RCLCPP_INFO(rclcpp::get_logger("MicroSystemHardware"), "=============end checkpoint============");
-
   return hardware_interface::CallbackReturn::SUCCESS;
 }
 
 std::vector<hardware_interface::StateInterface> MicroSystemHardware::export_state_interfaces(){
   
-  RCLCPP_INFO(rclcpp::get_logger("MicroSystemHardware"), "=============exporting state interfaces============");
-
   std::vector<hardware_interface::StateInterface> state_interfaces;
-
-  RCLCPP_INFO(rclcpp::get_logger("MicroSystemHardware"), motors.at(0)->get_state_interfaces().at(0).get_name().c_str());
 
   for(int i = 0; i < motors.size(); i++){
     
@@ -89,8 +81,6 @@ std::vector<hardware_interface::StateInterface> MicroSystemHardware::export_stat
 }
 
 std::vector<hardware_interface::CommandInterface> MicroSystemHardware::export_command_interfaces(){
-
-  RCLCPP_INFO(rclcpp::get_logger("MicroSystemHardware"), "=============exporting command interfaces============");
 
   std::vector<hardware_interface::CommandInterface> command_interfaces;
 

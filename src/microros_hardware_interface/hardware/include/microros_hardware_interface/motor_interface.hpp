@@ -24,20 +24,20 @@ namespace microros_hardware_interface{
                     HardwareTopic("/effort", hardware_interface::HW_IF_EFFORT)
                 },
                 joint_name(joint),
-                TopicInterface(topic, &command_interface, &state_interfaces){
-                    RCLCPP_INFO(rclcpp::get_logger("MicroSystemHardware"), "saijdodsa: '%i'", static_cast<int>(state_interfaces.size()));
-                }
+                TopicInterface(topic){
+                    this->initialize(topic, "", &command_interface, &state_interfaces);
+            }
 
-            MotorInterface(const std::string& joint, const std::string& topic, HardwareTopic* command, std::vector<HardwareTopic>* states) : 
+            MotorInterface(const std::string& joint, const std::string& topic, const std::string& prefix, const double& conversion) : 
                 state_interfaces{
                     HardwareTopic("/velocity", hardware_interface::HW_IF_VELOCITY),
                     HardwareTopic("/position", hardware_interface::HW_IF_POSITION),
                     HardwareTopic("/effort", hardware_interface::HW_IF_EFFORT)
                 },
-                joint_name(topic),
-                TopicInterface(topic, command, states){
-                    RCLCPP_INFO(rclcpp::get_logger("MicroSystemHardware"), "saijdodsa: '%i'", static_cast<int>(state_interfaces.size()));
-                }
+                joint_name(joint),
+                TopicInterface(topic){
+                    this->initialize(topic, prefix, &command_interface, &state_interfaces);
+            }
 
             std::vector<hardware_interface::StateInterface> get_state_interfaces(){
                 return TopicInterface::get_state_interfaces(joint_name);

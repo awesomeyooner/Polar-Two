@@ -40,25 +40,21 @@ namespace microros_hardware_interface{
 
             std::vector<rclcpp::Time> timestamps;
 
-            TopicInterface(const std::string& name, const std::string& prefix, HardwareTopic* command_topic, std::vector<HardwareTopic>* state_topics) : 
-                Node(name + "_node"),
-                command(command_topic), states(state_topics){
+            TopicInterface(const std::string& name) : Node(name + "_node"){}
 
-                RCLCPP_INFO(rclcpp::get_logger("MicroSystemHardware"), "=============TopicInterface: Constructor============");
-
+            virtual void initialize(const std::string& name, const std::string& prefix, HardwareTopic* command_topic, std::vector<HardwareTopic>* state_topics){
+    
                 timestamps.resize(state_topics->size());
-
-                RCLCPP_INFO(rclcpp::get_logger("MicroSystemHardware"), name.c_str());
-                RCLCPP_INFO(rclcpp::get_logger("MicroSystemHardware"), "Topic Size: '%d'", static_cast<int>(states->size()));
-                RCLCPP_INFO(rclcpp::get_logger("MicroSystemHardware"), "Topic Size: '%d'", static_cast<int>(state_topics->size()));
-                RCLCPP_INFO(rclcpp::get_logger("MicroSystemHardware"), "Topic Size: '%f'", state_topics->at(0).conversion);
                 
+                states = state_topics;
+                command = command_topic;
+
                 //populates subscriptions
                 for(int i = 0; i < state_topics->size(); i++){
                     
                     // subscribers
                     rclcpp::Subscription<std_msgs::msg::Float64>::SharedPtr subscription = this->create_subscription<std_msgs::msg::Float64>(
-                        prefix + name + state_topics->at(i).topic_name, rclcpp::SystemDefaultsQoS(), 
+                        prefix + "/" + name + state_topics->at(i).topic_name, rclcpp::SystemDefaultsQoS(), 
                         [this, i](const std_msgs::msg::Float64 &message) {
                             states->at(i).data = states->at(i).conversion * message.data;
                             timestamps.at(i) = this->now();
@@ -70,12 +66,8 @@ namespace microros_hardware_interface{
 
                 //publisher
                 publisher = this->create_publisher<std_msgs::msg::Float64>(
-                        prefix + command_topic->topic_name, 10);
+                        prefix + "/" + name + command_topic->topic_name, 10);
             }
-
-            //defaults name to just the name with _node appended
-            TopicInterface(const std::string& name, HardwareTopic* command_topic, std::vector<HardwareTopic>* state_topics) : 
-                TopicInterface(name, "", command_topic, state_topics){}
 
             void send_command(){
                 std_msgs::msg::Float64 message = std_msgs::msg::Float64();
@@ -110,7 +102,6 @@ namespace microros_hardware_interface{
             }
         
         private:
-            //rclcpp::Subscription<std_msgs::msg::Float64>::SharedPtr bob;
             std::vector<rclcpp::Subscription<std_msgs::msg::Float64>::SharedPtr> subscriptions;
             rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr publisher;
     };

@@ -34,19 +34,32 @@ hardware_interface::CallbackReturn MicroSystemHardware::on_init(const hardware_i
     return hardware_interface::CallbackReturn::ERROR;
   }
 
-  std::string front_left_name = info_.hardware_parameters["front_left_name"];
-  std::string front_right_name = info_.hardware_parameters["front_right+name"];
-  std::string rear_left_name = info_.hardware_parameters["rear_left_name"];
-  std::string rear_right_name = info_.hardware_parameters["rear_right_name"];
+  std::string front_left_joint = info_.hardware_parameters["front_left_joint"];
+  std::string front_right_joint = info_.hardware_parameters["front_right_joint"];
+  std::string rear_left_joint = info_.hardware_parameters["rear_left_joint"];
+  std::string rear_right_joint = info_.hardware_parameters["rear_right_joint"];
 
-  double conversion = std::stod(info_.hardware_parameters["conversion"]);
+  std::string front_left_topic = info_.hardware_parameters["front_left_topic"];
+  std::string front_right_topic = info_.hardware_parameters["front_right_topic"];
+  std::string rear_left_topic = info_.hardware_parameters["rear_left_topic"];
+  std::string rear_right_topic = info_.hardware_parameters["rear_right_topic"];
 
-  front_left_motor = std::make_shared<MotorInterface>(front_left_name, conversion);
-  front_right_motor = std::make_shared<MotorInterface>(front_right_name, conversion);
-  rear_left_motor = std::make_shared<MotorInterface>(rear_left_name, conversion);
-  rear_right_motor = std::make_shared<MotorInterface>(rear_right_name, conversion);
+  double front_left_conversion = std::stod(info_.hardware_parameters["front_left_conversion"]);
+  double front_right_conversion = std::stod(info_.hardware_parameters["front_right_conversion"]);
+  double rear_left_conversion = std::stod(info_.hardware_parameters["rear_left_conversion"]);
+  double rear_right_conversion = std::stod(info_.hardware_parameters["rear_right_conversion"]);
 
-  motors = {front_left_motor, front_right_motor, rear_left_motor, rear_right_motor};
+  front_left_motor = std::make_shared<MotorInterface>(front_left_joint, front_left_topic, front_left_conversion);
+  front_right_motor = std::make_shared<MotorInterface>(front_right_joint, front_right_topic, front_right_conversion);
+  rear_left_motor = std::make_shared<MotorInterface>(rear_left_joint, rear_left_topic, rear_left_conversion);
+  rear_right_motor = std::make_shared<MotorInterface>(rear_right_joint, rear_right_topic, rear_right_conversion);
+
+  motors.emplace_back(front_left_motor);
+  motors.emplace_back(front_right_motor);
+  motors.emplace_back(rear_left_motor);
+  motors.emplace_back(rear_right_motor);
+
+  //motors = {front_left_motor, front_right_motor, rear_left_motor, rear_right_motor};
 
   return hardware_interface::CallbackReturn::SUCCESS;
 }

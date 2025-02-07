@@ -32,16 +32,18 @@ namespace microros_hardware_interface{
             std::vector<HardwareTopic> states;
             HardwareTopic command;
 
-            std::vector<rclcpp::Time> timestamps;
+            // std::vector<rclcpp::Time> timestamps;
 
-            TopicInterface(std::string node_name, std::string prefix, HardwareTopic command_topic, std::vector<HardwareTopic> state_topics) : 
-                Node(node_name),
+            TopicInterface(std::string name, std::string prefix, HardwareTopic command_topic, std::vector<HardwareTopic> state_topics) : 
+                Node(name + "_node"),
                 command(command_topic), states(state_topics){
 
                 // states.resize(state_topics.size());
 
-                timestamps.resize(state_topics.size());
-                subscriptions.resize(state_topics.size());
+                //timestamps.resize(state_topics.size());
+
+                RCLCPP_INFO(this->get_logger(), "Topic Size: '%f'", state_topics.size());
+                // subscriptions.resize(state_topics.size());
                 
                 //populates subscriptions
                 for(int i = 0; i < state_topics.size(); i++){
@@ -51,11 +53,11 @@ namespace microros_hardware_interface{
                         prefix + state_topics.at(i).topic_name, rclcpp::SystemDefaultsQoS(), 
                         [this, i](const std_msgs::msg::Float64 &message) {
                             states.at(i).data = states.at(i).conversion * message.data;
-                            timestamps.at(i) = this->now();
+                            // timestamps.at(i) = this->now();
                         }
                     );
 
-                    subscriptions.push_back(subscription);
+                    subscriptions.emplace_back(subscription);
                 }
 
                 //publisher
@@ -63,9 +65,9 @@ namespace microros_hardware_interface{
                         prefix + command_topic.topic_name, 10);
             }
 
-            //defaults node_name to just the name with _node appended
-            TopicInterface(std::string node_name, HardwareTopic command_topic, std::vector<HardwareTopic> state_topics) : 
-                TopicInterface(node_name, "_node", command_topic, state_topics){}
+            //defaults name to just the name with _node appended
+            TopicInterface(std::string name, HardwareTopic command_topic, std::vector<HardwareTopic> state_topics) : 
+                TopicInterface(name, "", command_topic, state_topics){}
 
             void send_command(){
                 std_msgs::msg::Float64 message = std_msgs::msg::Float64();

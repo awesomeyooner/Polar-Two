@@ -24,7 +24,7 @@ def generate_launch_description():
     hardware_package = "microros_hardware_interface"
 
     # Check if we're told to use sim time
-    controller_params_file = os.path.join(get_package_share_directory(hardware_package),'config','controllers.yaml')
+    controller_params_file = os.path.join(get_package_share_directory(hardware_package),'bringup', 'config','controllers.yaml')
 
     controller_manager = Node(
         package="controller_manager",

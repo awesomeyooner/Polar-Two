@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <xacro:macro name="carlikebot" params="prefix">
+  <xacro:macro name="robot_hardware" params="prefix">
 
     <!-- Base Link -->
     <link name="${prefix}base_link"/>

@@ -64,9 +64,9 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
-        microros_launch,
+        # microros_launch,
         controller_manager_launch,
         joint_state_broadcaster_launch,
         robot_state_publisher_launch,
-        external_controllers
+        # external_controllers
     ])

@@ -63,11 +63,11 @@ install(
   DESTINATION include/microros_hardware_interface
 )
 install(
-  DIRECTORY description/launch description/ros2_control description/urdf
+  DIRECTORY description
   DESTINATION share/microros_hardware_interface
 )
 install(
-  DIRECTORY bringup/launch bringup/config bringup
+  DIRECTORY bringup
   DESTINATION share/microros_hardware_interface
 )
 

@@ -26,9 +26,15 @@ namespace microros_hardware_interface{
                 MotorInterface(joint, topic, "", conversion){}
 
             MotorInterface(const std::string& joint, const std::string& topic, const std::string& prefix, const double& conversion) : 
+                MotorInterface(joint, topic, prefix, conversion, false){}
+
+            MotorInterface(const std::string& joint, const std::string& topic, const std::string& prefix, const double& conversion, const bool& invert) : 
                 joint_name(joint),
                 TopicInterface(topic){
                     set_conversion_for_states(conversion, &state_interfaces);
+                    set_inverted(invert, &state_interfaces);
+                    command_interface.set_inverted(invert);
+                    
                     this->initialize(topic, prefix, &command_interface, &state_interfaces);
             }
 

@@ -61,16 +61,17 @@ namespace differential_drive_controller{
             protected:
 
                 struct WheelHandle{
-                    std::reference_wrapper<const hardware_interface::LoanedStateInterface> feedback;
-                    std::reference_wrapper<hardware_interface::LoanedCommandInterface> velocity;
+                    std::reference_wrapper<const hardware_interface::LoanedStateInterface> velocity;
+                    std::reference_wrapper<const hardware_interface::LoanedStateInterface> position;
+                    std::reference_wrapper<hardware_interface::LoanedCommandInterface> command;
                 };
 
                 const char * feedback_type() const;
 
                 controller_interface::CallbackReturn configure_side(
-                    const std::string & side, 
-                    const std::vector<std::string> & wheel_names,
-                    std::vector<WheelHandle> & registered_handles
+                    const std::string& side, 
+                    const std::vector<std::string>& wheel_names,
+                    std::vector<WheelHandle>& registered_handles
                 );
 
                 std::vector<WheelHandle> registered_left_wheel_handles;

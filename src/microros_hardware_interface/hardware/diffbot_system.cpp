@@ -26,6 +26,8 @@
 #include "rclcpp/rclcpp.hpp"
 #include "include/microros_hardware_interface/constants.hpp"
 
+#include "include/microros_hardware_interface/util/utility.hpp"
+
 namespace microros_hardware_interface{
 
 hardware_interface::CallbackReturn MicroSystemHardware::on_init(const hardware_interface::HardwareInfo & info){
@@ -46,17 +48,17 @@ hardware_interface::CallbackReturn MicroSystemHardware::on_init(const hardware_i
   std::string rear_left_topic = info_.hardware_parameters["rear_left_topic"];
   std::string rear_right_topic = info_.hardware_parameters["rear_right_topic"];
 
-  double front_left_conversion = std::stod(info_.hardware_parameters["front_left_conversion"]);
-  double front_right_conversion = std::stod(info_.hardware_parameters["front_right_conversion"]);
-  double rear_left_conversion = std::stod(info_.hardware_parameters["rear_left_conversion"]);
-  double rear_right_conversion = std::stod(info_.hardware_parameters["rear_right_conversion"]);
+  double conversion = std::stod(info_.hardware_parameters["conversion"]);
 
-  // MotorInterface::set_conversion_for_states(-1, state_interfaces);
+  bool front_left_inverted = utility::string_to_bool(info_.hardware_parameters["front_left_inverted"]);
+  bool front_right_inverted = utility::string_to_bool(info_.hardware_parameters["front_right_inverted"]);
+  bool rear_left_inverted = utility::string_to_bool(info_.hardware_parameters["rear_left_inverted"]);
+  bool rear_right_inverted = utility::string_to_bool(info_.hardware_parameters["rear_right_inverted"]);
 
-  front_left_motor = std::make_shared<MotorInterface>(front_left_joint, front_left_topic, prefix, front_left_conversion);
-  front_right_motor = std::make_shared<MotorInterface>(front_right_joint, front_right_topic, prefix, front_right_conversion);
-  rear_left_motor = std::make_shared<MotorInterface>(rear_left_joint, rear_left_topic, prefix, rear_left_conversion);
-  rear_right_motor = std::make_shared<MotorInterface>(rear_right_joint, rear_right_topic, prefix, rear_right_conversion);
+  front_left_motor = std::make_shared<MotorInterface>(front_left_joint, front_left_topic, prefix, conversion, front_left_inverted);
+  front_right_motor = std::make_shared<MotorInterface>(front_right_joint, front_right_topic, prefix, conversion, front_right_inverted);
+  rear_left_motor = std::make_shared<MotorInterface>(rear_left_joint, rear_left_topic, prefix, conversion, rear_left_inverted);
+  rear_right_motor = std::make_shared<MotorInterface>(rear_right_joint, rear_right_topic, prefix, conversion, rear_right_inverted);
 
   motors.emplace_back(front_left_motor);
   motors.emplace_back(front_right_motor);

@@ -9,7 +9,18 @@ namespace{
 
 namespace differential_drive_controller{
 
-    
-    // DifferentialDriveController::DifferentialDriveController() : controller_interface::ControllerInterface(){
-    // }
+    controller_interface::CallbackReturn DifferentialDriveController::on_init(){
+
+        try
+  {
+    // Create the parameter listener and get the parameters
+    param_listener_ = std::make_shared<ParamListener>(get_node());
+    params_ = param_listener_->get_params();
+  }
+  catch (const std::exception & e)
+    {
+        fprintf(stderr, "Exception thrown during init stage with message: %s \n", e.what());
+        return controller_interface::CallbackReturn::ERROR;
+    }
+    }
 }

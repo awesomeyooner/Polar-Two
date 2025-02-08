@@ -15,10 +15,10 @@
 #include "realtime_tools/realtime_box.hpp"
 #include "realtime_tools/realtime_publisher.hpp"
 #include "tf2_msgs/msg/tf_message.hpp"
-
-#include "utility/DifferentialDriveKinematics.hpp"
-#include "utility/DifferentialDriveOdometry.hpp"
-//#include <differential_drive_controller/differential_drive_controller_parameters/include/differential_drive_controller_parameters.hpp>
+#include "hardware_interface/types/hardware_interface_type_values.hpp"
+// #include "utility/DifferentialDriveKinematics.hpp"
+// #include "utility/DifferentialDriveOdometry.hpp"
+#include <differential_drive_controller/differential_drive_controller_parameters.hpp>
 
 namespace differential_drive_controller{
 
@@ -66,36 +66,35 @@ namespace differential_drive_controller{
                     std::reference_wrapper<hardware_interface::LoanedCommandInterface> command;
                 };
 
-                const char * feedback_type() const;
+                const char* feedback_type() const;
 
                 controller_interface::CallbackReturn configure_side(
-                    const std::string& side, 
                     const std::vector<std::string>& wheel_names,
                     std::vector<WheelHandle>& registered_handles
                 );
 
-                std::shared_ptr<ParamListener> param_listener_;
-                Params params_;     
+                std::shared_ptr<ParamListener> param_listener;
+                Params params;     
 
                 std::vector<WheelHandle> registered_left_wheel_handles;
                 std::vector<WheelHandle> registered_right_wheel_handles;
 
-                int wheelsPerSide;
+                //wheel info
+                int wheels_per_side;
+                double wheel_separation;
+                double wheel_radius;
 
-                DifferentialDriveKinematics kinematics;
-                DifferentialDriveOdometry odometry;
+                // std::shared_ptr<rclcpp::Publisher<nav_msgs::msg::Odometry>> odom_publisher = nullptr;
+                // std::shared_ptr<realtime_tools::RealtimePublisher<nav_msgs::msg::Odometry>> realtime_odom_publisher = nullptr;
 
-                std::shared_ptr<rclcpp::Publisher<nav_msgs::msg::Odometry>> odometryPublisher = nullptr;
-                std::shared_ptr<realtime_tools::RealtimePublisher<nav_msgs::msg::Odometry>> realtimeOdometryPublisher = nullptr;
+                // std::shared_ptr<rclcpp::Publisher<tf2_msgs::msg::TFMessage>> odom_transform_publisher = nullptr;
+                // std::shared_ptr<realtime_tools::RealtimePublisher<tf2_msgs::msg::TFMessage>> realtime_transform_publisher = nullptr;
 
-                std::shared_ptr<rclcpp::Publisher<tf2_msgs::msg::TFMessage>> odomTransformPublisher = nullptr;
-                std::shared_ptr<realtime_tools::RealtimePublisher<tf2_msgs::msg::TFMessage>> realtimeTransformPublisher = nullptr;
+                rclcpp::Subscription<geometry_msgs::msg::TwistStamped>::SharedPtr command_subscriber = nullptr;
 
-                rclcpp::Subscription<geometry_msgs::msg::TwistStamped>::SharedPtr velocityCommandSubscriber = nullptr;
-
-                realtime_tools::RealtimeBox<std::shared_ptr<geometry_msgs::msg::TwistStamped>> recievedVelocityMessagePtr{nullptr};
-                std::shared_ptr<geometry_msgs::msg::TwistStamped> lastCommandMessage;
-                std::queue<geometry_msgs::msg::TwistStamped> previousCommands;
+                // realtime_tools::RealtimeBox<std::shared_ptr<geometry_msgs::msg::TwistStamped>> recievedVelocityMessagePtr{nullptr};
+                std::shared_ptr<geometry_msgs::msg::TwistStamped> last_command;
+                // std::queue<geometry_msgs::msg::TwistStamped> previousCommands;
     };   
 }
 

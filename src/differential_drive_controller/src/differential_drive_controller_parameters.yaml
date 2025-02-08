@@ -1,4 +1,19 @@
 differential_drive_controller:
+  command_topic: {
+    type: string,
+    default_value: "~/cmd_vel",
+    description:  "Which topic to subscribe to",
+  }
+  command_type: {
+    type: string,
+    default_value: "velocity",
+    description:  "what interface type to use for commands. velocity or effort",
+  }
+  feedback_types: {
+    type: string_array,
+    default_value: ["velocity", "position", "effort"],
+    description:  "Available feedback types",
+  }
   left_wheel_names: {
     type: string_array,
     default_value: [],
@@ -15,7 +30,15 @@ differential_drive_controller:
       not_empty<>: []
     }
   }
-  track_width: {
+  wheels_per_side: {
+    type: int,
+    default_value: 1,
+    description: "Number of wheels per side",
+    validation: {
+      gt<>: [0]
+    }
+  }
+  wheel_separation: {
     type: double,
     default_value: 0.0,
     description: "Shortest distance between the left and right wheels. If this parameter is wrong, the robot will not behave correctly in curves.",

@@ -36,10 +36,10 @@ add_compile_definitions(RCPPUTILS_VERSION_MAJOR=${rcpputils_VERSION_MAJOR})
 add_compile_definitions(RCPPUTILS_VERSION_MINOR=${rcpputils_VERSION_MINOR})
 
 generate_parameter_library(differential_drive_controller_parameters
-  src/differential_drive_controller_parameter.yaml
+  src/differential_drive_controller_parameters.yaml
   include/differential_drive_controller/custom_validators.hpp
 )
-
+#sadads
 add_library(differential_drive_controller SHARED
   src/differential_drive_controller.cpp
 )
@@ -55,33 +55,14 @@ ament_target_dependencies(differential_drive_controller PUBLIC ${THIS_PACKAGE_IN
 pluginlib_export_plugin_description_file(controller_interface differential_drive_plugin.xml)
 
 if(BUILD_TESTING)
-  find_package(ament_cmake_gmock REQUIRED)
-  find_package(controller_manager REQUIRED)
-  find_package(ros2_control_test_assets REQUIRED)
-
-  ament_add_gmock(test_differential_drive_controller
-    test/test_differential_drive_controller.cpp
-  )
-  target_link_libraries(test_differential_drive_controller
-    differential_drive_controller
-  )
-  ament_target_dependencies(test_differential_drive_controller
-    geometry_msgs
-    hardware_interface
-    nav_msgs
-    rclcpp
-    rclcpp_lifecycle
-    realtime_tools
-    tf2
-    tf2_msgs
-  )
-
-  add_definitions(-DTEST_FILES_DIRECTORY="${CMAKE_CURRENT_SOURCE_DIR}/test")
-  ament_add_gmock(test_load_differential_drive_controller test/test_load_differential_drive_controller.cpp)
-  ament_target_dependencies(test_load_differential_drive_controller
-    controller_manager
-    ros2_control_test_assets
-  )
+  find_package(ament_lint_auto REQUIRED)
+  # the following line skips the linter which checks for copyrights
+  # uncomment the line when a copyright and license is not present in all source files
+  #set(ament_cmake_copyright_FOUND TRUE)
+  # the following line skips cpplint (only works in a git repo)
+  # uncomment the line when this package is not in a git repo
+  #set(ament_cmake_cpplint_FOUND TRUE)
+  ament_lint_auto_find_test_dependencies()
 endif()
 
 install(

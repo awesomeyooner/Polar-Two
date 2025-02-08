@@ -34,7 +34,7 @@ namespace microros_hardware_interface{
                     set_conversion_for_states(conversion, &state_interfaces);
                     set_inverted(invert, &state_interfaces);
                     command_interface.set_inverted(invert);
-                    
+
                     this->initialize(topic, prefix, &command_interface, &state_interfaces);
             }
 
@@ -48,6 +48,9 @@ namespace microros_hardware_interface{
 
             void set_conversion_for_states(const double& conversion, std::vector<HardwareTopic>* convert){
                 for(int i = 0; i < convert->size(); i++){
+                    if(convert->at(i).interface == hardware_interface::HW_IF_EFFORT)
+                        continue;
+
                     convert->at(i).conversion = conversion; 
                 }
             }

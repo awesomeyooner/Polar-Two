@@ -74,6 +74,9 @@ namespace differential_drive_controller{
                     std::vector<WheelHandle>& registered_handles
                 );
 
+                std::shared_ptr<ParamListener> param_listener_;
+                Params params_;     
+
                 std::vector<WheelHandle> registered_left_wheel_handles;
                 std::vector<WheelHandle> registered_right_wheel_handles;
 

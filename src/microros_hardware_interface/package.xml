@@ -17,6 +17,7 @@
   <depend>rclcpp_lifecycle</depend>
   <depend>libserial-dev</depend>
 
+  <exec_depend>differential_drive_controller</exec_depend>
   <exec_depend>position_controllers</exec_depend>
   <exec_depend>velocity_controllers</exec_depend>
   <exec_depend>forward_command_controller</exec_depend>

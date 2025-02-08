@@ -9,6 +9,8 @@ namespace{
 
 namespace differential_drive_controller{
 
+    DifferentialDriveController::DifferentialDriveController() : controller_interface::ControllerInterface(){}
+
     controller_interface::CallbackReturn DifferentialDriveController::on_init(){
         try{
             // Create the parameter listener and get the parameters
@@ -24,6 +26,7 @@ namespace differential_drive_controller{
     }
 
     controller_interface::InterfaceConfiguration DifferentialDriveController::command_interface_configuration() const{
+
         std::vector<std::string> config_names;
 
         for(const std::string& joint_name : params.left_wheel_names){
@@ -38,6 +41,7 @@ namespace differential_drive_controller{
     }
 
     controller_interface::InterfaceConfiguration DifferentialDriveController::state_interface_configuration() const{
+
         std::vector<std::string> config_names;
 
         for(const std::string& feedback_type : params.feedback_types){
@@ -55,6 +59,9 @@ namespace differential_drive_controller{
     }
 
     controller_interface::return_type DifferentialDriveController::update(const rclcpp::Time & time, const rclcpp::Duration & period) {
+
+        if(!last_command)
+            return controller_interface::return_type::ERROR;
 
         double linear = last_command->twist.linear.x;
         double angular = last_command->twist.angular.z;
@@ -158,3 +165,8 @@ namespace differential_drive_controller{
         return controller_interface::CallbackReturn::SUCCESS;
     }
 }
+
+#include "class_loader/register_macro.hpp"
+
+CLASS_LOADER_REGISTER_CLASS(
+  differential_drive_controller::DifferentialDriveController, controller_interface::ControllerInterface)

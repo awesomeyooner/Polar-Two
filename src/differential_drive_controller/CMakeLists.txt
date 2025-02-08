@@ -51,6 +51,11 @@ target_include_directories(differential_drive_controller PUBLIC
 target_link_libraries(differential_drive_controller
   PUBLIC
     differential_drive_controller_parameters)
+
+find_package(fmt REQUIRED)
+target_link_libraries(differential_drive_controller PRIVATE fmt::fmt)
+# message(STATUS "Found fmt version: ${fmt_VERSION}")
+    
 ament_target_dependencies(differential_drive_controller PUBLIC ${THIS_PACKAGE_INCLUDE_DEPENDS})
 pluginlib_export_plugin_description_file(controller_interface differential_drive_plugin.xml)
 

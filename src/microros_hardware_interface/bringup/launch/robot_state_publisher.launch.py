@@ -22,22 +22,17 @@ from launch_ros.substitutions import FindPackageShare
 
 def generate_launch_description():
 
+    use_sim_time = LaunchConfiguration('use_sim_time')
+
     hardware_package = "microros_hardware_interface"
 
-    robot_description_content = Command(
-        [
-            PathJoinSubstitution([FindExecutable(name="xacro")]),
-            " ",
-            PathJoinSubstitution(
-                [FindPackageShare(hardware_package), "description", "urdf", "core.urdf.xacro"]
-            ),
-        ]
-    )
+    xacro_file = os.path.join(get_package_share_directory(hardware_package),'description', 'urdf', 'core.urdf.xacro')
+
+    robot_description_content = Command(['xacro ', xacro_file, ' sim_mode:=', use_sim_time])
 
     robot_description = {"robot_description": robot_description_content}
 
     # Check if we're told to use sim time
-    use_sim_time = LaunchConfiguration('use_sim_time')
 
     robot_state_publisher_node = Node(
         package="robot_state_publisher",

@@ -85,7 +85,7 @@ class Joystick : public rclcpp::Node
         boost_coef = msg.buttons.at(toggle_boost) ? max_speed : reduced_speed;
 
         twist_stamped.twist.linear.x = msg.axes[1] * boost_coef;
-        twist_stamped.twist.angular.z = msg.axes[3];
+        twist_stamped.twist.angular.z = msg.axes[3] * 3.14;
         publisher->publish(twist_stamped);
       }
     }

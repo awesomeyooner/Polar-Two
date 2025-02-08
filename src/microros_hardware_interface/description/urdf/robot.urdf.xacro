@@ -54,9 +54,10 @@
               <!-- COLLISION -->
               <collision>
                 <origin xyz="0 0 0" rpy="${side * -PI/2} 0 0"/>
-
+                  
                 <geometry>
-                  <mesh filename="file://$(find microros_hardware_interface)/description/urdf/assets/Wheel.stl"/>
+                  <!-- <mesh filename="file://$(find microros_hardware_interface)/description/urdf/assets/Wheel.stl"/> -->
+                  <sphere radius="${wheel_radius}" />
                 </geometry>
 
                 <surface>
@@ -75,6 +76,7 @@
 
                   <geometry>
                       <mesh filename="file://$(find microros_hardware_interface)/description/urdf/assets/Wheel.stl"/>
+                      <!-- <sphere radius="${wheel_radius}" /> -->
                   </geometry>
 
                   <material name="black"/>

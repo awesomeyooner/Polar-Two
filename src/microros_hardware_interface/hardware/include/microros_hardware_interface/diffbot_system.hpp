@@ -32,7 +32,7 @@
 
 #include "../include/microros_hardware_interface/visibility_control.h"
 
-#include "motor_interface.hpp"
+#include "interfaces/motor_interface.hpp"
 
 namespace microros_hardware_interface{
     

@@ -65,8 +65,24 @@
                       <ode>
                         <mu value="${friction}"/>
                         <mu2 value="${friction}"/>
+                        <!-- <min_depth value="${min_depth}"/> -->
+                        <!-- <slip1 value="1"/>
+                        <slip2 value="1"/> -->
                       </ode>
+
+                      <torsional>
+                        <coefficient>0.0</coefficient>
+                      </torsional>
                     </friction>
+
+                    <contact>
+                      <ode>
+                        <min_depth value="${min_depth}"/>
+                        <!-- <kp>1e15</kp>
+                        <kd>1e13</kd> -->
+                      </ode>
+                    </contact>
+
                   </surface>
               </collision>
         

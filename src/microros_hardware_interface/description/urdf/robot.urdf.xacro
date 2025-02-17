@@ -11,16 +11,16 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 ${PI/2}"/>
         <geometry>
-          <mesh filename="file://$(find microros_hardware_interface)/description/urdf/assets/Chassis.stl"/>
+          <mesh filename="file://$(find microros_hardware_interface)/description/urdf/assets/chassis/Chassis.stl"/>
         </geometry>
       </collision>
 
       <visual>
         <origin xyz="0 0 0" rpy="0 0 ${PI/2}"/>
         <geometry>
-          <mesh filename="file://$(find microros_hardware_interface)/description/urdf/assets/Chassis.stl"/>
+          <mesh filename="file://$(find microros_hardware_interface)/description/urdf/assets/chassis/Chassis.stl"/>
         </geometry>
-
+        <cast_shadows>false</cast_shadows>
         <material name="grey"/>
       </visual>
 
@@ -28,9 +28,9 @@
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <mass value="${base_mass}"/>
           <inertia
-            ixx="0.000270" ixy="0.0" ixz="0.0"
-            iyy="0.000270" iyz="0.0"
-            izz="0.000426"/>
+            ixx="${0.01952332}" ixy="0.0" ixz="0.0"
+            iyy="${0.01450326}" iyz="${-0.00000016}"
+            izz="${0.02678084}"/>
         </inertial>
     </link>
 
@@ -56,7 +56,7 @@
                 <origin xyz="0 0 0" rpy="${side * -PI/2} 0 0"/>
                   
                 <geometry>
-                  <!-- <mesh filename="file://$(find microros_hardware_interface)/description/urdf/assets/Wheel.stl"/> -->
+                  <!-- <mesh filename="file://$(find microros_hardware_interface)/description/urdf/assets/wheel/Wheel.stl"/> -->
                   <sphere radius="${wheel_radius}" />
                 </geometry>
 
@@ -91,11 +91,11 @@
                   <origin xyz="0 0 0" rpy="${side * -PI/2} 0 0"/>
 
                   <geometry>
-                      <mesh filename="file://$(find microros_hardware_interface)/description/urdf/assets/Wheel.stl"/>
+                      <mesh filename="file://$(find microros_hardware_interface)/description/urdf/assets/wheel/Wheel.obj"/>
                       <!-- <sphere radius="${wheel_radius}" /> -->
                   </geometry>
 
-                  <material name="black"/>
+                  <!-- <material name="black"/> -->
               </visual>
         
               <!-- INERTIAL -->
@@ -109,9 +109,9 @@
               </inertial>
           </link>
 
-          <gazebo reference="${name}_wheel">
+          <!-- <gazebo reference="${name}_wheel">
               <material>Gazebo/Black</material>
-          </gazebo>
+          </gazebo> -->
 
           <joint name="${name}_wheel_joint" type="continuous">
               <parent link="${prefix}chassis_link"/>

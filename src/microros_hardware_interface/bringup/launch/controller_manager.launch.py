@@ -23,6 +23,14 @@ def generate_launch_description():
 
     hardware_package = "microros_hardware_interface"
 
+    use_sim_time = LaunchConfiguration('use_sim_time')
+
+    use_sim_time_arg = DeclareLaunchArgument(
+        'use_sim_time',
+        default_value='false',
+        description='Toggle to use sim time'
+        )
+
     # Check if we're told to use sim time
     controller_params_file = os.path.join(get_package_share_directory(hardware_package),'bringup', 'config','controllers.yaml')
 
@@ -33,11 +41,12 @@ def generate_launch_description():
         remappings=[
             ("~/robot_description", "/robot_description"),
         ],
-        parameters=[controller_params_file]
+        parameters=[controller_params_file, {'-use_sim_time': use_sim_time}]
     )
     
 
     # Launch!
     return LaunchDescription([
+        use_sim_time_arg,
         controller_manager
     ])

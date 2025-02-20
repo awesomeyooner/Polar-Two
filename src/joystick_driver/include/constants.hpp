@@ -6,7 +6,7 @@
 namespace hid_devices{
 
     namespace PS4{
-        enum {
+        enum{
             X = 0,
             CIRCLE = 1,
             SQUARE = 2,
@@ -42,7 +42,7 @@ namespace hid_devices{
     };
 
     namespace Xbox{
-        enum {
+        enum{
             A = 0,
             B = 1,
             X = 2,
@@ -54,6 +54,7 @@ namespace hid_devices{
             LEFT_STICK = 6,
             RIGHT_STICK = 7
         };
+        
     // I don't actually know the real map for xbox controllers this is just a placeholder
         const GamepadMapping MAP{
             .stick_left_x = 0,

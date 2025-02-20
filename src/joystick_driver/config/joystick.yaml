@@ -2,12 +2,5 @@ joystick_teleop:
   ros__parameters:
     joystick_type: "ps4" # implemented ones are: "ps4" and "xbox" so far
 
-    max_speed: 1.0
-    reduced_speed: 1.0
-
-    toggle_boost: 6
-    toggle_freeze: 0
-
-    boost_amount: 1.0 
-    boost_toggle: 6
-    freeze_toggle: 1
+    max_tangential_velocity: 1.0
+    max_angular_velocity: 3.14

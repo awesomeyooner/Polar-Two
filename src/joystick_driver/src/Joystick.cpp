@@ -6,7 +6,7 @@
 #include "geometry_msgs/msg/twist.hpp"
 #include "geometry_msgs/msg/twist_stamped.hpp"
 
-#include "gamepad_interface.hpp"
+#include "../include/gamepad_interface.hpp"
 #include "../include/constants.hpp"
 
 using std::placeholders::_1;
@@ -24,10 +24,8 @@ class Joystick : public rclcpp::Node
     Joystick() : Node("joystick_teleop")
     {
         this->declare_parameter<std::string>("joystick_type", "ps4");
-        this->declare_parameter<double>("max_speed", 1);
-        this->declare_parameter<double>("reduced_speed", 0.5);
-        this->declare_parameter<int>("toggle_boost", 6);
-        this->declare_parameter<int>("toggle_freeze", 0);
+        this->declare_parameter<double>("max_tangential_velocity", 1);
+        this->declare_parameter<double>("max_angular_velocity", 3.14);
 
         std::string joystick_type = this->get_parameter("joystick_type").as_string();
 
@@ -37,11 +35,9 @@ class Joystick : public rclcpp::Node
           gamepad.initialize(hid_devices::Xbox::MAP);
         
         // rclcpp::Parameter
-        max_speed = this->get_parameter("max_speed").as_double();
-        reduced_speed = this->get_parameter("reduced_speed").as_double();
-        toggle_boost = this->get_parameter("toggle_boost").as_int();
-        toggle_freeze = this->get_parameter("toggle_freeze").as_int();
-
+        max_tan = this->get_parameter("max_tangential_velocity").as_double();
+        max_ang = this->get_parameter("max_angular_velocity").as_double();
+  
         publisher = this->create_publisher<geometry_msgs::msg::TwistStamped>("cmd_vel", 10);
         subscription = this->create_subscription<sensor_msgs::msg::Joy>(
         "joy", 10, std::bind(&Joystick::topic_callback, this, _1));
@@ -79,15 +75,11 @@ class Joystick : public rclcpp::Node
       twist_stamped.header.frame_id = "command_velocity";
       twist_stamped.header.stamp = this->now();
 
-      double boost_coef;
+      twist_stamped.twist.linear.x = gamepad.get_axis(hid_devices::GamepadAxis::LEFT_Y)->get() * max_tan;
+      twist_stamped.twist.angular.z = gamepad.get_axis(hid_devices::GamepadAxis::RIGHT_X)->get() * max_ang;
 
-      if(!msg.buttons.at(toggle_freeze)){
-        boost_coef = msg.buttons.at(toggle_boost) ? max_speed : reduced_speed;
-
-        twist_stamped.twist.linear.x = msg.axes[1] * boost_coef;
-        twist_stamped.twist.angular.z = msg.axes[3] * 3.14;
-        publisher->publish(twist_stamped);
-      }
+      publisher->publish(twist_stamped);
+      
     }
 
     rclcpp::Subscription<sensor_msgs::msg::Joy>::SharedPtr subscription;
@@ -95,11 +87,8 @@ class Joystick : public rclcpp::Node
 
     hid_devices::Gamepad gamepad;
 
-    double max_speed;
-    double reduced_speed;
-    
-    int toggle_boost;
-    int toggle_freeze;
+    double max_tan;
+    double max_ang;
 };
 
 int main(int argc, char * argv[])

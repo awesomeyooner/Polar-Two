@@ -74,9 +74,7 @@ namespace hid_devices{
 
         Axis(){}
         Axis(int index, int id) : index(index), id(id){}
-
-        double value = 0;
-
+        
         double get(){
             return value;
         }
@@ -99,6 +97,7 @@ namespace hid_devices{
 
         private:
             int index;
+            double value = 0;
     };
 
     struct GamepadMapping{

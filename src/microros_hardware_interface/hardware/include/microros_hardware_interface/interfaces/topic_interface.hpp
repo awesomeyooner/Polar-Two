@@ -21,12 +21,13 @@ namespace microros_hardware_interface{
 
         double data = 0;
         double conversion = 1;
+        double inverted = 1;
 
         HardwareTopic(std::string topic_name, std::string interface) : topic_name(topic_name), interface(interface){}
         HardwareTopic(std::string topic_name, std::string interface, double conversion) : topic_name(topic_name), interface(interface), conversion(conversion){}
 
         void set_inverted(bool invert){
-            conversion *= invert ? -1 : 1; //if inverted then negate
+            inverted = invert ? -1 : 1;
         }
     };
 
@@ -56,7 +57,7 @@ namespace microros_hardware_interface{
                     rclcpp::Subscription<std_msgs::msg::Float64>::SharedPtr subscription = this->create_subscription<std_msgs::msg::Float64>(
                         prefix + "/" + name + state_topics->at(i).topic_name, rclcpp::SystemDefaultsQoS(), 
                         [this, i](const std_msgs::msg::Float64 &message) {
-                            states->at(i).data = states->at(i).conversion * message.data;
+                            states->at(i).data = states->at(i).conversion * states->at(i).inverted * message.data;
                             timestamps.at(i) = this->now();
                         }
                     );
@@ -72,7 +73,7 @@ namespace microros_hardware_interface{
             void send_command(){
                 std_msgs::msg::Float64 message = std_msgs::msg::Float64();
 
-                message.data = command->data;
+                message.data = command->data * command->inverted;
 
                 publisher->publish(message);
             }

@@ -42,12 +42,13 @@
           <param name="rear_right_topic">rear_right_motor</param>
 
           <!-- Conversions -->
-          <param name="conversion">1</param>
+          <param name="conversion">0.000294731376096</param>
+          <!-- 1 / (2pi * 45 * 12) -->
 
           <!-- Inverts -->
-          <param name="front_left_inverted">false</param>
+          <param name="front_left_inverted">true</param>
           <param name="front_right_inverted">false</param>
-          <param name="rear_left_inverted">false</param>
+          <param name="rear_left_inverted">true</param>
           <param name="rear_right_inverted">false</param>
 
         </hardware>

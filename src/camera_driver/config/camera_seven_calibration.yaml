@@ -1,0 +1,9 @@
+/**:
+  ros__parameters:
+    camera_model: pinhole # fx, fy, cx, cy
+    intrinsics: [730.0688629, 730.2649748, 674.9147146, 545.0855588]
+    distortion_model: radtan
+    distortion_coeffs: [0.03080258043, -0.06523055331, 0.0003025805212, -4.177400726e-05, 0.06055868742] # k1, k2, p1, p2, k3
+    resolution: [1280, 960]
+
+    camera_path: "/dev/v4l/by-path/pci-0000:00:14.0-usb-0:2:1.0-video-index0"

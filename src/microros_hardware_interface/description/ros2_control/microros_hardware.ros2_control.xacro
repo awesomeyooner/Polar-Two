@@ -46,10 +46,10 @@
           <!-- 1 / (2pi * 45 * 12) -->
 
           <!-- Inverts -->
-          <param name="front_left_inverted">true</param>
-          <param name="front_right_inverted">false</param>
-          <param name="rear_left_inverted">true</param>
-          <param name="rear_right_inverted">false</param>
+          <param name="front_left_inverted">false</param>
+          <param name="front_right_inverted">true</param>
+          <param name="rear_left_inverted">false</param>
+          <param name="rear_right_inverted">true</param>
 
         </hardware>
 

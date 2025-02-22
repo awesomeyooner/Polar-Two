@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" >
     
-    <xacro:macro name="depth_camera" params="cam_name namespace parent x:=0 y:=0 z:=0 roll:=0 pitch:=0 yaw:=0">
+    <xacro:macro name="depth_camera" params="name namespace parent x:=0 y:=0 z:=0 roll:=0 pitch:=0 yaw:=0">
 
         <xacro:property name="PI" value="3.1415926535897931"/>
 
         <!-- main link -->
-        <link name="${cam_name}_link">
+        <link name="${name}_link">
             <visual>
                 <geometry>
                     <box size="0.010 0.03 0.03"/>
@@ -16,23 +16,23 @@
         </link>
 
         <!-- optical link -->
-        <link name="${cam_name}_link_optical"></link>
+        <link name="${name}_link_optical"></link>
 
         <!-- main joint -->
-        <joint name="${cam_name}_joint" type="fixed">
+        <joint name="${name}_joint" type="fixed">
             <parent link="${parent}"/>
-            <child link="${cam_name}_link"/>
+            <child link="${name}_link"/>
             <origin xyz="${x} ${y} ${z}" rpy="${roll} ${pitch} ${yaw}"/>
         </joint>
 
         <!-- optical joint -->
-        <joint name="${cam_name}_optical_joint" type="fixed">
-            <parent link="${cam_name}_link"/>
-            <child link="${cam_name}_link_optical"/>
+        <joint name="${name}_optical_joint" type="fixed">
+            <parent link="${name}_link"/>
+            <child link="${name}_link_optical"/>
             <origin xyz="0 0 0" rpy="${-PI / 2} 0 ${-PI / 2}"/>
         </joint>
 
-        <gazebo reference="${cam_name}_link">
+        <gazebo reference="${name}_link">
             <material>Gazebo/Black</material>
 
             <sensor name="${namespace}" type="rgbd_camera">
@@ -70,7 +70,7 @@
                 </camera>
 
                 <topic>${namespace}</topic>
-                <gz_frame_id>${cam_name}_link_optical</gz_frame_id>
+                <gz_frame_id>${name}_link_optical</gz_frame_id>
 
                 <!-- <plugin filename="RosGzPointCloud" name="ros_gz_point_cloud::PointCloud">
                     <namespace>rgbd_camera</namespace>

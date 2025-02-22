@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" >
-    
-    <xacro:camera cam_name="camera" namespace="camera" parent="chassis_link" x="0" y="0" z="${base_height}" roll="0" pitch="0" yaw="0"/>
+
+    <xacro:camera name="camera" namespace="camera" parent="chassis_link" x="0" y="0" z="${base_height}" roll="0" pitch="0" yaw="0"/>
 
 </robot>

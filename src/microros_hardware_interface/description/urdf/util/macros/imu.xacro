@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" >
     
-    <xacro:macro name="imu" params="imu_name namespace parent x:=0 y:=0 z:=0 roll:=0 pitch:=0 yaw:=0">
+    <xacro:macro name="imu" params="name namespace parent x:=0 y:=0 z:=0 roll:=0 pitch:=0 yaw:=0">
 
         <xacro:property name="PI" value="3.1415926535897931"/>
 
-        <link name="${imu_name}_link">
+        <link name="${name}_link">
 
             <visual>
                 <geometry>
@@ -16,16 +16,16 @@
 
         </link>
 
-        <joint name="${imu_name}_joint" type="fixed">
+        <joint name="${name}_joint" type="fixed">
             <parent link="${parent}"/>
-            <child link="${imu_name}_link"/>
+            <child link="${name}_link"/>
             <origin xyz="${x} ${y} ${z}" rpy="${roll} ${pitch} ${yaw}"/>
         </joint>
 
-        <gazebo reference="${imu_name}_link">
+        <gazebo reference="${name}_link">
             <material>Gazebo/Black</material>
 
-            <sensor name="${imu_name}" type="imu">
+            <sensor name="${name}" type="imu">
                 <!-- offset from joint -->
                 <pose> 0 0 0 0 0 0 </pose>
 
@@ -39,7 +39,7 @@
                 <update_rate>30</update_rate>
                 
                 <topic>${namespace}/data</topic>
-                <gz_frame_id>${imu_name}_link</gz_frame_id>
+                <gz_frame_id>${name}_link</gz_frame_id>
 
                 <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu"/>
 

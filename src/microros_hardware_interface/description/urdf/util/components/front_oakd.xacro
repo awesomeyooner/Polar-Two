@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" >
+
+    <xacro:oakd name="oakd" namespace="oak" parent="chassis_link" x="0.5" y="0" z="${base_height}" roll="0" pitch="0" yaw="0"/>
+    
+</robot>

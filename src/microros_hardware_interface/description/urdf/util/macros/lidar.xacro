@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" >
-    <xacro:macro name="lidar" params="lidar_name namespace parent x:=0 y:=0 z:=0 roll:=0 pitch:=0 yaw:=0">
+    <xacro:macro name="lidar" params="name namespace parent x:=0 y:=0 z:=0 roll:=0 pitch:=0 yaw:=0">
         
-        <joint name="${lidar_name}_joint" type="fixed">
+        <joint name="${name}_joint" type="fixed">
             <parent link="${parent}"/>
-            <child link="${lidar_name}_frame"/>
+            <child link="${name}_frame"/>
 
             <origin xyz="${x} ${y} ${z}" rpy="${roll} ${pitch} ${yaw}"/>
         </joint>
 
-        <link name="${lidar_name}_frame">
+        <link name="${name}_frame">
             <visual>
                 <geometry>
                     <cylinder radius="0.05" length="0.04"/>
@@ -18,10 +18,10 @@
             </visual>
         </link>
 
-        <gazebo reference="${lidar_name}_frame">
+        <gazebo reference="${name}_frame">
             <material>Gazebo/Blue</material>
     
-            <sensor name="${lidar_name}" type="gpu_lidar">
+            <sensor name="${name}" type="gpu_lidar">
                 <pose> 0 0 0 0 0 0 </pose>
                 <visualize>true</visualize>
                 <update_rate>20</update_rate>
@@ -41,7 +41,7 @@
                 </lidar>
 
                 <topic>${namespace}/scan</topic>
-                <gz_frame_id>${lidar_name}_frame</gz_frame_id>
+                <gz_frame_id>${name}_frame</gz_frame_id>
 
             </sensor>
         </gazebo>

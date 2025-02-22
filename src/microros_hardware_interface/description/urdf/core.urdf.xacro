@@ -18,17 +18,20 @@
   <xacro:robot_hardware prefix="$(arg prefix)" />
   <xacro:micro_system_hardware_ros2_control name="MicroSystemHardware" prefix="$(arg prefix)" />
 
-  <!-- <xacro:include filename="$(find microros_hardware_interface)/ros2_control/sim.xacro"/> -->
-
   <!-- Import Camera -->
   <xacro:include filename="$(find microros_hardware_interface)/description/urdf/components/camera.xacro" />
   <xacro:camera prefix="$(arg prefix)"/>
 
   <!-- Import Depth Camera -->
-  <!-- <xacro:include filename="$(find microros_hardware_interface)/urdf/components/depth_camera.xacro" /> -->
+  <xacro:include filename="$(find microros_hardware_interface)/description/urdf/components/depth_camera.xacro" />
+  <xacro:depth_camera prefix="$(arg prefix)"/>
 
   <!-- Import LiDAR -->
   <xacro:include filename="$(find microros_hardware_interface)/description/urdf/components/lidar.xacro" />
   <xacro:lidar prefix="$(arg prefix)"/>
+
+  <!-- Import IMU -->
+  <xacro:include filename="$(find microros_hardware_interface)/description/urdf/components/imu.xacro" />
+  <xacro:imu prefix="$(arg prefix)"/>
 
 </robot>

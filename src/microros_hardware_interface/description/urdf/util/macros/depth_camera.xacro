@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" >
     
-    <xacro:macro name="depth_camera" params="name namespace parent x:=0 y:=0 z:=0 roll:=0 pitch:=0 yaw:=0">
+    <xacro:macro name="depth_camera" params="name namespace parent x:=0 y:=0 z:=0 roll:=0 pitch:=0 yaw:=0 visualize:=true">
 
         <xacro:property name="PI" value="3.1415926535897931"/>
 
@@ -9,7 +9,9 @@
         <link name="${name}_link">
             <visual>
                 <geometry>
-                    <box size="0.010 0.03 0.03"/>
+                    <xacro:if value="${visualize}">
+                        <box size="0.010 0.03 0.03"/>
+                    </xacro:if>    
                 </geometry>
                 <material name="black"/>
             </visual>

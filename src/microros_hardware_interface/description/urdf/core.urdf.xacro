@@ -31,7 +31,7 @@
     <!-- Import Driver Camera -->
     <xacro:include filename="$(find microros_hardware_interface)/description/urdf/util/components/driver_camera.xacro" />
 
-    <!-- Import OakD -->
+    <!-- Import Oak-D -->
     <xacro:include filename="$(find microros_hardware_interface)/description/urdf/util/components/front_oakd.xacro" />
 
     <!-- Import LiDAR -->

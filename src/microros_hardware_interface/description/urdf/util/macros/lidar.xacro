@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" >
-    <xacro:macro name="lidar" params="name namespace parent x:=0 y:=0 z:=0 roll:=0 pitch:=0 yaw:=0">
+    <xacro:macro name="lidar" params="name namespace parent x:=0 y:=0 z:=0 roll:=0 pitch:=0 yaw:=0 visualize:=true">
         
         <joint name="${name}_joint" type="fixed">
             <parent link="${parent}"/>
@@ -12,7 +12,9 @@
         <link name="${name}_frame">
             <visual>
                 <geometry>
-                    <cylinder radius="0.05" length="0.04"/>
+                    <xacro:if value="${visualize}">
+                        <cylinder radius="0.05" length="0.04"/>
+                    </xacro:if>
                 </geometry>
                 <material name="blue"/>
             </visual>

@@ -3,27 +3,36 @@
 
     <xacro:macro name="oakd" params="name namespace parent x:=0 y:=0 z:=0 roll:=0 pitch:=0 yaw:=0">
 
-        <link name="${name}_base_link">
+        <link name="${name}-base-frame"/>
+
+        <link name="${name}">
             <visual>
+                <origin xyz="0 0 0" rpy="${PI / 2} 0 ${PI / 2}"/>
                 <geometry>
-                     <box size="0.010 0.03 0.03"/>
-                    <!-- <mesh filename="file://$(find microros_hardware_interface)/description/urdf/assets/components/oakd.STL"/> -->
+                    <mesh filename="file://$(find microros_hardware_interface)/description/urdf/assets/components/Oak-D.stl"/>
                 </geometry>
-                <material name="black"/>
+                <!-- <material name="black"/> -->
             </visual>
         </link>
 
-        <joint name="${name}_base_joint" type="fixed">
+        <joint name="${name}_joint" type="fixed">
+            <parent link="${name}-base-frame"/>
+            <child link="${name}"/>
+
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </joint>
+
+        <joint name="${name}-base-frame_joint" type="fixed">
             <parent link="${parent}"/>
-            <child link="${name}_base_link"/>
+            <child link="${name}-base-frame"/>
 
             <origin xyz="${x} ${y} ${z}" rpy="${roll} ${pitch} ${yaw}"/>
         </joint>
     
-        <xacro:depth_camera name="${name}_depth" namespace="${namespace}/depth" parent="${name}_base_link" x="0" y="0" z="0" roll="0" pitch="0" yaw="0"/>
-        <xacro:camera name="${name}_left" namespace="${namespace}/left" parent="${name}_base_link" x="0" y="0.05" z="0" roll="0" pitch="0" yaw="0"/>
-        <xacro:camera name="${name}_right" namespace="${namespace}/right" parent="${name}_base_link" x="0" y="-0.05" z="0" roll="0" pitch="0" yaw="0"/>
-        <xacro:imu name="${name}_imu" namespace="${namespace}/imu" parent="${name}_base_link" x="0" y="0" z="0" roll="0" pitch="0" yaw="0"/>
+        <xacro:depth_camera name="${name}_rgb" namespace="${namespace}/rgb" parent="${name}" x="0.0073" y="0" z="0" roll="0" pitch="0" yaw="0" visualize="false"/>
+        <xacro:camera name="${name}_left" namespace="${namespace}/left" parent="${name}" x="0.0073" y="0.0375" z="0" roll="0" pitch="0" yaw="0" visualize="false"/>
+        <xacro:camera name="${name}_right" namespace="${namespace}/right" parent="${name}" x="0.0073" y="-0.0375" z="0" roll="0" pitch="0" yaw="0" visualize="false"/>
+        <xacro:imu name="${name}_imu" namespace="${namespace}/imu" parent="${name}" x="0" y="0" z="0" roll="0" pitch="0" yaw="0" visualize="false"/>
 
     </xacro:macro>
 

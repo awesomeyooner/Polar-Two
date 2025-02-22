@@ -4,8 +4,11 @@
   <xacro:arg name="prefix" default="" />
   <xacro:arg name="sim_mode" default="false"/>
 
-  <!-- Import Constants -->
+  <!-- Import Static Files -->
   <xacro:include filename="$(find microros_hardware_interface)/description/urdf/util/constants.xacro" />
+
+  <!-- Import Macros -->
+  <xacro:include filename="$(find microros_hardware_interface)/description/urdf/util/macros/wheel.xacro" />
 
   <!-- Import Robot Description -->
   <xacro:include filename="$(find microros_hardware_interface)/description/urdf/robot.urdf.xacro" />
@@ -16,22 +19,22 @@
   <!-- Import Hardware Interface -->
   <xacro:include filename="$(find microros_hardware_interface)/description/ros2_control/microros_hardware.ros2_control.xacro" />
   <xacro:robot_hardware prefix="$(arg prefix)" />
-  <xacro:micro_system_hardware_ros2_control name="MicroSystemHardware" prefix="$(arg prefix)" />
+  <xacro:micro_system_hardware_ros2_control name="MicroSystemHardware" prefix="$(arg prefix)"/>
 
   <!-- Import Camera -->
-  <xacro:include filename="$(find microros_hardware_interface)/description/urdf/components/camera.xacro" />
+  <xacro:include filename="$(find microros_hardware_interface)/description/urdf/util/components/camera.xacro" />
   <xacro:camera prefix="$(arg prefix)"/>
 
   <!-- Import Depth Camera -->
-  <xacro:include filename="$(find microros_hardware_interface)/description/urdf/components/depth_camera.xacro" />
+  <xacro:include filename="$(find microros_hardware_interface)/description/urdf/util/components/depth_camera.xacro" />
   <xacro:depth_camera prefix="$(arg prefix)"/>
 
   <!-- Import LiDAR -->
-  <xacro:include filename="$(find microros_hardware_interface)/description/urdf/components/lidar.xacro" />
+  <xacro:include filename="$(find microros_hardware_interface)/description/urdf/util/components/lidar.xacro" />
   <xacro:lidar prefix="$(arg prefix)"/>
 
   <!-- Import IMU -->
-  <xacro:include filename="$(find microros_hardware_interface)/description/urdf/components/imu.xacro" />
+  <xacro:include filename="$(find microros_hardware_interface)/description/urdf/util/components/imu.xacro" />
   <xacro:imu prefix="$(arg prefix)"/>
 
 </robot>

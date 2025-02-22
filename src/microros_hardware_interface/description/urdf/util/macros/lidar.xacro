@@ -10,14 +10,14 @@
         </joint>
 
         <link name="${name}_frame">
-            <visual>
-                <geometry>
-                    <xacro:if value="${visualize}">
+            <xacro:if value="${visualize}">
+                <visual>
+                    <geometry> 
                         <cylinder radius="0.05" length="0.04"/>
-                    </xacro:if>
-                </geometry>
-                <material name="blue"/>
-            </visual>
+                    </geometry>
+                    <material name="blue"/>
+                </visual>
+            </xacro:if>
         </link>
 
         <gazebo reference="${name}_frame">

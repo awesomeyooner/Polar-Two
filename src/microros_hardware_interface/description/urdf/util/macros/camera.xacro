@@ -7,14 +7,16 @@
 
         <!-- main link -->
         <link name="${name}_link">
-            <visual>
-                <geometry>
-                    <xacro:if value="${visualize}">
-                        <box size="0.010 0.03 0.03"/>
-                    </xacro:if>
-                </geometry>
-                <material name="black"/>
-            </visual>
+            <xacro:if value="${visualize}">
+                <visual>
+                    <geometry>
+                        
+                            <box size="0.010 0.03 0.03"/>
+                        
+                    </geometry>
+                    <material name="black"/>
+                </visual>
+            </xacro:if>
         </link>
 
         <!-- optical link -->

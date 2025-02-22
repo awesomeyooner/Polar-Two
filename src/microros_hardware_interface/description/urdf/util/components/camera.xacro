@@ -33,7 +33,7 @@
         <joint name="${prefix}camera_optical_joint" type="fixed">
             <parent link="${prefix}camera_link"/>
             <child link="${prefix}camera_link_optical"/>
-            <origin xyz="${x_transform / 2} ${y_transform} ${z_transform}" rpy="${-PI / 2} 0 ${-PI / 2}"/>
+            <origin xyz="0 0 0" rpy="${-PI / 2} 0 ${-PI / 2}"/>
         </joint>
 
         <link name="${prefix}camera_link_optical"></link>

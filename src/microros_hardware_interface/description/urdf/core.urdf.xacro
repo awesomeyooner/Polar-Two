@@ -9,6 +9,10 @@
 
   <!-- Import Macros -->
   <xacro:include filename="$(find microros_hardware_interface)/description/urdf/util/macros/wheel.xacro" />
+  <xacro:include filename="$(find microros_hardware_interface)/description/urdf/util/macros/camera.xacro" />
+  <xacro:include filename="$(find microros_hardware_interface)/description/urdf/util/macros/depth_camera.xacro" />
+  <xacro:include filename="$(find microros_hardware_interface)/description/urdf/util/macros/imu.xacro" />
+  <xacro:include filename="$(find microros_hardware_interface)/description/urdf/util/macros/lidar.xacro" />
 
   <!-- Import Robot Description -->
   <xacro:include filename="$(find microros_hardware_interface)/description/urdf/robot.urdf.xacro" />
@@ -22,19 +26,23 @@
   <xacro:micro_system_hardware_ros2_control name="MicroSystemHardware" prefix="$(arg prefix)"/>
 
   <!-- Import Camera -->
-  <xacro:include filename="$(find microros_hardware_interface)/description/urdf/util/components/camera.xacro" />
-  <xacro:camera prefix="$(arg prefix)"/>
+  <!-- <xacro:include filename="$(find microros_hardware_interface)/description/urdf/util/components/camera.xacro" /> -->
+  <!-- <xacro:camera prefix="$(arg prefix)"/> -->
+  <xacro:include filename="$(find microros_hardware_interface)/description/urdf/util/components/driver_camera.xacro" />
 
   <!-- Import Depth Camera -->
-  <xacro:include filename="$(find microros_hardware_interface)/description/urdf/util/components/depth_camera.xacro" />
-  <xacro:depth_camera prefix="$(arg prefix)"/>
+  <!-- <xacro:include filename="$(find microros_hardware_interface)/description/urdf/util/components/depth_camera.xacro" /> -->
+  <!-- <xacro:depth_camera prefix="$(arg prefix)"/> -->
+  <xacro:camera cam_name="rgbd_camera" namespace="rgbd_camera" parent="chassis_link" x="0.1" y="0" z="0.1" roll="0" pitch="0" yaw="0"/>
+
 
   <!-- Import LiDAR -->
-  <xacro:include filename="$(find microros_hardware_interface)/description/urdf/util/components/lidar.xacro" />
-  <xacro:lidar prefix="$(arg prefix)"/>
+  <!-- <xacro:include filename="$(find microros_hardware_interface)/description/urdf/util/components/lidar.xacro" />
+  <xacro:lidar prefix="$(arg prefix)"/> -->
+  <xacro:lidar lidar_name="laser" namespace="lidar" parent="chassis_link" x="0" y="0" z="0.14" roll="0" pitch="0" yaw="0"/>
 
-  <!-- Import IMU -->
-  <xacro:include filename="$(find microros_hardware_interface)/description/urdf/util/components/imu.xacro" />
-  <xacro:imu prefix="$(arg prefix)"/>
+  <!-- Create IMU -->
+  <xacro:imu imu_name="imu" namespace="imu" parent="chassis_link" x="0.1" y="0" z="0.17" roll="0" pitch="0" yaw="0"/>
+
 
 </robot>

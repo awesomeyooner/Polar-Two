@@ -8,8 +8,8 @@
   direction: GZ_TO_ROS
 
 # gz topic published by Sensors plugin
-- ros_topic_name: "scan"
-  gz_topic_name: "scan"
+- ros_topic_name: "lidar/scan"
+  gz_topic_name: "lidar/scan"
   ros_type_name: "sensor_msgs/msg/LaserScan"
   gz_type_name: "gz.msgs.LaserScan"
   direction: GZ_TO_ROS
@@ -90,7 +90,7 @@
   direction: GZ_TO_ROS
 
   # IMU configuration.
-- topic_name: "/imu"
+- topic_name: "/imu/data"
   ros_type_name: "sensor_msgs/msg/Imu"
   gz_type_name: "gz.msgs.IMU"
   lazy: true

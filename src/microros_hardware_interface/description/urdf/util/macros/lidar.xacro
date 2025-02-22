@@ -1,23 +1,15 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" >
-    <xacro:macro name="lidar" params="prefix">
-
-        <xacro:property name="x_transform" value="0"/>
-        <xacro:property name="y_transform" value="0"/>
-        <xacro:property name="z_transform" value="${0.140 + 0.01}"/>
-
-        <xacro:property name="roll_transform" value="0"/>
-        <xacro:property name="pitch_transform" value="0"/>
-        <xacro:property name="yaw_transform" value="0"/>
+    <xacro:macro name="lidar" params="lidar_name namespace parent x:=0 y:=0 z:=0 roll:=0 pitch:=0 yaw:=0">
         
-        <joint name="laser_joint" type="fixed">
-            <parent link="${prefix}chassis_link"/>
-            <child link="${prefix}laser_frame"/>
+        <joint name="${lidar_name}_joint" type="fixed">
+            <parent link="${parent}"/>
+            <child link="${lidar_name}_frame"/>
 
-            <origin xyz="${x_transform} ${y_transform} ${base_height}" rpy="${roll_transform} ${pitch_transform} ${yaw_transform}"/>
+            <origin xyz="${x} ${y} ${z}" rpy="${roll} ${pitch} ${yaw}"/>
         </joint>
 
-        <link name="${prefix}laser_frame">
+        <link name="${lidar_name}_frame">
             <visual>
                 <geometry>
                     <cylinder radius="0.05" length="0.04"/>
@@ -26,12 +18,12 @@
             </visual>
         </link>
 
-        <gazebo reference="${prefix}laser_frame">
+        <gazebo reference="${lidar_name}_frame">
             <material>Gazebo/Blue</material>
     
-            <sensor name="laser" type="gpu_lidar">
+            <sensor name="${lidar_name}" type="gpu_lidar">
                 <pose> 0 0 0 0 0 0 </pose>
-                <visualize>false</visualize>
+                <visualize>true</visualize>
                 <update_rate>20</update_rate>
 
                 <lidar>
@@ -48,8 +40,8 @@
                     </range>
                 </lidar>
 
-                <topic>scan</topic>
-                <gz_frame_id>laser_frame</gz_frame_id>
+                <topic>${namespace}/scan</topic>
+                <gz_frame_id>${lidar_name}_frame</gz_frame_id>
 
             </sensor>
         </gazebo>

@@ -64,20 +64,19 @@ def generate_launch_description():
         launch_arguments={'use_sim_time': 'true'}.items()
     )
 
-    default_world = os.path.join(
-        get_package_share_directory(hardware_package),
-        'bringup',
-        'worlds',
-        'obstacles.world'
-    )
-
     world_arg = DeclareLaunchArgument(
         'world',
-        default_value=default_world,
+        default_value='obstacles.world',
         description='World to load'
         )
     
-    world = LaunchConfiguration('world')
+
+    world = PathJoinSubstitution([
+        get_package_share_directory(hardware_package),
+        'bringup',
+        'worlds',
+        LaunchConfiguration('world')
+    ])
 
     gazebo = IncludeLaunchDescription(
                 PythonLaunchDescriptionSource([os.path.join(
@@ -107,20 +106,20 @@ def generate_launch_description():
     rviz = IncludeLaunchDescription(
                 PythonLaunchDescriptionSource([os.path.join(
                     get_package_share_directory(hardware_package), 'bringup', 'launch', 'rviz2.launch.py')]),
-                    launch_arguments={'use_sim_time': 'True'}.items()
+                    launch_arguments={'use_sim_time': 'True', 'rviz_file': 'view.rviz'}.items()
              )
 
-    # ros_gz_image_bridge = Node(
-    #     package="ros_gz_image",
-    #     executable="image_bridge",
-    #     arguments=[
-    #         # "/camera/image_raw", 
-    #         "/oak/left/image_raw", 
-    #         "/oak/right/image_raw", 
-    #         "/oak/rgb/image", 
-    #         "/oak/rgb/depth_image"
-    #     ]
-    # )
+    ros_gz_image_bridge = Node(
+        package="ros_gz_image",
+        executable="image_bridge",
+        arguments=[
+            "/camera/image_raw", 
+            "/oak/left/image_raw", 
+            "/oak/right/image_raw", 
+            "/oak/rgb/image", 
+            "/oak/rgb/depth_image"
+        ]
+    )
 
     
     return LaunchDescription([
@@ -135,6 +134,6 @@ def generate_launch_description():
         spawn_entity,
 
         ros_gz_bridge,
-        rviz
-        # ros_gz_image_bridge
+        rviz,
+        ros_gz_image_bridge
     ])

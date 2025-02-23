@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from launch import LaunchDescription
+from launch import LaunchContext
 from launch.actions import DeclareLaunchArgument, RegisterEventHandler
 from launch.conditions import IfCondition, UnlessCondition
 from launch.event_handlers import OnProcessExit
@@ -43,20 +44,29 @@ def generate_launch_description():
     
     use_sim_time = LaunchConfiguration('use_sim_time')
 
-    hardware_package = "microros_hardware_interface"
+    rviz_file_arg = DeclareLaunchArgument(
+        'rviz_file',
+        default_value="view.rviz",
+        description='which .rviz file to use'
+        )
 
-    file = 'view.rviz'
+    rviz_file = LaunchConfiguration('rviz_file')
+    
+    hardware_package = "microros_hardware_interface"
 
     rviz = Node(
         package="rviz2",
         executable="rviz2",
         arguments=[
-            '-d', os.path.join(get_package_share_directory(hardware_package), 'description', 'rviz', file)
+            '-d', PathJoinSubstitution([
+                get_package_share_directory(hardware_package), 'description', 'rviz', rviz_file
+            ])
         ],
         parameters=[{'use_sim_time': use_sim_time}]
     )
     
     return LaunchDescription([
         use_sim_time_arg,
+        rviz_file_arg,
         rviz
     ])

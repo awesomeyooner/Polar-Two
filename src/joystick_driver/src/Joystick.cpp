@@ -33,6 +33,8 @@ class Joystick : public rclcpp::Node
           gamepad.initialize(hid_devices::PS4::MAP);
         else if(joystick_type == "xbox")
           gamepad.initialize(hid_devices::Xbox::MAP);
+        else if(joystick_type == "gamesir")
+          gamepad.initialize(hid_devices::GameSir::MAP);
         
         // rclcpp::Parameter
         max_tan = this->get_parameter("max_tangential_velocity").as_double();

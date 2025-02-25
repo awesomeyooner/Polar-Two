@@ -47,11 +47,11 @@
     </joint>
 
     <!--front is positive, left is positive-->
-    <xacro:wheel name="front_left" x="0" y="0" z="0" front="1" side="1"/>
-    <xacro:wheel name="front_right" x="0" y="0" z="0" front="1" side="-1"/>
-    <xacro:wheel name="rear_left" x="0" y="0" z="0" front="-1" side="1"/>
-    <xacro:wheel name="rear_right" x="0" y="0" z="0" front="-1" side="-1"/>
+    <xacro:wheel name="left" x="0" y="0" z="0" front="-1" side="-1"/>
+    <xacro:wheel name="right" x="0" y="0" z="0" front="-1" side="1"/>
 
+    <xacro:dead_wheel name="left_caster" x="0" y="0" z="0" front="1" side="-1"/>
+    <xacro:dead_wheel name="right_caster" x="0" y="0" z="0" front="1" side="1"/>
   </xacro:macro>
 
 </robot>

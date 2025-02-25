@@ -9,6 +9,7 @@
 
   <!-- Import Macros -->
   <xacro:include filename="$(find microros_hardware_interface)/description/urdf/util/macros/wheel.xacro" />
+  <xacro:include filename="$(find microros_hardware_interface)/description/urdf/util/macros/dead_wheel.xacro" />
   <xacro:include filename="$(find microros_hardware_interface)/description/urdf/util/macros/camera.xacro" />
   <xacro:include filename="$(find microros_hardware_interface)/description/urdf/util/macros/depth_camera.xacro" />
   <xacro:include filename="$(find microros_hardware_interface)/description/urdf/util/macros/imu.xacro" />

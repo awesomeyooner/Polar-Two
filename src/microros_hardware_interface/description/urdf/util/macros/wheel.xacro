@@ -63,9 +63,11 @@
             </inertial>
         </link>
 
-        <!-- <gazebo reference="${name}_wheel">
+        <gazebo reference="${name}_wheel">
             <material>Gazebo/Black</material>
-        </gazebo> -->
+            <mu1 value="1"/>
+            <mu2 value="1"/>
+        </gazebo>
 
         <joint name="${name}_wheel_joint" type="continuous">
             <parent link="${prefix}chassis_link"/>

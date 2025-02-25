@@ -77,7 +77,7 @@
                 <!-- <plugin filename="RosGzPointCloud" name="ros_gz_point_cloud::PointCloud">
                     <namespace>rgbd_camera</namespace>
                     <topic>points</topic>
-                    <frame_id>camera_link_optical</frame_id>
+                    <frame_id>${name}_link_optical</frame_id>
                 </plugin> -->
 
             </sensor>

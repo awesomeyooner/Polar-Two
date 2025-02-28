@@ -15,8 +15,8 @@
 // TODO(christophfroehlich) remove this file and use it from control_toolbox once
 // https://github.com/PickNikRobotics/generate_parameter_library/pull/213 is merged and released
 
-#ifndef DIFF_DRIVE_CONTROLLER__CUSTOM_VALIDATORS_HPP_
-#define DIFF_DRIVE_CONTROLLER__CUSTOM_VALIDATORS_HPP_
+#ifndef DIFFERENTIAL_DRIVE_CONTROLLER__CUSTOM_VALIDATORS_HPP_
+#define DIFFERENTIAL_DRIVE_CONTROLLER__CUSTOM_VALIDATORS_HPP_
 
 #include <fmt/core.h>
 
@@ -26,7 +26,7 @@
 #include <rsl/parameter_validators.hpp>
 #include <tl_expected/expected.hpp>
 
-namespace diff_drive_controller
+namespace differential_drive_controller
 {
 
 /**

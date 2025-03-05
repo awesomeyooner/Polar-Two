@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:macro name="dead_wheel" params="name x y z front side">
+    
+        <link name="${name}_wheel">
+
+            <!-- COLLISION -->
+            <collision>
+                <origin xyz="0 0 0" rpy="${side * -PI/2} 0 0"/>
+                    
+                <geometry>
+                    <!-- <mesh filename="file://$(find microros_hardware_interface)/description/urdf/assets/wheel/Wheel.stl"/> -->
+                    <sphere radius="${wheel_radius}" />
+                </geometry>
+
+                <!-- <surface>
+                    <friction>
+                        <ode>
+                        <mu value="0"/>
+                        <mu2 value="0"/>
+                        </ode>
+
+                        <torsional>
+                        <coefficient>0.0</coefficient>
+                        </torsional>
+                    </friction>
+
+                    <contact>
+                        <ode>
+                        <min_depth value="${min_depth}"/>
+                        </ode>
+                    </contact>
+
+                </surface> -->
+            </collision>
+    
+            <!-- VISIUAL -->
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+
+                <geometry>
+                    <mesh filename="file://$(find microros_hardware_interface)/description/urdf/assets/caster/caster.obj"/>
+                    <!-- <sphere radius="${wheel_radius / 5}" /> -->
+
+                </geometry>
+
+                <!-- <material name="black"/> -->
+            </visual>
+    
+            <!-- INERTIAL -->
+            <inertial>
+                <origin xyz="0 0 0" rpy="${PI/2} 0 ${PI/2}"/>
+                <mass value="${wheel_mass}"/>
+                <inertia
+                    ixx="0.000270" ixy="0.0" ixz="0.0"
+                    iyy="0.000270" iyz="0.0"
+                    izz="0.000426"/>
+            </inertial>
+        </link>
+
+        <gazebo reference="${name}_wheel">
+            <material>Gazebo/Black</material>
+            <mu1 value="0.001"/>
+            <mu2 value="0.001"/>
+        </gazebo>
+
+        <joint name="${name}_wheel_joint" type="fixed">
+            <parent link="${prefix}chassis_link"/>
+            <child link="${name}_wheel"/>
+            <origin xyz="${front * 0.10855000} ${side * 0.08160000} -0.01194906" rpy="0 0 0"/>
+        </joint>
+
+    </xacro:macro>
+
+</robot>

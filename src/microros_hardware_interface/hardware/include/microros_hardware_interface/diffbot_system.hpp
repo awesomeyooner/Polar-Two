@@ -40,10 +40,8 @@ namespace microros_hardware_interface{
 
     private:
   
-    std::shared_ptr<MotorInterface> front_left_motor;
-    std::shared_ptr<MotorInterface> front_right_motor;
-    std::shared_ptr<MotorInterface> rear_left_motor;
-    std::shared_ptr<MotorInterface> rear_right_motor;
+    std::shared_ptr<MotorInterface> left_motor;
+    std::shared_ptr<MotorInterface> right_motor;
 
     std::vector<std::shared_ptr<MotorInterface>> motors;
       

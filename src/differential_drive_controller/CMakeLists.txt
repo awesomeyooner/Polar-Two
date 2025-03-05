@@ -60,7 +60,17 @@ ament_target_dependencies(differential_drive_controller PUBLIC ${THIS_PACKAGE_IN
 pluginlib_export_plugin_description_file(controller_interface differential_drive_plugin.xml)
 
 if(BUILD_TESTING)
+  find_package(ament_cmake_gtest REQUIRED)
+  find_package(ament_cmake_gmock REQUIRED)
   find_package(ament_lint_auto REQUIRED)
+  find_package(ros2_control_test_assets REQUIRED)
+
+  ament_add_gtest(${PROJECT_NAME}_test test/test.cpp)
+  target_include_directories(${PROJECT_NAME}_test PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+  )
+  target_link_libraries(${PROJECT_NAME}_test ${PROJECT_NAME})
   # the following line skips the linter which checks for copyrights
   # uncomment the line when a copyright and license is not present in all source files
   #set(ament_cmake_copyright_FOUND TRUE)

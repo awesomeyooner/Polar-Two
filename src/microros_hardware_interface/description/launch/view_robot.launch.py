@@ -13,13 +13,24 @@
 # limitations under the License.
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument
-from launch.conditions import IfCondition
-from launch.substitutions import Command, FindExecutable, LaunchConfiguration, PathJoinSubstitution
+from launch.actions import DeclareLaunchArgument, RegisterEventHandler
+from launch.conditions import IfCondition, UnlessCondition
+from launch.event_handlers import OnProcessExit
+from launch.substitutions import Command, FindExecutable, PathJoinSubstitution, LaunchConfiguration
+
+import launch
+from launch import LaunchDescription
+from launch.actions import IncludeLaunchDescription
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+import os
+from launch_ros.substitutions import FindPackageShare
+
+from ament_index_python.packages import get_package_share_directory
+
+from launch_ros.actions import Node
 
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
-
 
 def generate_launch_description():
     # Declare arguments
@@ -93,19 +104,19 @@ def generate_launch_description():
         output="both",
         parameters=[robot_description],
     )
-    rviz_node = Node(
-        package="rviz2",
-        executable="rviz2",
-        name="rviz2",
-        output="log",
-        arguments=["-d", rviz_config_file],
-        condition=IfCondition(gui),
-    )
+    
+    hardware_package = "microros_hardware_interface"
+
+    rviz = IncludeLaunchDescription(
+                PythonLaunchDescriptionSource([os.path.join(
+                    get_package_share_directory(hardware_package), 'bringup', 'launch', 'rviz2.launch.py')]),
+                    launch_arguments={'use_sim_time': 'True', 'rviz_file': 'view.rviz'}.items()
+             )
 
     nodes = [
         joint_state_publisher_node,
         robot_state_publisher_node,
-        #rviz_node,
+        rviz,
     ]
 
     return LaunchDescription(declared_arguments + nodes)

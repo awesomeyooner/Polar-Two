@@ -121,7 +121,6 @@ def generate_launch_description():
         ]
     )
 
-    
     return LaunchDescription([
         # microros_launch,
         controller_manager_launch,

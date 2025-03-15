@@ -1,3 +1,7 @@
+joy_node:
+  ros__parameters:
+    deadzone: 0.05
+
 joystick_teleop:
   ros__parameters:
     joystick_type: "ps4" # implemented ones are: "ps4", "gamesir", "xbox" so far

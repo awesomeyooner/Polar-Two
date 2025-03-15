@@ -38,21 +38,23 @@ hardware_interface::CallbackReturn MicroSystemHardware::on_init(const hardware_i
   
   master_node = std::make_shared<MasterNode>("differential_drive_controller_master_node");
 
-  std::string prefix = info_.hardware_parameters["prefix"];
+  left_motor = std::make_shared<MotorInterface>(
+    master_node, 
+    info_.hardware_parameters["left_joint"], 
+    info_.hardware_parameters["left_topic"], 
+    info_.hardware_parameters["prefix"], 
+    std::stod(info_.hardware_parameters["conversion"]), 
+    utility::string_to_bool(info_.hardware_parameters["left_inverted"])
+  );
 
-  std::string left_joint = info_.hardware_parameters["left_joint"];
-  std::string right_joint = info_.hardware_parameters["right_joint"];
-
-  std::string left_topic = info_.hardware_parameters["left_topic"];
-  std::string right_topic = info_.hardware_parameters["right_topic"];
-
-  double conversion = std::stod(info_.hardware_parameters["conversion"]);
-
-  bool left_inverted = utility::string_to_bool(info_.hardware_parameters["left_inverted"]);
-  bool right_inverted = utility::string_to_bool(info_.hardware_parameters["right_inverted"]);
-
-  left_motor = std::make_shared<MotorInterface>(left_joint, left_topic, prefix, conversion, left_inverted);
-  right_motor = std::make_shared<MotorInterface>(right_joint, right_topic, prefix, conversion, right_inverted);
+  right_motor = std::make_shared<MotorInterface>(
+    master_node, 
+    info_.hardware_parameters["right_joint"], 
+    info_.hardware_parameters["right_topic"], 
+    info_.hardware_parameters["prefix"], 
+    std::stod(info_.hardware_parameters["conversion"]), 
+    utility::string_to_bool(info_.hardware_parameters["right_inverted"])
+  );
 
   motors.emplace_back(left_motor);
   motors.emplace_back(right_motor);
@@ -64,9 +66,13 @@ std::vector<hardware_interface::StateInterface> MicroSystemHardware::export_stat
   
   std::vector<hardware_interface::StateInterface> state_interfaces;
 
+  //for each motor
   for(int i = 0; i < motors.size(); i++){
     
+    //for each state interface
     for(hardware_interface::StateInterface state_interface : motors.at(i)->get_state_interfaces()){
+
+      //add to the total state interfaces
       state_interfaces.emplace_back(state_interface);
     }
   }
@@ -78,7 +84,9 @@ std::vector<hardware_interface::CommandInterface> MicroSystemHardware::export_co
 
   std::vector<hardware_interface::CommandInterface> command_interfaces;
 
+  //for each motor
   for(int i = 0; i < motors.size(); i++){
+    //add to the total command interfaces
     command_interfaces.emplace_back(motors.at(i)->get_command_interface());
   }
 
@@ -110,9 +118,7 @@ hardware_interface::return_type MicroSystemHardware::read(const rclcpp::Time & /
   if(!rclcpp::ok())
     return hardware_interface::return_type::ERROR;
  
-  for(int i = 0; i < motors.size(); i++){
-    rclcpp::spin_some(motors.at(i));
-  }
+  rclcpp::spin_some(master_node);
   
   return hardware_interface::return_type::OK;
 }

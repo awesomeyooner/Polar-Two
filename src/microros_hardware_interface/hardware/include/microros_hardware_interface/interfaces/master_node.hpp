@@ -19,13 +19,12 @@ namespace microros_hardware_interface{
 
         public:
 
-            MasterNode(std::string name) : Node(name){
-
-            }
-
-        private:
-
-            
+            /**
+             * @brief Construct a new Master Node object
+             * 
+             * @param name name of the node
+             */
+            MasterNode(std::string name) : Node(name){}
 
     };
 

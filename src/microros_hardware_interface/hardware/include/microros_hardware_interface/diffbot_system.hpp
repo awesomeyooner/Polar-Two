@@ -33,12 +33,15 @@
 #include "../include/microros_hardware_interface/visibility_control.h"
 
 #include "interfaces/motor_interface.hpp"
+#include "interfaces/master_node.hpp"
 
 namespace microros_hardware_interface{
     
   class MicroSystemHardware : public hardware_interface::SystemInterface{
 
     private:
+
+    std::shared_ptr<MasterNode> master_node;
   
     std::shared_ptr<MotorInterface> left_motor;
     std::shared_ptr<MotorInterface> right_motor;

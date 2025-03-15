@@ -16,7 +16,10 @@ def generate_launch_description():
         launch_ros.actions.Node(
             package='joy',
             executable='joy_node',
-            name='joystick_driver'),
+            name='joystick_driver',
+            parameters=[
+                {'deadzone': 0.01}
+            ]),
 
         launch_ros.actions.Node(
             package='joystick_driver',

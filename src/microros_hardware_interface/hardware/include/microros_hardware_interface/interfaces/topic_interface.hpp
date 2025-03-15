@@ -31,7 +31,7 @@ namespace microros_hardware_interface{
         }
     };
 
-    class TopicInterface : public rclcpp::Node {
+    class TopicInterface {
 
         private:
             std::vector<HardwareTopic>* states;
@@ -41,9 +41,9 @@ namespace microros_hardware_interface{
 
             std::vector<rclcpp::Time> timestamps;
 
-            TopicInterface(const std::string& name) : Node(name + "_node"){}
+            TopicInterface(){}
 
-            virtual void initialize(const std::string& name, const std::string& prefix, HardwareTopic* command_topic, std::vector<HardwareTopic>* state_topics){
+            virtual void initialize(rclcpp::Node* node, const std::string& name, const std::string& prefix, HardwareTopic* command_topic, std::vector<HardwareTopic>* state_topics){
     
                 timestamps.resize(state_topics->size());
                 
@@ -54,11 +54,11 @@ namespace microros_hardware_interface{
                 for(int i = 0; i < state_topics->size(); i++){
                     
                     // subscribers
-                    rclcpp::Subscription<std_msgs::msg::Float64>::SharedPtr subscription = this->create_subscription<std_msgs::msg::Float64>(
+                    rclcpp::Subscription<std_msgs::msg::Float64>::SharedPtr subscription = node->create_subscription<std_msgs::msg::Float64>(
                         prefix + "/" + name + state_topics->at(i).topic_name, rclcpp::SystemDefaultsQoS(), 
-                        [this, i](const std_msgs::msg::Float64 &message) {
+                        [this, node, i](const std_msgs::msg::Float64 &message) {
                             states->at(i).data = states->at(i).conversion * states->at(i).inverted * message.data;
-                            timestamps.at(i) = this->now();
+                            timestamps.at(i) = node->now();
                         }
                     );
 
@@ -66,7 +66,7 @@ namespace microros_hardware_interface{
                 }
 
                 //publisher
-                publisher = this->create_publisher<std_msgs::msg::Float64>(
+                publisher = node->create_publisher<std_msgs::msg::Float64>(
                         prefix + "/" + name + command_topic->topic_name, 10);
             }
 

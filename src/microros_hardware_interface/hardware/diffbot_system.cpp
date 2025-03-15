@@ -35,6 +35,8 @@ hardware_interface::CallbackReturn MicroSystemHardware::on_init(const hardware_i
   if (hardware_interface::SystemInterface::on_init(info) != hardware_interface::CallbackReturn::SUCCESS){
     return hardware_interface::CallbackReturn::ERROR;
   }
+  
+  master_node = std::make_shared<MasterNode>("differential_drive_controller_master_node");
 
   std::string prefix = info_.hardware_parameters["prefix"];
 

@@ -22,20 +22,20 @@ namespace microros_hardware_interface{
 
             std::string joint_name;
 
-            MotorInterface(const std::string& joint, const std::string& topic, const double& conversion) : 
-                MotorInterface(joint, topic, "", conversion){}
+            MotorInterface(rclcpp::Node* node, const std::string& joint, const std::string& topic, const double& conversion) : 
+                MotorInterface(node, joint, topic, "", conversion){}
 
-            MotorInterface(const std::string& joint, const std::string& topic, const std::string& prefix, const double& conversion) : 
-                MotorInterface(joint, topic, prefix, conversion, false){}
+            MotorInterface(rclcpp::Node* node, const std::string& joint, const std::string& topic, const std::string& prefix, const double& conversion) : 
+                MotorInterface(node, joint, topic, prefix, conversion, false){}
 
-            MotorInterface(const std::string& joint, const std::string& topic, const std::string& prefix, const double& conversion, const bool& invert) : 
+            MotorInterface(rclcpp::Node* node, const std::string& joint, const std::string& topic, const std::string& prefix, const double& conversion, const bool& invert) : 
                 joint_name(joint),
-                TopicInterface(topic){
+                TopicInterface(){
                     set_conversion_for_states(conversion, &state_interfaces);
                     set_inverted(invert, &state_interfaces);
                     command_interface.set_inverted(invert);
 
-                    this->initialize(topic, prefix, &command_interface, &state_interfaces);
+                    this->initialize(node, topic, prefix, &command_interface, &state_interfaces);
             }
 
             std::vector<hardware_interface::StateInterface> get_state_interfaces(){

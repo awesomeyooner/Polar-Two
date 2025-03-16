@@ -6,10 +6,26 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 # find dependencies
+set(THIS_PACKAGE_INCLUDE_DEPENDS
+  rclcpp
+  std_msgs
+)
+
+# find dependencies
 find_package(ament_cmake REQUIRED)
+foreach(Dependency IN ITEMS ${THIS_PACKAGE_INCLUDE_DEPENDS})
+  find_package(${Dependency} REQUIRED)
+endforeach()
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
+
+add_executable(driverstation_gui src/main.cpp)
+ament_target_dependencies(driverstation_gui ${THIS_PACKAGE_INCLUDE_DEPENDS})
+
+install(TARGETS
+  driverstation_gui
+  DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

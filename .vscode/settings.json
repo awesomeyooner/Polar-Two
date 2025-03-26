@@ -87,9 +87,13 @@
         "latch": "cpp",
         "ranges": "cpp",
         "scoped_allocator": "cpp",
-        "syncstream": "cpp"
+        "syncstream": "cpp",
+        "*.msg": "cpp",
+        "qwidget": "cpp",
+        "qapplication": "cpp"
     },
-    "cmake.sourceDirectory": "/home/dev/Documents/GitHub/Polar-Two/src/differential_drive_controller",
+    "cmake.sourceDirectory": "/home/dev/Documents/GitHub/Polar-Two/src/driverstation",
+    // "cmake.sourceDirectory": "/home/dev/Documents/GitHub/Polar-Two/src/differential_drive_controller",
     // "cmake.sourceDirectory": "/home/dev/Documents/GitHub/Polar-Two/src/microros_hardware_interface",
     //"cmake.sourceDirectory": "/home/dev/Documents/GitHub/Polar-Two/src/joystick_driver"
 }

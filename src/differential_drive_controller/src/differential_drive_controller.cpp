@@ -63,13 +63,13 @@ namespace differential_drive_controller{
 
         //get_node()->get_clock()->now();
 
-        // if(!last_command)
-        //     return controller_interface::return_type::ERROR;
+        if(!last_command)
+            return controller_interface::return_type::ERROR;
 
-        last_command = std::make_shared<geometry_msgs::msg::TwistStamped>();
+        // last_command = std::make_shared<geometry_msgs::msg::TwistStamped>();
 
-        last_command.get()->twist.linear.x = 1;
-        last_command.get()->twist.angular.z = 3.14 / 6;
+        // last_command.get()->twist.linear.x = 1;
+        // last_command.get()->twist.angular.z = 3.14 / 6;
 
         // send command
         drivetrain->drive_from_chassis(Twist::from_message(*last_command.get()));

@@ -26,8 +26,8 @@ class DifferentialDriveDrivetrain{
         }
 
         void update(){
-            double left_positions = WheelHandle::get_position(left_wheels);
-            double right_positions = WheelHandle::get_position(right_wheels);
+            double left_positions = get_left_positions();
+            double right_positions = get_right_positions();
 
             odometry.update(left_positions, right_positions);
         }

@@ -46,7 +46,7 @@ namespace utility{
         }
 
         double get_velocity(){
-            return position.get().get_value();
+            return velocity.get().get_value();
         }
 
         static double get_velocity(std::vector<WheelHandle> wheel_handles){
@@ -78,8 +78,8 @@ namespace utility{
         WheelSpeeds() : left_velocity(0), right_velocity(0){}
 
         WheelSpeeds times(double scale){
-            left_velocity * scale;
-            right_velocity * scale;
+            left_velocity *= scale;
+            right_velocity *= scale;
 
             return *this;
         }
@@ -195,7 +195,7 @@ namespace utility{
 
         Pose2d transformBy(Transform transform){
             return Pose2d(
-                getTranslation().plus(transform.getTranslation()).rotateBy(theta),
+                getTranslation().plus(transform.getTranslation().rotateBy(theta)),
                 theta + transform.theta
             );
         }

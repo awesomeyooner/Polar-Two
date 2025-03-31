@@ -52,7 +52,12 @@ class DifferentialDriveOdometry{
 
             Pose2d new_pose = pose.exponential(twist);
 
-            pose = new_pose;
+            pose.x = new_pose.x;
+            pose.y = new_pose.y;
+            pose.theta = new_pose.theta;
+
+            previous_wheel_positions.left_distance = current_wheel_positions.left_distance;// = current_wheel_positions;
+            previous_wheel_positions.right_distance = current_wheel_positions.right_distance;
         }
 
         void update(double current_left, double current_right){

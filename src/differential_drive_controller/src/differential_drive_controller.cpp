@@ -68,7 +68,9 @@ namespace differential_drive_controller{
 
         last_command = std::make_shared<geometry_msgs::msg::TwistStamped>();
 
-        last_command.get()->twist.angular.z = 3.14;
+        last_command.get()->twist.linear.x = 1;
+        last_command.get()->twist.angular.z = 3.14 / 6;
+
         // send command
         drivetrain->drive_from_chassis(Twist::from_message(*last_command.get()));
 

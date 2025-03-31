@@ -16,10 +16,9 @@ class DifferentialDriveDrivetrain{
         std::vector<WheelHandle> right_wheels;
 
         double wheel_radius;
-        double circumference;
 
         DifferentialDriveDrivetrain(double track_width_, double wheel_radius_) : 
-            odometry(track_width_), wheel_radius(wheel_radius_), circumference(wheel_radius_ * M_PI * 2){}
+            odometry(track_width_), wheel_radius(wheel_radius_){}
     
         void initialize(std::vector<WheelHandle>& left, std::vector<WheelHandle>& right ){
             left_wheels = left;
@@ -44,11 +43,11 @@ class DifferentialDriveDrivetrain{
 
         // get positions
         double get_left_positions(){
-            return WheelHandle::get_position(left_wheels) * circumference;
+            return WheelHandle::get_position(left_wheels) * wheel_radius;
         }
 
         double get_right_positions(){
-            return WheelHandle::get_position(right_wheels) * circumference;
+            return WheelHandle::get_position(right_wheels) * wheel_radius;
         }
 
         WheelPositions get_wheel_positions(){
@@ -57,11 +56,11 @@ class DifferentialDriveDrivetrain{
 
         // get velocities
         double get_left_velocities(){
-            return WheelHandle::get_velocity(left_wheels) * circumference;
+            return WheelHandle::get_velocity(left_wheels) * wheel_radius;
         }
 
         double get_right_velocities(){
-            return WheelHandle::get_velocity(right_wheels) * circumference;
+            return WheelHandle::get_velocity(right_wheels) * wheel_radius;
         }
 
         WheelSpeeds get_wheel_speeds(){
@@ -74,8 +73,8 @@ class DifferentialDriveDrivetrain{
 
         // controls
         void drive_from_chassis(Twist desired){
-            //meters per second -> rotations per second
-            WheelSpeeds wheel_speeds = odometry.get_kinematics()->toWheelSpeeds(desired).times(1 / (circumference));
+            //meters per second -> radians per second
+            WheelSpeeds wheel_speeds = odometry.get_kinematics()->toWheelSpeeds(desired).times(1 / (wheel_radius));
 
             //set the wheels to the speeds
             set_left_command(wheel_speeds.left_velocity);

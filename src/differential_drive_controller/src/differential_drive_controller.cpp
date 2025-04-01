@@ -94,14 +94,14 @@ namespace differential_drive_controller{
 
         // publish messages
         Pose2d pose = drivetrain->get_odometry()->get_pose();
-        pose.x *= -1;
-        pose.y *= -1;
+            pose.x *= -1;
+            pose.y *= -1;
 
         Twist twist = drivetrain->to_chassis_speed();
 
         std_msgs::msg::Header header;
-        header.frame_id = odom_frame_id;
-        header.stamp = time;
+            header.frame_id = odom_frame_id;
+            header.stamp = time;
 
         //transform message
         geometry_msgs::msg::TransformStamped transform_message;

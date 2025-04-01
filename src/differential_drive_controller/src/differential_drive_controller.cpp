@@ -61,10 +61,25 @@ namespace differential_drive_controller{
 
     controller_interface::return_type DifferentialDriveController::update(const rclcpp::Time & time, const rclcpp::Duration & period) {
 
-        //get_node()->get_clock()->now();
-
-        if(!last_command)
+        // if the last command is empty, then return error
+        if(!last_command){
+            drivetrain->stop();
             return controller_interface::return_type::ERROR;
+        }
+
+        double time_since_last_command = abs(
+            ( last_command->header.stamp.sec + (last_command->header.stamp.nanosec / pow(10, 9)) ) - time.seconds()
+        );
+
+        double timeout = 1; //seconds
+
+        // if the last time a command was recieved was more than a second ago, then return error
+        if(time_since_last_command > timeout){
+            drivetrain->stop();
+            return controller_interface::return_type::ERROR;
+        }
+
+        // RCLCPP_INFO(get_node()->get_logger(), std::to_string(time_since_last_command).c_str());
 
         // last_command = std::make_shared<geometry_msgs::msg::TwistStamped>();
 
@@ -79,6 +94,9 @@ namespace differential_drive_controller{
 
         // publish messages
         Pose2d pose = drivetrain->get_odometry()->get_pose();
+        pose.x *= -1;
+        pose.y *= -1;
+
         Twist twist = drivetrain->to_chassis_speed();
 
         std_msgs::msg::Header header;

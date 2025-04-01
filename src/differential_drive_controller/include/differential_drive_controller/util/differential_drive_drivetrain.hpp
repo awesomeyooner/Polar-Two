@@ -99,6 +99,11 @@ class DifferentialDriveDrivetrain{
             set_right_command(right_speed);
         }
 
+        void stop(){
+            set_left_command(0);
+            set_right_command(0);
+        }
+
         /**
          * @brief Sets the speed in RPS
          * 

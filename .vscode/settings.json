@@ -92,7 +92,7 @@
         "qwidget": "cpp",
         "qapplication": "cpp"
     },
-    "cmake.sourceDirectory": "/home/dev/Documents/GitHub/Polar-Two/src/driverstation",
+    "cmake.sourceDirectory": "/home/dev/Documents/GitHub/Polar-Two/src/differential_drive_controller",
     "C_Cpp.default.compilerPath": "/usr/bin/g++",
     // "cmake.sourceDirectory": "/home/dev/Documents/GitHub/Polar-Two/src/differential_drive_controller",
     // "cmake.sourceDirectory": "/home/dev/Documents/GitHub/Polar-Two/src/microros_hardware_interface",

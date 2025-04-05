@@ -25,6 +25,8 @@ set(THIS_PACKAGE_INCLUDE_DEPENDS
   realtime_tools
   tf2
   tf2_msgs
+  tf2_ros
+  tf2_geometry_msgs
 )
 
 find_package(ament_cmake REQUIRED)

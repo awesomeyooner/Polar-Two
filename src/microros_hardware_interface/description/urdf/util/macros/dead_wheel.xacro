@@ -11,7 +11,7 @@
                     
                 <geometry>
                     <!-- <mesh filename="file://$(find microros_hardware_interface)/description/urdf/assets/wheel/Wheel.stl"/> -->
-                    <sphere radius="${wheel_radius}" />
+                    <sphere radius="0.04800000" />
                 </geometry>
 
                 <!-- <surface>

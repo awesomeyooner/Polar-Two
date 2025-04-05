@@ -61,19 +61,70 @@ namespace differential_drive_controller{
 
     controller_interface::return_type DifferentialDriveController::update(const rclcpp::Time & time, const rclcpp::Duration & period) {
 
-        if(!last_command)
+        // if the last command is empty, then return error
+        if(!last_command){
+            drivetrain->stop();
             return controller_interface::return_type::ERROR;
-
-        double linear = last_command->twist.linear.x;
-        double angular = last_command->twist.angular.z;
-
-        double left_command = (linear - (angular * (wheel_separation / 2))) / wheel_radius;
-        double right_command = (linear + (angular * (wheel_separation / 2))) / wheel_radius;
-
-        for(int i = 0; i < wheels_per_side; i++){
-            registered_left_wheel_handles[i].command.get().set_value(left_command);
-            registered_right_wheel_handles[i].command.get().set_value(right_command);
         }
+
+        double time_since_last_command = abs(
+            ( last_command->header.stamp.sec + (last_command->header.stamp.nanosec / pow(10, 9)) ) - time.seconds()
+        );
+
+        double timeout = 1; //seconds
+
+        // if the last time a command was recieved was more than a second ago, then return error
+        if(time_since_last_command > timeout){
+            drivetrain->stop();
+            return controller_interface::return_type::ERROR;
+        }
+
+        // RCLCPP_INFO(get_node()->get_logger(), std::to_string(time_since_last_command).c_str());
+
+        // last_command = std::make_shared<geometry_msgs::msg::TwistStamped>();
+
+        // last_command.get()->twist.linear.x = 1;
+        // last_command.get()->twist.angular.z = 3.14 / 6;
+
+        // send command
+        drivetrain->drive_from_chassis(Twist::from_message(*last_command.get()));
+
+        // update odometry
+        drivetrain->update();
+
+        // publish messages
+        Pose2d pose = drivetrain->get_odometry()->get_pose();
+            pose.x *= -1;
+            pose.y *= -1;
+
+        Twist twist = drivetrain->to_chassis_speed();
+
+        std_msgs::msg::Header header;
+            header.frame_id = odom_frame_id;
+            header.stamp = time;
+
+        //transform message
+        geometry_msgs::msg::TransformStamped transform_message;
+
+            transform_message.header = header;
+            transform_message.child_frame_id = base_frame_id;
+
+            transform_message.transform.translation = pose.getTranslation().to_message();
+            transform_message.transform.rotation = pose.get_quaternion();
+
+        tf_broadcaster->sendTransform(transform_message);
+
+        //odometry message
+        nav_msgs::msg::Odometry odometry_message;
+
+            odometry_message.header = header;
+            odometry_message.child_frame_id = base_frame_id;
+
+            odometry_message.pose.pose.orientation = pose.get_quaternion();
+            odometry_message.pose.pose.position = pose.get_point();
+            odometry_message.twist.twist = twist.to_message();
+        
+        odom_publisher->publish(odometry_message);
 
         return controller_interface::return_type::OK;
     }
@@ -81,16 +132,32 @@ namespace differential_drive_controller{
     controller_interface::CallbackReturn DifferentialDriveController::on_configure(const rclcpp_lifecycle::State & previous_state){
         //param stuff
 
+        //set constants to the ones specified in the params
         wheels_per_side = (int)params.wheels_per_side;
         wheel_separation = params.wheel_separation;
         wheel_radius = params.wheel_radius;
 
+        odom_frame_id = params.odom_frame_id;
+        base_frame_id = params.base_frame_id;
+
+        //create the odometry object with the given wheel_separation
+        drivetrain = std::make_shared<DifferentialDriveDrivetrain>(wheel_separation, wheel_radius);
+
+        //create publishers and subscribers
         command_subscriber = get_node()->create_subscription<geometry_msgs::msg::TwistStamped>(
             params.command_topic, rclcpp::SystemDefaultsQoS(),
             [this](const std::shared_ptr<geometry_msgs::msg::TwistStamped> message){
                 last_command = message;
             }
         );
+
+        odom_publisher = get_node()->create_publisher<nav_msgs::msg::Odometry>(
+            DEFAULT_ODOMETRY_TOPIC, rclcpp::SystemDefaultsQoS());
+        
+        // odom_transform_publisher = get_node()->create_publisher<tf2_msgs::msg::TFMessage>(
+        //     DEFAULT_TRANSFORM_TOPIC, rclcpp::SystemDefaultsQoS());
+
+        tf_broadcaster = std::make_shared<tf2_ros::TransformBroadcaster>(get_node());
 
         return controller_interface::CallbackReturn::SUCCESS;
     }
@@ -101,7 +168,15 @@ namespace differential_drive_controller{
         const controller_interface::CallbackReturn left_status = configure_side(params.left_wheel_names, registered_left_wheel_handles);
         const controller_interface::CallbackReturn right_status = configure_side(params.right_wheel_names, registered_right_wheel_handles);
 
-        return controller_interface::CallbackReturn::SUCCESS;
+        //assign wheels to drivetrain
+        drivetrain->initialize(registered_left_wheel_handles, registered_right_wheel_handles);
+
+        //if both are good, then its a success
+        if(left_status == controller_interface::CallbackReturn::SUCCESS && right_status == controller_interface::CallbackReturn::SUCCESS)
+            return controller_interface::CallbackReturn::SUCCESS;
+        //if either fail, throw an error
+        else
+            return controller_interface::CallbackReturn::ERROR;
     }
 
     controller_interface::CallbackReturn DifferentialDriveController::on_deactivate(const rclcpp_lifecycle::State & previous_state){
@@ -126,12 +201,14 @@ namespace differential_drive_controller{
 
     controller_interface::CallbackReturn DifferentialDriveController::configure_side( 
         const std::vector<std::string>& wheel_names,
-        std::vector<WheelHandle>& registered_handles){
+        std::vector<utility::WheelHandle>& registered_handles){
 
         registered_handles.reserve(wheel_names.size());
 
+        // for reach wheel in wheel_names
         for(const std::string& wheel_name : wheel_names){
             
+            // create the velocity handle
             const auto velocity_handle = std::find_if(
                 state_interfaces_.cbegin(), state_interfaces_.cend(),
                 [this, &wheel_name](const auto & interface)
@@ -141,6 +218,7 @@ namespace differential_drive_controller{
                 }
             );
 
+            // create the position handle
             const auto position_handle = std::find_if(
                 state_interfaces_.cbegin(), state_interfaces_.cend(),
                 [this, &wheel_name](const auto & interface)
@@ -150,6 +228,7 @@ namespace differential_drive_controller{
                 }
             );
 
+            // create the command handle
             const auto command_handle = std::find_if(
                 command_interfaces_.begin(), command_interfaces_.end(),
                 [this, &wheel_name](const auto & interface){
@@ -158,8 +237,9 @@ namespace differential_drive_controller{
                 }
             );
 
+            // add this WheelHandle to the list of all wheel handles
             registered_handles.emplace_back(
-                WheelHandle{std::ref(*velocity_handle), std::ref(*position_handle), std::ref(*command_handle)}
+                utility::WheelHandle{std::ref(*velocity_handle), std::ref(*position_handle), std::ref(*command_handle)}
             );
         }
 

@@ -34,7 +34,7 @@ differential_drive_controller:
     wheel_separation: 0.2845
     wheel_radius: 0.032
 
-    odom_frame_id: ""
+    odom_frame_id: "odom"
     base_frame_id: base_link
 
 # position_controller:

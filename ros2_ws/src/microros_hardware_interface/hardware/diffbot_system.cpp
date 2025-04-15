@@ -36,7 +36,7 @@ hardware_interface::CallbackReturn MicroSystemHardware::on_init(const hardware_i
     return hardware_interface::CallbackReturn::ERROR;
   }
   
-  master_node = std::make_shared<MasterNode>("differential_drive_controller_master_node");
+  master_node = std::make_shared<MasterNode>("microros_hardware_interface_master_node");
 
   left_motor = std::make_shared<MotorInterface>(
     master_node, 

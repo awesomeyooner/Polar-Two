@@ -98,6 +98,7 @@ namespace differential_drive_controller{
             pose.y *= -1;
 
         Twist twist = drivetrain->to_chassis_speed();
+            twist.dx *= -1;
 
         std_msgs::msg::Header header;
             header.frame_id = odom_frame_id;

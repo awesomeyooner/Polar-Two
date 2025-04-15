@@ -1,32 +1,40 @@
 #!/bin/bash
 
-#make workspace for packages
-# echo 'Creating Workspace...'
-# mkdir ros2_ws
-# cd ros2_ws
+# Clone microros package
 
-#clone microros package
-echo 'Cloning MicroROS Setup...'
-git clone -b $ROS_DISTRO https://github.com/micro-ROS/micro_ros_setup.git src/micro_ros_setup
+build_workspace(){
+    colcon build --symlink-install
+}
 
-#update
-echo 'Updating Packages...'
-sudo apt update && sudo apt upgrade -y && rosdep update
-rosdep install --from-paths src --ignore-src -y
-sudo apt-get install python3-pip
+source_workspace(){
+    source install/setup.bash
+}
 
-#build the setup package
-echo 'Building Packages...'
-colcon build
-source install/local_setup.bash
+install_uros(){
 
-#clone and build the agent package
-echo 'Building Agent...'
-ros2 run micro_ros_setup create_agent_ws.sh
-ros2 run micro_ros_setup build_agent.sh
+    # Clone the MicroROS Repo
+    echo 'Cloning MicroROS Setup...'
+    git clone -b $ROS_DISTRO https://github.com/micro-ROS/micro_ros_setup.git src/micro_ros_setup
 
-#source package
-echo 'Sourcing...'
-source install/local_setup.bash
+    # Update Packages
+    echo 'Updating Packages...'
+    sudo apt update && sudo apt upgrade -y && rosdep update
+    rosdep install --from-paths src --ignore-src -y
+    sudo apt-get install python3-pip
 
-echo 'Finished!!!'
+    # Build the setup package
+    build_workspace
+    source_workspace
+
+    # Run the setup script
+    ros2 run micro_ros_setup create_agent_ws.sh
+
+    # Build everything
+    build_workspace
+
+    # Finally, finish by sourcing
+    source_workspace
+}
+
+
+install_uros

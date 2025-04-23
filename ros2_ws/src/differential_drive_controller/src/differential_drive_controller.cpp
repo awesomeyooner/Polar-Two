@@ -87,7 +87,7 @@ namespace differential_drive_controller{
         // last_command.get()->twist.angular.z = 3.14 / 6;
 
         // send command
-        drivetrain->drive_from_chassis(Twist::from_message(*last_command.get()));
+        drivetrain->drive_from_chassis(Twist::from_message(*last_command.get()), params.is_open_loop);
 
         // update odometry
         drivetrain->update();

@@ -41,6 +41,13 @@ class DifferentialDriveKinematics{
             );
         }
 
+        WheelSpeeds toWheelSpeedsOpenLoop(Twist chassisSpeed, double turnCoefficient = 1){
+            return WheelSpeeds(
+                chassisSpeed.dx - (chassisSpeed.dTheta * turnCoefficient),
+                chassisSpeed.dx + (chassisSpeed.dTheta * turnCoefficient)
+            );
+        }
+
         /**
          * @brief Returns a twist for a difference in initial and final
          * 

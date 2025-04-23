@@ -37,6 +37,8 @@ differential_drive_controller:
     odom_frame_id: "odom"
     base_frame_id: base_link
 
+    is_open_loop: false
+
 # position_controller:
 #   ros__parameters:
 #     joints:

@@ -35,7 +35,7 @@ namespace MotorConstants{
             .in1 = PIN_LEFT_MOTOR_IN1,
             .in2 = PIN_LEFT_MOTOR_IN2,
             
-            .chA = PIN_LEFT_MOTOR_ENA,
+            .chA = PIN_LEFT_MOTOR_CHA,
             .chB = PIN_LEFT_MOTOR_CHB
         };
 
@@ -55,7 +55,7 @@ namespace MotorConstants{
             .in1 = PIN_RIGHT_MOTOR_IN1,
             .in2 = PIN_RIGHT_MOTOR_IN2,
             
-            .chA = PIN_RIGHT_MOTOR_ENA,
+            .chA = PIN_RIGHT_MOTOR_CHA,
             .chB = PIN_RIGHT_MOTOR_CHB
         };
 }

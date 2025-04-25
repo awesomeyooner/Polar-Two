@@ -51,18 +51,18 @@ namespace hardware_component{
 
                 if(request > 0){
                     digitalWrite(enA, HIGH);
-                    ledcWrite(in1, map(abs(request) * 1000, 0, 1000, 0, MAX_DUTY_CYCLE));
-                    ledcWrite(in2, 0);
+                    ledcWrite(c_in1, map(abs(request) * 1000, 0, 1000, 0, MAX_DUTY_CYCLE));
+                    ledcWrite(c_in2, 0);
                 }     
                 else if(request < 0){
                     digitalWrite(enA, HIGH);
-                    ledcWrite(in1, 0);
-                    ledcWrite(in2, map(abs(request) * 1000, 0, 1000, 0, MAX_DUTY_CYCLE));
+                    ledcWrite(c_in1, 0);
+                    ledcWrite(c_in2, map(abs(request) * 1000, 0, 1000, 0, MAX_DUTY_CYCLE));
                 }
                 else{
                     digitalWrite(enA, LOW);
-                    ledcWrite(in1, 0);
-                    ledcWrite(in2, 0);
+                    ledcWrite(c_in1, 0);
+                    ledcWrite(c_in2, 0);
                 }
             }
 

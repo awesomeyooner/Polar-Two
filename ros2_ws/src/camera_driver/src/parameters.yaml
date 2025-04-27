@@ -1,8 +1,8 @@
 camera_driver:
   camera_name: {
     type: string,
-    default_value: "camera",
-    description: "Name of the camera"
+    default_value: "",
+    description: "Name of the camera, if you want to use namespace then leave this blank"
   }
 
   camera_frame_id: {

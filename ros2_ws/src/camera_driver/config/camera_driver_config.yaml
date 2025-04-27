@@ -1,4 +1,4 @@
-camera_driver_node:
+/**:
   ros__parameters:
     camera_name: "camera"
     camera_frame_id: "camera_rig"

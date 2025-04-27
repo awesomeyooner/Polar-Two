@@ -29,11 +29,8 @@ class CameraDriverNode : public rclcpp::Node {
             }
 
             D = params.distortion_coeffs;
-
             K = util::Util::getK(D);
-
             R = util::Util::getR(D);
-
             P = util::Util::getP(D);
 
             if(params.resolution[0] != -1 && params.resolution[1] != -1 && params.image_fps != -1)
@@ -57,6 +54,10 @@ class CameraDriverNode : public rclcpp::Node {
                 params.camera_name + "/reconfigure_defaults",
                 std::bind(&CameraDriverNode::handle_reconfig, this, std::placeholders::_1, std::placeholders::_2)
             );
+        }
+
+        void shutdown(){
+            camera.release();
         }
 
     private:
@@ -208,6 +209,7 @@ int main(int argc, char **argv){
 
     rclcpp::spin(node);
 
+    node->shutdown();
     rclcpp::shutdown();
     return 0;
 }

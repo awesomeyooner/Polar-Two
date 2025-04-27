@@ -17,6 +17,8 @@
   <depend>rclcpp_lifecycle</depend>
   <depend>cv_bridge</depend>
   <depend>camera_driver_srvs</depend>
+  <depend>generate_parameter_library</depend>
+
 
   <exec_depend>ros2launch</exec_depend>
   <exec_depend>rviz2</exec_depend>

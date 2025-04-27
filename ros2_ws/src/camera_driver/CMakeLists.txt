@@ -18,9 +18,9 @@ set(THIS_PACKAGE_INCLUDE_DEPENDS
   cv_bridge
   OpenCV
   camera_driver_srvs
+  generate_parameter_library
+  CURL
 )
-
-find_package(CURL REQUIRED)
 
 foreach(Dependency IN ITEMS ${THIS_PACKAGE_INCLUDE_DEPENDS})
   find_package(${Dependency} REQUIRED)
@@ -41,12 +41,20 @@ include_directories(
 add_executable(camera_driver_node src/Main.cpp)
 ament_target_dependencies(camera_driver_node ${THIS_PACKAGE_INCLUDE_DEPENDS})
 
-target_link_libraries(camera_driver_node ${OpenCV_LIBS})
-target_link_libraries(camera_driver_node CURL::libcurl)
+generate_parameter_library(
+  ${PROJECT_NAME}_parameters
+  src/parameters.yaml
+)
+
+target_link_libraries(camera_driver_node ${OpenCV_LIBS} CURL::libcurl ${PROJECT_NAME}_parameters)
 
 install(TARGETS
   camera_driver_node
+  ${PROJECT_NAME}_parameters
+  EXPORT ${PROJECT_NAME}Targets
   DESTINATION lib/${PROJECT_NAME})
+
+ament_export_targets(${PROJECT_NAME}Targets HAS_LIBRARY_TARGET)
 
 install(DIRECTORY
   launch

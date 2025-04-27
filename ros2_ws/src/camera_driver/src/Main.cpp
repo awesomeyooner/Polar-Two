@@ -8,7 +8,7 @@
 #include <camera_driver_srvs/srv/reconfigure_defaults.hpp>
 #include "../include/camera_driver/cameramanager/CameraManager.hpp"
 #include <camera_driver/camera_driver_parameters.hpp>
-#include "camera_driver/helpers/util.hpp"
+#include "../include/camera_driver/helpers/util.hpp"
 
 class CameraDriverNode : public rclcpp::Node {
 
@@ -30,28 +30,11 @@ class CameraDriverNode : public rclcpp::Node {
 
             D = params.distortion_coeffs;
 
-            double fx = params.intrinsics[0];
-            double fy = params.intrinsics[1];
-            double cx = params.intrinsics[2];
-            double cy = params.intrinsics[3];
-            
-            K = {
-                fx, 0.0, cx,
-                0.0, fy, cy,
-                0.0, 0.0, 1.0
-            };
+            K = util::Util::getK(D);
 
-            R = {
-                1.0, 0.0, 0.0,
-                0.0, 1.0, 0.0,
-                0.0, 0.0, 1.0
-            };
+            R = util::Util::getR(D);
 
-            P = {
-                fx, 0.0, cx, 0.0,
-                0.0, fy, cy, 0.0,
-                0.0, 0.0, 1.0, 0.0
-            };
+            P = util::Util::getP(D);
 
             if(params.resolution[0] != -1 && params.resolution[1] != -1 && params.image_fps != -1)
                 camera.config(params.resolution[0], params.resolution[1], params.image_fps);

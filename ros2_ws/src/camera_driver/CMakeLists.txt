@@ -46,6 +46,11 @@ generate_parameter_library(
   src/parameters.yaml
 )
 
+target_include_directories(camera_driver_node PUBLIC
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include/${PROJECT_NAME}>
+)
+
 target_link_libraries(camera_driver_node ${OpenCV_LIBS} CURL::libcurl ${PROJECT_NAME}_parameters)
 
 install(TARGETS
@@ -60,6 +65,11 @@ install(DIRECTORY
   launch
   config
   DESTINATION share/${PROJECT_NAME}/
+)
+
+install(
+  DIRECTORY include/
+  DESTINATION include/${PROJECT_NAME}/
 )
 
 if(BUILD_TESTING)

@@ -104,6 +104,10 @@ class PIDController{
             return feedforward;
         }
 
+        double get_setpoint(){
+            return setpoint;
+        }
+
     private:
 
         TimestampedValue prev_error;

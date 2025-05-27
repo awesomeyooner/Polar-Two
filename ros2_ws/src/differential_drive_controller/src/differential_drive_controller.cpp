@@ -68,28 +68,15 @@ namespace differential_drive_controller{
         }
 
         double time_since_last_command = abs(
-            ( last_command->header.stamp.sec + (last_command->header.stamp.nanosec / pow(10, 9)) ) - time.seconds()
+            ( (double)last_command->header.stamp.sec + ((double)last_command->header.stamp.nanosec / pow(10, 9)) ) - time.seconds()
         );
 
-        double timeout = 1; //seconds
-
         // if the last time a command was recieved was more than a second ago, then return error
-        if(time_since_last_command > timeout){
+        if(time_since_last_command > params.command_timeout){
             drivetrain->stop();
             return controller_interface::return_type::ERROR;
         }
 
-        // RCLCPP_INFO(get_node()->get_logger(), std::to_string(time_since_last_command).c_str());
-
-        // last_command = std::make_shared<geometry_msgs::msg::TwistStamped>();
-
-        // last_command.get()->twist.linear.x = 1;
-        // last_command.get()->twist.angular.z = 3.14 / 6;
-
-        // send command
-        last_command->twist.linear.x *= -1;
-        last_command->twist.angular.z *= -1;
-        
         drivetrain->drive_from_chassis(Twist::from_message(*last_command.get()), params.is_open_loop);
 
         // update odometry

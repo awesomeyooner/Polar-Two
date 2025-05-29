@@ -58,6 +58,27 @@ namespace microros_hardware_interface{
             }
 
             /**
+             * @brief Construct a new Motor Interface object
+             * 
+             * @param node MasterNode to use for subscribers and publishers
+             * @param joint The name of the joint
+             * @param topic The overall name of the topic
+             * @param prefix The prefix to apply to the topics
+             * @param conversion The conversion to apply to the states
+             * @param invert_encoder Invert the values of the state interfaces
+             * @param invert_motor Invert the values of the command interface
+             */
+            MotorInterface(std::shared_ptr<MasterNode> node, const std::string& joint, const std::string& topic, const std::string& prefix, const double& conversion, const bool& invert_encoder, const bool& invert_motor) : 
+                joint_name(joint),
+                TopicInterface(){
+                    set_conversion(conversion, &state_interfaces);
+                    set_inverted(invert_encoder, &state_interfaces);
+                    command_interface.set_inverted(invert_motor);
+
+                    this->initialize(node, topic, prefix, &command_interface, &state_interfaces);
+            }
+
+            /**
              * @brief Gets the state interfaces for this joint
              * 
              * @return std::vector<hardware_interface::StateInterface> 

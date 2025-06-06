@@ -7,8 +7,8 @@ joystick_teleop:
     use_sim_time: true
     joystick_type: "gamesir" # implemented ones are: "ps4", "gamesir", "xbox" so far
 
-    # max_tangential_velocity: 1.0 # 1.0
-    # max_angular_velocity: 3.14 # 3.14
-
     max_tangential_velocity: 1.0 # 1.0
-    max_angular_velocity: 1.0 # 3.14
+    max_angular_velocity: 3.14 # 3.14
+
+    # max_tangential_velocity: 1.0 # 1.0
+    # max_angular_velocity: 1.0 # 3.14

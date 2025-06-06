@@ -6,6 +6,9 @@
     <!-- Base Link -->
     <link name="${prefix}base_link"/>
 
+    <!-- Base Footprint -->
+    <link name="${prefix}base_footprint"/>
+
     <!-- Chassis -->
     <link name="${prefix}chassis_link">
       <collision>
@@ -44,6 +47,12 @@
       <origin xyz="0 0 ${.0199 + wheel_radius}" rpy="0 0 ${PI}"/>
       <axis xyz="0 0 1"/>
       <dynamics damping="${damping}"/>
+    </joint>
+
+    <joint name="${prefix}base_footprint_joint" type="fixed">
+      <parent link="${prefix}base_link"/>
+      <child link="${prefix}base_footprint"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
     </joint>
 
     <!--front is positive, left is positive-->

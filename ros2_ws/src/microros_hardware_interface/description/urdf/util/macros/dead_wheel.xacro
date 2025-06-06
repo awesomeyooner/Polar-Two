@@ -11,7 +11,7 @@
                     
                 <geometry>
                     <!-- <mesh filename="file://$(find microros_hardware_interface)/description/urdf/assets/wheel/Wheel.stl"/> -->
-                    <sphere radius="0.04800000" />
+                    <sphere radius="0.03605094" />
                 </geometry>
 
                 <!-- <surface>
@@ -40,8 +40,8 @@
                 <origin xyz="0 0 0" rpy="0 0 0"/>
 
                 <geometry>
-                    <mesh filename="file://$(find microros_hardware_interface)/description/urdf/assets/caster/caster.obj"/>
-                    <!-- <sphere radius="${wheel_radius / 5}" /> -->
+                    <!-- <mesh filename="file://$(find microros_hardware_interface)/description/urdf/assets/caster/caster.obj"/> -->
+                    <sphere radius="0.03605094" />
 
                 </geometry>
 

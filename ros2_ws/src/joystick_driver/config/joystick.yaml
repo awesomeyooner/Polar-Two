@@ -4,7 +4,7 @@ joy_node:
 
 joystick_teleop:
   ros__parameters:
-    use_sim_time: false
+    use_sim_time: true
     joystick_type: "gamesir" # implemented ones are: "ps4", "gamesir", "xbox" so far
 
     # max_tangential_velocity: 1.0 # 1.0

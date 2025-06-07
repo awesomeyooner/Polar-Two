@@ -7,96 +7,57 @@
 #include <camera_driver_srvs/srv/configure_camera.hpp>
 #include <camera_driver_srvs/srv/reconfigure_defaults.hpp>
 #include "../include/camera_driver/cameramanager/CameraManager.hpp"
+#include <camera_driver/camera_driver_parameters.hpp>
+#include "../include/camera_driver/helpers/util.hpp"
 
 class CameraDriverNode : public rclcpp::Node {
 
     public:
-        CameraDriverNode() : Node("camera_driver_node"){
+        CameraDriverNode() : Node("camera_driver_node"){}
 
-            this->declare_parameter<std::string>("camera_name", "camera");
-            this->declare_parameter<std::string>("camera_frame_id", "camera_rig");
-            this->declare_parameter<std::string>("camera_path", "unused");
-            this->declare_parameter<int>("camera_index", 1);
-            this->declare_parameter<double>("publish_rate", 60); //hz
-            this->declare_parameter<bool>("publish_as_gray", false);
-            this->declare_parameter<bool>("publish_compressed", true);
-            this->declare_parameter<bool>("publish_camera_info", false);
+        void initialize(std::shared_ptr<Node> node){
+            param_listener = std::make_shared<camera_driver::ParamListener>(node);
+            params = param_listener->get_params();
 
-            this->declare_parameter<std::vector<int>>("resolution", {-1, -1});
-            this->declare_parameter<int>("image_fps", -1);
-
-            this->declare_parameter<std::vector<double>>("intrinsics", {0, 0, 0, 0});
-            this->declare_parameter<std::vector<double>>("distortion_coeffs", {0, 0, 0, 0, 0});
-
-            camera_name = this->get_parameter("camera_name").as_string();
-            camera_frame_id = this->get_parameter("camera_frame_id").as_string();
-            camera_path = this->get_parameter("camera_path").as_string();
-            camera_index = this->get_parameter("camera_index").as_int();
-            publish_rate = this->get_parameter("publish_rate").as_double();
-            publish_as_gray = this->get_parameter("publish_as_gray").as_bool();
-            publish_compressed = this->get_parameter("publish_compressed").as_bool();
-            publish_camera_info = this->get_parameter("publish_camera_info").as_bool();
-
-            resolution = this->get_parameter("resolution").as_integer_array();
-            image_fps = this->get_parameter("image_fps").as_int();
-
-            if(camera_path == "unused"){
-                RCLCPP_INFO(this->get_logger(), std::string("Opening Camera on: " + std::to_string(camera_index)).c_str());
-                camera = CameraManager(camera_index, cv::CAP_V4L2);
+            if(params.camera_path == "unused"){
+                RCLCPP_INFO(this->get_logger(), std::string("Opening Camera on: " + std::to_string(params.camera_index)).c_str());
+                camera = CameraManager(params.camera_index, cv::CAP_V4L2);
             }
             else{
-                RCLCPP_INFO(this->get_logger(), std::string("Opening Camera on: " + camera_path).c_str());
-                camera = CameraManager(camera_path, cv::CAP_V4L2);
+                RCLCPP_INFO(this->get_logger(), std::string("Opening Camera on: " + params.camera_path).c_str());
+                camera = CameraManager(params.camera_path, cv::CAP_V4L2);
             }
 
-            D = this->get_parameter("distortion_coeffs").as_double_array();
+            D = params.distortion_coeffs;
+            K = util::Util::getK(D);
+            R = util::Util::getR(D);
+            P = util::Util::getP(D);
 
-            std::vector<double> intrinsics = this->get_parameter("intrinsics").as_double_array();
+            if(params.resolution[0] != -1 && params.resolution[1] != -1 && params.image_fps != -1)
+                camera.config(params.resolution[0], params.resolution[1], params.image_fps);
 
-            double fx = intrinsics[0];
-            double fy = intrinsics[1];
-            double cx = intrinsics[2];
-            double cy = intrinsics[3];
-            
-            K = {
-                fx, 0.0, cx,
-                0.0, fy, cy,
-                0.0, 0.0, 1.0
-            };
-
-            R = {
-                1.0, 0.0, 0.0,
-                0.0, 1.0, 0.0,
-                0.0, 0.0, 1.0
-            };
-
-            P = {
-                fx, 0.0, cx, 0.0,
-                0.0, fy, cy, 0.0,
-                0.0, 0.0, 1.0, 0.0
-            };
-
-            if(resolution[0] != -1 && resolution[1] != -1 && image_fps != -1)
-                camera.config(resolution[0], resolution[1], image_fps);
-
-            image_raw_publisher = this->create_publisher<sensor_msgs::msg::Image>(camera_name + "/image_raw", 10);
-            image_compressed_publisher = this->create_publisher<sensor_msgs::msg::CompressedImage>(camera_name + "/image_raw/compressed", 10);
-            camera_info_publisher = this->create_publisher<sensor_msgs::msg::CameraInfo>(camera_name + "/camera_info", 10);
+            image_raw_publisher = this->create_publisher<sensor_msgs::msg::Image>(params.camera_name + "/image_raw", 10);
+            image_compressed_publisher = this->create_publisher<sensor_msgs::msg::CompressedImage>(params.camera_name + "/image_raw/compressed", 10);
+            camera_info_publisher = this->create_publisher<sensor_msgs::msg::CameraInfo>(params.camera_name + "/camera_info", 10);
 
             timer = this->create_wall_timer(
-                std::chrono::milliseconds(int((1.0 / publish_rate) * 1000)),
+                std::chrono::milliseconds(int((1.0 / params.publish_rate) * 1000)),
                 std::bind(&CameraDriverNode::publish_data, this)
             );
 
             config_service = this->create_service<camera_driver_srvs::srv::ConfigureCamera>(
-                camera_name + "/configure_camera",
+                params.camera_name + "/configure_camera",
                 std::bind(&CameraDriverNode::handle_config, this, std::placeholders::_1, std::placeholders::_2)
             );
 
             reconfig_service = this->create_service<camera_driver_srvs::srv::ReconfigureDefaults>(
-                camera_name + "/reconfigure_defaults",
+                params.camera_name + "/reconfigure_defaults",
                 std::bind(&CameraDriverNode::handle_reconfig, this, std::placeholders::_1, std::placeholders::_2)
             );
+        }
+
+        void shutdown(){
+            camera.release();
         }
 
     private:
@@ -161,10 +122,10 @@ class CameraDriverNode : public rclcpp::Node {
             std::shared_ptr<camera_driver_srvs::srv::ReconfigureDefaults::Response> response){
 
             response->status = config_camera(
-                resolution[0],
-                resolution[1],
+                params.resolution[0],
+                params.resolution[1],
                 cv::VideoWriter::fourcc('M','J','P','G'),
-                image_fps,
+                params.image_fps,
                 20
             );
         }
@@ -182,27 +143,27 @@ class CameraDriverNode : public rclcpp::Node {
         }
 
         void publish_data(){
-            cv::Mat frame = publish_as_gray ? camera.getFrameGray() : camera.getFrame();
+            cv::Mat frame = params.publish_as_gray ? camera.getFrameGray() : camera.getFrame();
 
             if(frame.empty())
                 return;
 
             std_msgs::msg::Header header = std_msgs::msg::Header();
                 header.stamp = this->now();
-                header.frame_id = camera_frame_id; 
+                header.frame_id = params.camera_frame_id; 
 
             cv_bridge::CvImage message = cv_bridge::CvImage(
                 header, 
-                publish_as_gray ? "mono8" : "bgr8", 
+                params.publish_as_gray ? "mono8" : "bgr8", 
                 frame
             );
 
             image_raw_publisher->publish(*message.toImageMsg());
 
-            if(publish_compressed)
+            if(params.publish_compressed)
                 image_compressed_publisher->publish(*message.toCompressedImageMsg(cv_bridge::Format::JPEG));
 
-            if(publish_camera_info){
+            if(params.publish_camera_info){
                 sensor_msgs::msg::CameraInfo info = sensor_msgs::msg::CameraInfo();
 
                 info.header = header;
@@ -230,17 +191,8 @@ class CameraDriverNode : public rclcpp::Node {
         rclcpp::Service<camera_driver_srvs::srv::ConfigureCamera>::SharedPtr config_service;
         rclcpp::Service<camera_driver_srvs::srv::ReconfigureDefaults>::SharedPtr reconfig_service;
 
-        std::string camera_name;
-        std::string camera_frame_id;
-        std::string camera_path;
-        int camera_index;
-        double publish_rate;
-        bool publish_as_gray;
-        bool publish_compressed;
-        bool publish_camera_info;
-
-        std::vector<int64_t> resolution;
-        int image_fps;
+        std::shared_ptr<camera_driver::ParamListener> param_listener;
+        camera_driver::Params params;
         
         std::vector<double> D;
         std::array<double, 9> K;
@@ -250,12 +202,14 @@ class CameraDriverNode : public rclcpp::Node {
 
 int main(int argc, char **argv){
     rclcpp::init(argc, argv);
-    rclcpp::spin(std::make_shared<CameraDriverNode>());
+
+    std::shared_ptr node = std::make_shared<CameraDriverNode>();
+
+    node->initialize(node);
+
+    rclcpp::spin(node);
+
+    node->shutdown();
     rclcpp::shutdown();
     return 0;
 }
-
-// int main(int argc, char **argv){
-//     return 0;
-// }
-

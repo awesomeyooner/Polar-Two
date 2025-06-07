@@ -9,6 +9,16 @@ differential_drive_controller:
     default_value: "velocity",
     description:  "what interface type to use for commands. velocity or effort",
   }
+  is_open_loop: {
+    type: bool,
+    default_value: false,
+    description:  "Toggle open loop control for wheels",
+  }
+  command_timeout: {
+    type: double,
+    default_value: 1.0,
+    description: "How old a command can be until the controller halts the drivetrain",
+  }
   feedback_types: {
     type: string_array,
     default_value: ["velocity", "position", "effort"],

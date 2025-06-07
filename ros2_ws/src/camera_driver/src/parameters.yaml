@@ -1,0 +1,73 @@
+camera_driver:
+  camera_name: {
+    type: string,
+    default_value: "",
+    description: "Name of the camera, if you want to use namespace then leave this blank"
+  }
+
+  camera_frame_id: {
+    type: string,
+    default_value: "camera_rig",
+    description: "frame_id to use for CameraInfo"
+  }
+
+  camera_path: {
+    type: string,
+    default_value: "unused",
+    description: "path of the camera to use, example: /dev/v4l/by-path/pci-0000:00:14.0-usb-0:2:1.0-video-index0"
+  }
+
+  camera_index: {
+    type: int,
+    default_value: 0,
+    description: "index of the camera to use, V4L2 backend"
+  }
+
+  publish_rate: {
+    type: double,
+    default_value: 60.0,
+    description: "How fast the timer updates in Hz"
+  }
+
+  publish_as_gray: {
+    type: bool,
+    default_value: false,
+    description: "Whether or not to grayscale the camera feed"
+  }
+
+  publish_compressed: {
+    type: bool,
+    default_value: true,
+    description: "Whether or not to publish the compressed frame"
+  }
+
+  publish_camera_info: {
+    type: bool,
+    default_value: true,
+    description: "Whether or not to publish the camera info"
+  }
+
+  resolution: {
+    type: int_array,
+    default_value: [-1, -1],
+    description: "Resolution of the camera"
+  }
+
+  distortion_coeffs: {
+    type: double_array,
+    default_value: [0, 0, 0, 0, 0],
+    description: "Distortion Coefficients, 5: k1, k2, p1, p2, k3"
+  }
+
+  intrinsics: {
+    type: double_array,
+    default_value: [0, 0, 0, 0],
+    description: "Instrinsics, 4, fx, fy, cx, cy"
+  }
+
+  image_fps: {
+    type: int,
+    default_value: -1,
+    description: "FPS of the camera to set"
+  }
+

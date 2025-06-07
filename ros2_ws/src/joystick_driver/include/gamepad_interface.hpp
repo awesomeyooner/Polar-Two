@@ -6,6 +6,7 @@
 
 namespace hid_devices{
 
+    // Universal Button ID
     enum GamepadButton{
         ACTION_DOWN = 0,
         ACTION_RIGHT = 1,
@@ -19,6 +20,7 @@ namespace hid_devices{
         RIGHT_STICK = 7
     };
 
+    // Universal Axis ID
     enum GamepadAxis{
         LEFT_X = 0,
         LEFT_Y = 1,
@@ -29,6 +31,7 @@ namespace hid_devices{
         RIGHT_TRIGGER = 5
     };
 
+    // Button Handle
     struct Button{
         int id;
         int index;
@@ -69,6 +72,7 @@ namespace hid_devices{
             //int index;
     };
 
+    // Axis Handle
     struct Axis{
         int id;
 
@@ -100,6 +104,7 @@ namespace hid_devices{
             double value = 0;
     };
 
+    // Indexes of each button / axis
     struct GamepadMapping{
         int stick_left_x;
         int stick_left_y;

@@ -7,16 +7,16 @@ namespace hid_devices{
 
     namespace PS4{
         enum{
-            X = 0,
-            CIRCLE = 1,
-            SQUARE = 2,
-            TRIANGLE = 3,
+            X = GamepadButton::ACTION_DOWN,
+            CIRCLE = GamepadButton::ACTION_RIGHT,
+            SQUARE = GamepadButton::ACTION_LEFT,
+            TRIANGLE = GamepadButton::ACTION_UP,
 
-            LEFT_BUMPER = 4,
-            RIGHT_BUMPER = 5,
+            LEFT_BUMPER = GamepadButton::LEFT_BUMPER,
+            RIGHT_BUMPER = GamepadButton::RIGHT_BUMPER,
 
-            LEFT_STICK = 6,
-            RIGHT_STICK = 7
+            LEFT_STICK = GamepadButton::LEFT_STICK,
+            RIGHT_STICK = GamepadButton::RIGHT_STICK
         };
 
         const GamepadMapping MAP{
@@ -43,19 +43,18 @@ namespace hid_devices{
 
     namespace GameSir{
         enum{
-            A = 0,
-            B = 1,
-            X = 2,
-            Y = 3,
+            A = GamepadButton::ACTION_DOWN,
+            B =  GamepadButton::ACTION_RIGHT,
+            X = GamepadButton::ACTION_LEFT,
+            Y = GamepadButton::ACTION_UP,
 
-            LEFT_BUMPER = 4,
-            RIGHT_BUMPER = 5,
+            LEFT_BUMPER = GamepadButton::LEFT_BUMPER,
+            RIGHT_BUMPER = GamepadButton::RIGHT_BUMPER,
 
-            LEFT_STICK = 9,
-            RIGHT_STICK = 10
+            LEFT_STICK = GamepadButton::LEFT_STICK,
+            RIGHT_STICK = GamepadButton::RIGHT_STICK
         };
         
-    // I don't actually know the real map for xbox controllers this is just a placeholder
         const GamepadMapping MAP{
             .stick_left_x = 0,
             .stick_left_y = 1,

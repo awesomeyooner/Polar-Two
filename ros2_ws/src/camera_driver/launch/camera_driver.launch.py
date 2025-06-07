@@ -19,6 +19,7 @@ def generate_launch_description():
             package='camera_driver',
             executable='camera_driver_node',
             name='camera_driver_node',
+            # namespace="camera",
             parameters=[params, calibration_params]
             )
 

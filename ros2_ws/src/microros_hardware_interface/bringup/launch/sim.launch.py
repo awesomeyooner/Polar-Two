@@ -64,6 +64,12 @@ def generate_launch_description():
         launch_arguments={'use_sim_time': 'true'}.items()
     )
 
+    slam_toolbox_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(os.path.join(get_package_share_directory(hardware_package), "bringup", "launch", 
+        "slam_toolbox.launch.py")),
+        launch_arguments={'use_sim_time': 'true'}.items()
+    )
+
     world_arg = DeclareLaunchArgument(
         'world',
         default_value='obstacles.world',
@@ -134,5 +140,7 @@ def generate_launch_description():
 
         ros_gz_bridge,
         rviz,
-        ros_gz_image_bridge
+        ros_gz_image_bridge,
+
+        slam_toolbox_launch
     ])

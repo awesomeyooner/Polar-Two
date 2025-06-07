@@ -1,0 +1,27 @@
+{
+    "name": "Polar Two", //CHANGE ME
+    // "image": "omnipotence:noetic",
+    "build": {
+        "dockerfile": "Dockerfile", // Path to your Dockerfilez
+        "options": [
+            "-t=polar-two:main" //CHANGE ME
+        ]
+    },
+    "workspaceFolder": "/home/dev",
+    "remoteUser": "dev",
+    "mounts": [
+        "source=${localWorkspaceFolder}/pocket,target=/home/dev/pocket,type=bind,consistency=cached",
+        "type=bind,source=/dev/bus/usb,target=/dev/bus/usb"
+    ],
+    "runArgs": [
+        // "--device=/dev/ttyUSB0",
+        "--env=DISPLAY=${localEnv:DISPLAY}",
+        "--env", "LIBGL_ALWAYS_INDIRECT=0",
+        "--volume", "/tmp/.X11-unix:/tmp/.X11-unix",
+        "--volume", "/dev/dri:/dev/dri",
+        "--network=host",
+        "--hostname", "container",
+        "--name", "my_container", //CHANGE ME
+        "--rm"
+    ]
+}

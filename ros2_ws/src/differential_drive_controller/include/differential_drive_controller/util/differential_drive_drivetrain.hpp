@@ -72,9 +72,11 @@ class DifferentialDriveDrivetrain{
         }
 
         // controls
-        void drive_from_chassis(Twist desired){
+        void drive_from_chassis(Twist desired, bool is_open_loop = false){
             //meters per second -> radians per second
-            WheelSpeeds wheel_speeds = odometry.get_kinematics()->toWheelSpeeds(desired).times(1 / (wheel_radius));
+            WheelSpeeds wheel_speeds = is_open_loop ? 
+                odometry.get_kinematics()->toWheelSpeedsOpenLoop(desired) : 
+                odometry.get_kinematics()->toWheelSpeeds(desired).times(1 / (wheel_radius));
 
             //set the wheels to the speeds
             set_left_command(wheel_speeds.left_velocity);

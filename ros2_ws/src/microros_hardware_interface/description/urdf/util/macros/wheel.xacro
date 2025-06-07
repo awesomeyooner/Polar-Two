@@ -7,7 +7,7 @@
 
             <!-- COLLISION -->
             <collision>
-            <origin xyz="0 0 0" rpy="${side * -PI/2} 0 0"/>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
                 
             <geometry>
                 <!-- <mesh filename="file://$(find microros_hardware_interface)/description/urdf/assets/wheel/Wheel.stl"/> -->
@@ -42,7 +42,7 @@
     
             <!-- VISIUAL -->
             <visual>
-                <origin xyz="0 0 0" rpy="${side * -PI/2} 0 0"/>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
 
                 <geometry>
                     <mesh filename="file://$(find microros_hardware_interface)/description/urdf/assets/wheel/Wheel.obj"/>
@@ -72,8 +72,8 @@
         <joint name="${name}_wheel_joint" type="continuous">
             <parent link="${prefix}chassis_link"/>
             <child link="${name}_wheel"/>
-            <origin xyz="${front * .120} ${side * .129} -.0199" rpy="0 0 0"/>
-            <axis xyz="0 -1 0"/>
+            <origin xyz="${front * .120} ${side * .129} -0.016" rpy="${side * -PI/2}  0 0"/>
+            <axis xyz="0 0 ${-side}"/>
             <limit effort="1000.0" velocity="100.0"/>
             <dynamics damping="${damping}"/>
 

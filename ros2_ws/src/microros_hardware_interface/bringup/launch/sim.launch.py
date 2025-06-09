@@ -72,7 +72,7 @@ def generate_launch_description():
 
     world_arg = DeclareLaunchArgument(
         'world',
-        default_value='obstacles.world',
+        default_value='boxed_world.world',
         description='World to load'
         )
     

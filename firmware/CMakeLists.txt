@@ -26,6 +26,9 @@ target_compile_definitions(shared_library INTERFACE
 # add_subdirectory(lib/MyLib)
 # target_link_libraries(MyLib PRIVATE shared_library)
 
+set(EMBEDDEDLIB_BUILD_ADC OFF CACHE BOOL "Disable ADC compiling" FORCE)
+set(EMBEDDEDLIB_BUILD_I2C OFF CACHE BOOL "Disable I2C compiling" FORCE)
+
 add_subdirectory(lib/EmbeddedLib)
 target_link_libraries(EmbeddedLib PRIVATE shared_library)
 
@@ -50,7 +53,12 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user sources here
     # src/my_code.cpp
 
+    # /
     src/core.cpp
+    
+    # /devices
+    src/devices/quadrature_encoder.cpp
+    src/devices/dual_pwm_driver.cpp
 )
 
 # Add include paths

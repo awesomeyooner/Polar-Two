@@ -31,7 +31,7 @@
 #include "usbd_cdc.h"
 
 /* USER CODE BEGIN INCLUDE */
-
+#include "WireLib/communication/protocols/serial_api.hpp"
 /* USER CODE END INCLUDE */
 
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY

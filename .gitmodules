@@ -1,0 +1,9 @@
+[submodule "firmware/lib/EmbeddedLib"]
+	path = firmware/lib/EmbeddedLib
+	url = https://github.com/awesomeyooner/EmbeddedLib.git
+[submodule "firmware/lib/WireLib"]
+	path = firmware/lib/WireLib
+	url = https://github.com/awesomeyooner/WireLib.git
+[submodule "firmware/lib/ActionLib"]
+	path = firmware/lib/ActionLib
+	url = https://github.com/awesomeyooner/ActionLib.git

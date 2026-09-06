@@ -26,11 +26,23 @@ target_compile_definitions(shared_library INTERFACE
 # add_subdirectory(lib/MyLib)
 # target_link_libraries(MyLib PRIVATE shared_library)
 
+add_subdirectory(lib/EmbeddedLib)
+target_link_libraries(EmbeddedLib PRIVATE shared_library)
+
+add_subdirectory(lib/WireLib)
+target_link_libraries(WireLib PRIVATE shared_library)
+
+add_subdirectory(lib/ActionLib)
+target_link_libraries(ActionLib PRIVATE shared_library)
+
 # Add linked libraries
 target_link_libraries(${CMAKE_PROJECT_NAME}
     shared_library
 
     # MyLib
+    EmbeddedLib
+    WireLib
+    ActionLib
 )
 
 # Add sources to executable

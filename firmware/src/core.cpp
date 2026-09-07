@@ -5,6 +5,8 @@
 
 #include "EmbeddedLib/devices/gpio_device.hpp"
 
+#include "ActionLib/ActionManager.hpp"
+
 #include "WireLib/communication/protocols/serial_interface.hpp"
 #include "WireLib/communication/wire_manager.hpp"
 #include "WireLib/registers/register_manager.hpp"
@@ -23,7 +25,7 @@ QuadratureEncoder encoder = QuadratureEncoder(
     GPIOC, GPIO_PIN_11,
     GPIOC, GPIO_PIN_12,
     12 * 4,
-    1
+    45
 );
 
 DualPWMDriver driver = DualPWMDriver(
@@ -39,6 +41,19 @@ void init()
     Serial.set_parse_type(ParseType::PACKET);
 
     WireManager::attach(Serial);
+
+    Action update_encoder = Action(0.005);
+
+    update_encoder.link_callback(
+        [](double, double) -> StatusedValue<bool>
+        {
+            encoder.update();
+
+            return StatusedValue<bool>(false, StatusCode::OK);
+        }
+    );
+
+    ActionManager::add(update_encoder);
 
     driver.init();
 
@@ -81,7 +96,7 @@ void init()
 
 void update()
 {
-    encoder.update();
+    ActionManager::update();
 
     System::update();
 

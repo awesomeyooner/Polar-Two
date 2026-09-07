@@ -45,7 +45,7 @@ int main(int argc, char* argv[])
         serial.write_data<double>(100, percent);
 
         ImPlotter::push_data(
-            angle_read.value / 45.0,
+            angle_read.value,
             "Angle (Radians)"
         );
 

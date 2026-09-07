@@ -19,7 +19,8 @@ using namespace status_utils;
 using namespace std;
 
 
-float percent = 0;
+float left_target = 0;
+float right_target = 0;
 
 
 int main(int argc, char* argv[])
@@ -30,39 +31,70 @@ int main(int argc, char* argv[])
 
     serial.init_field("product", "STM32 Virtual ComPort");
 
+    serial.set_timeout_ms(500);
+
+    Logger::info("Attempting to enable device...");
+
+    if(serial.write_data<int>(98, 0, true) == StatusCode::OK)
+        Logger::info("Successfully enabled!");
+    else
+    {
+        Logger::error("Failed to enable device! Exitting...");
+        System::shutdown();
+    }
+
     while(System::is_alive())
     {
-        auto angle_read = serial.request_data<double>(101, 500);
-        auto velocity_read = serial.request_data<double>(102, 500);
+        auto left_angle_read = serial.request_data<double>(101, 500);
+        auto left_velocity_read = serial.request_data<double>(102, 500);
 
-        if(!angle_read.is_OK() || !velocity_read.is_OK())
-        {
-            Logger::error("Failed to read! Skipping iteration...");
+        auto right_angle_read = serial.request_data<double>(104, 500);
+        auto right_velocity_read = serial.request_data<double>(105, 500);
 
-            continue;
-        }
+        if(serial.write_data<double>(100, left_target) != StatusCode::OK)
+            Logger::error("Failed to write to left motor!");
 
-        serial.write_data<double>(100, percent);
+        if(serial.write_data<double>(103, right_target) != StatusCode::OK)
+            Logger::error("Failed to write to right motor!");
 
         ImPlotter::push_data(
-            angle_read.value,
-            "Angle (Radians)"
+            left_angle_read.value,
+            "Left Angle (Radians)"
         );
 
         ImPlotter::push_data(
-            velocity_read.value,
-            "Velocity (Radians / sec)"
+            left_velocity_read.value,
+            "Left Velocity (Radians / sec)"
         );
+
+        ImPlotter::push_data(
+            right_angle_read.value,
+            "Right Angle (Radians)"
+        );
+
+        ImPlotter::push_data(
+            right_velocity_read.value,
+            "Right Velocity (Radians / sec)"
+        );
+
 
         function<void()> add_inputs = []()
         {
-            ImGui::SliderFloat("Percent Output", &percent, -1, 1, "%.3f V");
+            ImGui::SliderFloat("Left Percent Output", &left_target, -1, 1, "%.3f V");
+            ImGui::SliderFloat("Right Percent Output", &right_target, -1, 1, "%.3f V");
         };
 
         if(ImPlotter::update(add_inputs) == StatusCode::FAILED)
             System::shutdown();
 
     }
+
+    Logger::info("Disabling device...");
+
+    if(serial.write_data<int>(98, 1, true) == StatusCode::OK)
+        Logger::info("Successsfully disabled device.");
+    else
+        Logger::error("Failed to disable device!");
 
     serial.close();
     

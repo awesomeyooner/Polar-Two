@@ -32,7 +32,7 @@ class QuadratureEncoder
 
         int get_counts();
 
-        void set_inverted(bool inverted);
+        void set_inverted(bool inverted = true);
 
         bool is_inverted();
 

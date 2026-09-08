@@ -20,6 +20,20 @@ StatusCode DualPWMDriver::init()
 } // end of "init()"
 
 
+void DualPWMDriver::set_inverted(bool invert)
+{
+    m_is_inverted = invert;
+
+} // end of "set_inverted(bool)"
+
+
+bool DualPWMDriver::is_inverted()
+{
+    return m_is_inverted;
+
+} // end of "is_inverted()"
+
+
 void DualPWMDriver::set_input_voltage(double input_voltage)
 {
     // Make sure it's positive
@@ -44,6 +58,10 @@ void DualPWMDriver::set_percent(double percent)
         percent = 1;
     else if(percent < -1)
         percent = -1;
+
+    // Invert percent if needed
+    if(m_is_inverted)
+        percent *= -1;
 
     // Keep track of the commanded percent out
     m_percent = percent;

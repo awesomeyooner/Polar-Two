@@ -78,6 +78,66 @@ void init()
         )
     );
 
+    // Invert Left Motor
+    RegisterManager::add_command(
+        Command<int>(
+            96,
+            [](int data) -> StatusCode
+            {
+                System::feed();
+
+                switch(data)
+                {
+                    case 0:
+                        left_driver.set_inverted();
+                        break;
+                    
+                    case 1:
+                        left_encoder.set_inverted();
+                        break;
+
+                    case 2:
+                        left_driver.set_inverted();
+                        left_encoder.set_inverted();
+                        break;
+                }
+
+                return StatusCode::OK;
+            },
+            true
+        )
+    );
+
+    // Invert Right Motor
+    RegisterManager::add_command(
+        Command<int>(
+            97,
+            [](int data) -> StatusCode
+            {
+                System::feed();
+
+                switch(data)
+                {
+                    case 0:
+                        right_driver.set_inverted();
+                        break;
+                    
+                    case 1:
+                        right_encoder.set_inverted();
+                        break;
+
+                    case 2:
+                        right_driver.set_inverted();
+                        right_encoder.set_inverted();
+                        break;
+                }
+
+                return StatusCode::OK;
+            },
+            true
+        )
+    );
+
     // Left Control
     RegisterManager::add_command(
         Command<double>(

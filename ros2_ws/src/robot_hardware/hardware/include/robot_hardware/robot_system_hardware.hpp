@@ -19,6 +19,8 @@
 
 #include "robot_hardware/visibility_control.h"
 
+#include "CommiFaceLib/protocols/serial.hpp"
+
 
 namespace robot_hardware
 {    
@@ -54,7 +56,12 @@ class RobotSystemHardware : public hardware_interface::SystemInterface
 
     private:
 
-        
+        SerialInterface m_serial;
+
+        double m_targets[2] = {0, 0};
+        double m_positions[2] = {0, 0};
+        double m_velocities[2] = {0, 0};
+
 
 }; // class RobotSystemHardware
 

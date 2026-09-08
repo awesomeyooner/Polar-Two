@@ -9,7 +9,8 @@ endif()
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 # Add libraries!
-add_subdirectory(hardware/lib/MyLib)
+add_subdirectory(hardware/lib/plib)
+add_subdirectory(hardware/lib/CommiFaceLib)
 
 # Dependency list
 set(THIS_PACKAGE_INCLUDE_DEPENDS
@@ -35,6 +36,8 @@ ament_target_dependencies(${PROJECT_NAME} PUBLIC
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
     # Add your libraries!
+    plib
+    CommiFaceLib
 )
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)

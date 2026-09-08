@@ -25,6 +25,8 @@ def generate_launch_description():
     
     # Declare arguments
     declared_arguments = []
+
+    # Which package to get the config from
     declared_arguments.append(
         DeclareLaunchArgument(
             "description_package",
@@ -34,11 +36,30 @@ def generate_launch_description():
         )
     )
 
+    # The name of the config file
+    declared_arguments.append(
+        DeclareLaunchArgument(
+            "config_file",
+            default_value="default.rviz",
+            description="The RViz .rviz config file to load. Defaults to `default.rviz`",
+        )
+    )
+
+    declared_arguments.append(
+        DeclareLaunchArgument(
+            "use_sim_time",
+            default_value="false",
+            description="Whether or not to use sim time. Defaults to false",
+        )
+    )
+
     # Initialize Arguments
     description_package = LaunchConfiguration("description_package")
+    rviz_config_filename = LaunchConfiguration("config_file")
+    use_sim_time = LaunchConfiguration("use_sim_time")
 
-    rviz_config_file = PathJoinSubstitution(
-        [FindPackageShare(description_package), "rviz", "default.rviz"]
+    rviz_config = PathJoinSubstitution(
+        [FindPackageShare(description_package), "rviz", rviz_config_filename]
     )
 
     rviz_node = Node(
@@ -46,7 +67,8 @@ def generate_launch_description():
         executable="rviz2",
         name="rviz2",
         output="log",
-        arguments=["-d", rviz_config_file],
+        arguments=["-d", rviz_config],
+        parameters=[{'use_sim_time': use_sim_time}]
     )
 
     nodes = [

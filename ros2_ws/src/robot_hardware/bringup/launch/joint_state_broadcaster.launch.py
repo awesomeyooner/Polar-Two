@@ -21,14 +21,28 @@ import xacro
 
 def generate_launch_description():
 
+    # Declare arguments
+    declared_arguments = []
+
+    declared_arguments.append(
+        DeclareLaunchArgument(
+            "use_sim_time",
+            default_value="false",
+            description="Whether or not to use sim time. Defaults to false",
+        )
+    )
+
+    use_sim_time = LaunchConfiguration("use_sim_time")
+
     joint_state_broadcaster_spawner = Node(
         package="controller_manager",
         executable="spawner",
         arguments=["joint_state_broadcaster", "--controller-manager", "/controller_manager"],
+        parameters=[{'use_sim_time': use_sim_time}]
     )
    
     nodes = [
         joint_state_broadcaster_spawner
     ]
 
-    return LaunchDescription(nodes)
+    return LaunchDescription(declared_arguments + nodes)

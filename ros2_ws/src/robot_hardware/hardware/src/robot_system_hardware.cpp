@@ -28,6 +28,9 @@ CallbackReturn RobotSystemHardware::on_init(const HardwareComponentInterfacePara
 
     m_serial.set_timeout_ms(500);
 
+    m_serial.write_data<int>(96, 2, true);
+    // m_serial.write_data<int>(97, 0, true);
+
     // Using parameters in the ros2_control.xacro file
     string my_param = info_.hardware_parameters["my_param"];
 
@@ -56,7 +59,7 @@ vector<CommandInterface> RobotSystemHardware::export_command_interfaces()
     vector<CommandInterface> command_interfaces;
 
     command_interfaces.emplace_back(CommandInterface("left_wheel_joint", HW_IF_VELOCITY, &m_targets[0]));
-    command_interfaces.emplace_back(CommandInterface("right_wheel_joint", HW_IF_VELOCITY, &m_targets[0]));
+    command_interfaces.emplace_back(CommandInterface("right_wheel_joint", HW_IF_VELOCITY, &m_targets[1]));
 
     return command_interfaces;
 
@@ -105,7 +108,7 @@ return_type RobotSystemHardware::read(const rclcpp::Time & /*time*/, const rclcp
     m_positions[0] = left_angle_read.value;
 
     auto left_velocity_read = m_serial.request_data<double>(102, 500);
-    m_velocities[0] = left_angle_read.value;
+    m_velocities[0] = left_velocity_read.value;
     
     auto right_angle_read = m_serial.request_data<double>(104, 500);
     m_positions[1] = right_angle_read.value;

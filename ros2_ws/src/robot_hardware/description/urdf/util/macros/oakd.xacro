@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" >
+
+    <xacro:macro name="oakd" params="name namespace parent x:=0 y:=0 z:=0 roll:=0 pitch:=0 yaw:=0">
+
+        <link name="${name}-base-frame"/>
+
+        <link name="${name}">
+            <visual>
+                <origin xyz="0 0 0" rpy="${PI / 2} 0 ${PI / 2}"/>
+                <geometry>
+                    <mesh filename="file://$(find robot_hardware)/urdf/assets/components/Oak-D.stl"/>
+                </geometry>
+                <!-- <material name="black"/> -->
+            </visual>
+        </link>
+
+        <joint name="${name}_joint" type="fixed">
+            <parent link="${name}-base-frame"/>
+            <child link="${name}"/>
+
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </joint>
+
+        <joint name="${name}-base-frame_joint" type="fixed">
+            <parent link="${parent}"/>
+            <child link="${name}-base-frame"/>
+
+            <origin xyz="${x} ${y} ${z}" rpy="${roll} ${pitch} ${yaw}"/>
+        </joint>
+    
+        <xacro:depth_camera name="${name}_rgb" namespace="${namespace}/rgb" parent="${name}" x="0.0073" y="0" z="0" roll="0" pitch="0" yaw="0" visualize="false"/>
+        <xacro:camera name="${name}_left" namespace="${namespace}/left" parent="${name}" x="0.0073" y="0.0375" z="0" roll="0" pitch="0" yaw="0" visualize="false"/>
+        <xacro:camera name="${name}_right" namespace="${namespace}/right" parent="${name}" x="0.0073" y="-0.0375" z="0" roll="0" pitch="0" yaw="0" visualize="false"/>
+        <xacro:imu name="${name}_imu" namespace="${namespace}/imu" parent="${name}" x="0" y="0" z="0" roll="0" pitch="0" yaw="0" visualize="false"/>
+
+    </xacro:macro>
+
+</robot>

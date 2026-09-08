@@ -12,32 +12,46 @@ import xacro
 
 def generate_launch_description():
 
+    declared_arguments = []
+
+    declared_arguments.append(
+        DeclareLaunchArgument(
+            "package",
+            default_value="robot_hardware",
+            description="The package the URDF file is in",
+        )
+    )
+
+    declared_arguments.append(
+        DeclareLaunchArgument(
+            "use_sim_time",
+            default_value="false",
+            description="Whether or not to use sim time",
+        )
+    )
+
     # Check if we're told to use sim time
     use_sim_time = LaunchConfiguration('use_sim_time')
 
     # Process the URDF file
-    pkg_path = os.path.join(get_package_share_directory('carbot_hardware'))
-    xacro_file = os.path.join(pkg_path, 'urdf', 'carlikebot.urdf.xacro')
+    xacro_file = os.path.join(get_package_share_directory('robot_hardware'), 'urdf', 'core.urdf.xacro')
   
-    robot_description_config = Command(['xacro ', xacro_file, ' sim_mode:=', use_sim_time])
+    # Add the sim_mode argument to the xacro file
+    robot_description_contents = Command(['xacro ', xacro_file, ' sim_mode:=', use_sim_time])
     
     # Create a robot_state_publisher node
-    params = {'robot_description': robot_description_config, 'use_sim_time': use_sim_time}
+    params = {'robot_description': robot_description_contents, 'use_sim_time': use_sim_time}
 
-    node_robot_state_publisher = Node(
+    robot_state_publisher_node = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
-        output='screen',
+        output='both',
         parameters=[params]
     )
+
+    nodes = [
+        robot_state_publisher_node
+    ]
     
-
     # Launch!
-    return LaunchDescription([
-        DeclareLaunchArgument(
-            'use_sim_time',
-            default_value='false',
-            description='Use sim time if true'),
-
-        node_robot_state_publisher
-    ])
+    return LaunchDescription(declared_arguments + nodes)

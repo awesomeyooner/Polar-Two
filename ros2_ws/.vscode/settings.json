@@ -96,6 +96,6 @@
     "C_Cpp.default.compilerPath": "/usr/bin/g++",
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
     // "cmake.sourceDirectory": "/home/dev/Documents/GitHub/Polar-Two/src/differential_drive_controller",
-    // "cmake.sourceDirectory": "/home/dev/Documents/GitHub/Polar-Two/src/microros_hardware_interface",
+    // "cmake.sourceDirectory": "/home/dev/Documents/GitHub/Polar-Two/src/robot_hardware",
     //"cmake.sourceDirectory": "/home/dev/Documents/GitHub/Polar-Two/src/joystick_driver"
 }

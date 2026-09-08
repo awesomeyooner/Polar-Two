@@ -8,10 +8,11 @@ from launch.actions import DeclareLaunchArgument
 from launch_ros.actions import Node
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, RegisterEventHandler
+from launch.actions import DeclareLaunchArgument, RegisterEventHandler, EmitEvent
 from launch.conditions import IfCondition, UnlessCondition
 from launch.event_handlers import OnProcessExit
 from launch.substitutions import Command, FindExecutable, PathJoinSubstitution, LaunchConfiguration
+from launch.events import Shutdown
 
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
@@ -21,17 +22,8 @@ import xacro
 
 def generate_launch_description():
 
-    robot_description_content = Command(
-        [
-            PathJoinSubstitution([FindExecutable(name="xacro")]),
-            " ",
-            PathJoinSubstitution(
-                [FindPackageShare("carbot_hardware"), "urdf", "carlikebot.urdf.xacro"]
-            ),
-        ]
-    )
     # Check if we're told to use sim time
-    controller_params_file = os.path.join(get_package_share_directory("carbot_hardware"),'config','carlikebot_controllers.yaml')
+    controller_params_file = os.path.join(get_package_share_directory("robot_hardware"),'config','robot_hardware_controllers.yaml')
 
     controller_manager = Node(
         package="controller_manager",
@@ -42,9 +34,18 @@ def generate_launch_description():
         ],
         parameters=[controller_params_file]
     )
-    
+
+    lifecycle_tracker = RegisterEventHandler(
+        OnProcessExit(
+            target_action=controller_manager,
+            on_exit=[
+                EmitEvent(event=Shutdown(reason="controller_manager exited"))
+            ],
+        )
+    )
 
     # Launch!
     return LaunchDescription([
-        controller_manager
+        controller_manager,
+        lifecycle_tracker
     ])

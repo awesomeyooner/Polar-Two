@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" >
+    <xacro:macro name="lidar" params="name namespace parent x:=0 y:=0 z:=0 roll:=0 pitch:=0 yaw:=0 visualize:=true">
+        
+        <joint name="${name}_joint" type="fixed">
+            <parent link="${parent}"/>
+            <child link="${name}_frame"/>
+
+            <origin xyz="${x} ${y} ${z}" rpy="${roll} ${pitch} ${yaw}"/>
+        </joint>
+
+        <link name="${name}_frame">
+            <xacro:if value="${visualize}">
+                <visual>
+                    <geometry> 
+                        <cylinder radius="0.05" length="0.04"/>
+                    </geometry>
+                    <material name="blue"/>
+                </visual>
+            </xacro:if>
+        </link>
+
+        <gazebo reference="${name}_frame">
+            <material>Gazebo/Blue</material>
+    
+            <sensor name="${name}" type="gpu_lidar">
+                <pose> 0 0 0 0 0 0 </pose>
+                <visualize>true</visualize>
+                <update_rate>20</update_rate>
+
+                <lidar>
+                    <scan>
+                        <horizontal>
+                            <samples>360</samples>
+                            <min_angle>-3.14</min_angle>
+                            <max_angle>3.14</max_angle>
+                        </horizontal>
+                    </scan>
+                    <range>
+                        <min>0.3</min> 
+                        <max>20</max>
+                    </range>
+                </lidar>
+
+                <topic>${namespace}/scan</topic>
+                <gz_frame_id>${name}_frame</gz_frame_id>
+
+            </sensor>
+        </gazebo>
+
+    </xacro:macro>
+</robot>

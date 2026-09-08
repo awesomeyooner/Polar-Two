@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="robot_hardware" params="prefix">
+
+    <!-- Base Link and Base Footprint -->
+    <xacro:include filename="$(find robot_hardware)/urdf/components/base.xacro" />
+
+    <!-- Chassis Link -->
+    <xacro:include filename="$(find robot_hardware)/urdf/components/chassis.xacro" />
+
+        <xacro:include filename="$(find robot_hardware)/urdf/macros/front_wheel.xacro" />
+        <xacro:include filename="$(find robot_hardware)/urdf/macros/rear_wheel.xacro" />
+
+        <xacro:front_wheel name="front_left" x="${wheel_x}" y="${wheel_y}" z="${wheel_z}" side="1"/>
+        <xacro:front_wheel name="front_right" x="${wheel_x}" y="${-wheel_y}" z="${wheel_z}" side="-1"/>
+
+        <xacro:rear_wheel name="rear_left" x="${-wheel_x}" y="${wheel_y}" z="${wheel_z}" side="1"/>
+        <xacro:rear_wheel name="rear_right" x="${-wheel_x}" y="${-wheel_y}" z="${wheel_z}" side="-1"/>
+
+  </xacro:macro>
+
+</robot>

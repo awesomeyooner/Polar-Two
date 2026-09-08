@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!-- Physics Constants -->
+
+        <xacro:property name="PI" value="3.1415926535897931"/>
+
+        <xacro:property name="friction" value="1"/>
+        <xacro:property name="min_depth" value="0.5"/>
+        <xacro:property name="damping" value="0.001"/>
+
+
+    <!-- System Wide Constants -->
+
+        <xacro:property name="chassis_mass" value="20" /> <!-- arbitrary value for chassis mass -->
+
+
+    <!-- Mechanism Specific -->
+
+        <!-- Wheels -->
+            <xacro:property name="track_width" value="0.165" />
+            <xacro:property name="track_length" value="0.18" />
+
+            <xacro:property name="wheel_width" value="0.03" />
+            <xacro:property name="wheel_radius" value="0.03725" />
+            <xacro:property name="wheel_mass" value="0.5" /> <!-- arbitrary value for wheel mass -->
+
+            <!-- Remember to switch X and Y for onshape to ros -->
+            <xacro:property name="wheel_x" value="0.09"/>
+            <xacro:property name="wheel_y" value="0.0675"/>
+            <xacro:property name="wheel_z" value="0.02"/>
+
+</robot>

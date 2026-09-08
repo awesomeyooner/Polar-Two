@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!-- Base Link -->
+    <link name="${prefix}base_link"/>
+
+    <!-- Base Footprint -->
+    <link name="${prefix}base_footprint"/>
+
+    <!-- Base Link - Base Footprint -->
+    <joint name="${prefix}base_footprint_joint" type="fixed">
+        <parent link="${prefix}base_link"/>
+        <child link="${prefix}base_footprint"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
+
+
+</robot>

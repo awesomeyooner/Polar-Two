@@ -16,3 +16,9 @@
 [submodule "serial_test/project/lib/PlotLib"]
 	path = serial_test/project/lib/PlotLib
 	url = https://github.com/awesomeyooner/PlotLib.git
+[submodule "ros2_ws/src/robot_hardware/hardware/lib/plib"]
+	path = ros2_ws/src/robot_hardware/hardware/lib/plib
+	url = https://github.com/awesomeyooner/plib.git
+[submodule "ros2_ws/src/robot_hardware/hardware/lib/CommiFaceLib"]
+	path = ros2_ws/src/robot_hardware/hardware/lib/CommiFaceLib
+	url = https://github.com/awesomeyooner/CommiFaceLib.git

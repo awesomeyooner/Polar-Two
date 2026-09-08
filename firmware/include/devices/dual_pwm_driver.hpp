@@ -31,6 +31,19 @@ class DualPWMDriver
         status_utils::StatusCode init();
 
         /**
+         * @brief Invert the input of the driver
+         * 
+         */
+        void set_inverted(bool invert = true);
+
+        /**
+         * @brief Get whether or not the input is inverted
+         * 
+         * @return `bool`
+         */
+        bool is_inverted();
+
+        /**
          * @brief Set the input voltage
          * 
          * @param input_voltage `double`
@@ -97,6 +110,9 @@ class DualPWMDriver
 
         // IN2 Channel
         TimerDevice m_in2;
+
+        // True if input should be negated
+        bool m_is_inverted = false;
 
         // Bookkeeping for the percent output applied [-1, 1]
         double m_percent = 0;

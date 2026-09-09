@@ -80,7 +80,7 @@ install(
 
 # Bringup (yaml configs, launch files)
 install(
-  DIRECTORY bringup/launch bringup/config
+  DIRECTORY bringup/launch bringup/config bringup/worlds
   DESTINATION share/${PROJECT_NAME}
 )
 

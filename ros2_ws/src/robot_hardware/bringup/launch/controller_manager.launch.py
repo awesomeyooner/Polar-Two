@@ -22,8 +22,29 @@ import xacro
 
 def generate_launch_description():
 
-    # Check if we're told to use sim time
-    controller_params_file = os.path.join(get_package_share_directory("robot_hardware"),'config','robot_hardware_controllers.yaml')
+    # CHANGE ME
+    package = "robot_hardware"
+
+    # Declare arguments
+    declared_arguments = []
+
+    declared_arguments.append(
+        DeclareLaunchArgument(
+            "use_sim_time",
+            default_value="False",
+            description="Whether or not to use sim time. Defaults to False",
+        )
+    )
+
+    use_sim_time = LaunchConfiguration("use_sim_time")
+
+    controller_params_file = PathJoinSubstitution(
+        [
+            FindPackageShare(package),
+            "config",
+            "robot_hardware_controllers.yaml",
+        ]
+    )
 
     controller_manager = Node(
         package="controller_manager",
@@ -32,7 +53,7 @@ def generate_launch_description():
         remappings=[
             ("~/robot_description", "/robot_description"),
         ],
-        parameters=[controller_params_file]
+        parameters=[controller_params_file, {'-use_sim_time': use_sim_time}]
     )
 
     lifecycle_tracker = RegisterEventHandler(
@@ -44,8 +65,10 @@ def generate_launch_description():
         )
     )
 
-    # Launch!
-    return LaunchDescription([
+    nodes = [
         controller_manager,
         lifecycle_tracker
-    ])
+    ]
+
+    # Launch!
+    return LaunchDescription(declared_arguments + nodes)

@@ -36,7 +36,8 @@ def generate_launch_description():
     joystick_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(launch_file),
         launch_arguments={
-            "params_file": params_file
+            "params_file": params_file,
+            "use_sim_time": "true"
         }.items()
     )
 

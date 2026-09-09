@@ -1,0 +1,162 @@
+# https://github.com/gazebosim/ros_gz/blob/ros2/ros_gz_bridge/README.md
+# https://gazebosim.org/docs/fortress/migrating_gazebo_classic_ros2_packages/
+
+- ros_topic_name: "clock"
+  gz_topic_name: "clock"
+  ros_type_name: "rosgraph_msgs/msg/Clock"
+  gz_type_name: "gz.msgs.Clock"
+  direction: GZ_TO_ROS
+
+# gz topic published by Sensors plugin
+# - ros_topic_name: "lidar/scan"
+#   gz_topic_name: "lidar/scan"
+#   ros_type_name: "sensor_msgs/msg/LaserScan"
+#   gz_type_name: "gz.msgs.LaserScan"
+#   direction: GZ_TO_ROS
+
+# - topic_name: "lidar/points"
+#   ros_type_name: "sensor_msgs/msg/PointCloud2"
+#   gz_type_name: "gz.msgs.PointCloudPacked"
+#   lazy: true
+#   direction: GZ_TO_ROS
+
+# gz topic published by Sensors plugin (Camera)
+# - ros_topic_name: "camera/camera_info"
+#   gz_topic_name: "camera/camera_info"
+#   ros_type_name: "sensor_msgs/msg/CameraInfo"
+#   gz_type_name: "gz.msgs.CameraInfo"
+#   direction: GZ_TO_ROS
+
+
+# gz topic published by DiffDrive plugin
+# - ros_topic_name: "odom"
+#   gz_topic_name: "odom"
+#   ros_type_name: "nav_msgs/msg/Odometry"
+#   gz_type_name: "gz.msgs.Odometry"
+#   direction: GZ_TO_ROS
+
+# gz topic published by DiffDrive plugin
+# - ros_topic_name: "tf"
+#   gz_topic_name: "tf"
+#   ros_type_name: "tf2_msgs/msg/TFMessage"
+#   gz_type_name: "gz.msgs.Pose_V"
+#   direction: GZ_TO_ROS
+
+# gz topic subscribed to by DiffDrive plugin
+# - ros_topic_name: "diff_cont/cmd_vel_unstamped"
+#   gz_topic_name: "cmd_vel"
+#   ros_type_name: "geometry_msgs/msg/Twist"
+#   gz_type_name: "gz.msgs.Twist"
+#   direction: ROS_TO_GZ
+
+# gz topic published by JointState plugin
+# - ros_topic_name: "joint_states"
+#   gz_topic_name: "joint_states"
+#   ros_type_name: "sensor_msgs/msg/JointState"
+#   gz_type_name: "gz.msgs.Model"
+#   direction: GZ_TO_ROS
+
+# - topic_name: "/camera/camera_info"
+#   ros_type_name: "sensor_msgs/msg/CameraInfo"
+#   gz_type_name: "gz.msgs.CameraInfo"
+#   lazy: true
+#   direction: GZ_TO_ROS
+
+# Oak D
+# - topic_name: "/imu/data"
+#   ros_type_name: "sensor_msgs/msg/Imu"
+#   gz_type_name: "gz.msgs.IMU"
+#   lazy: true
+#   direction: GZ_TO_ROS
+
+# - topic_name: "/oak/left/camera_info"
+#   ros_type_name: "sensor_msgs/msg/CameraInfo"
+#   gz_type_name: "gz.msgs.CameraInfo"
+#   lazy: true
+#   direction: GZ_TO_ROS
+
+# - topic_name: "/oak/right/camera_info"
+#   ros_type_name: "sensor_msgs/msg/CameraInfo"
+#   gz_type_name: "gz.msgs.CameraInfo"
+#   lazy: true
+#   direction: GZ_TO_ROS
+
+# - topic_name: "/oak/rgb/camera_info"
+#   ros_type_name: "sensor_msgs/msg/CameraInfo"
+#   gz_type_name: "gz.msgs.CameraInfo"
+#   lazy: true
+#   direction: GZ_TO_ROS
+
+# - topic_name: "/oak/rgb/points"
+#   ros_type_name: "sensor_msgs/msg/PointCloud2"
+#   gz_type_name: "gz.msgs.PointCloudPacked"
+#   lazy: true
+#   direction: GZ_TO_ROS
+
+# Images
+# - topic_name: "/camera/image_raw"
+#   ros_type_name: "sensor_msgs/msg/Image"
+#   gz_type_name: "gz.msgs.Image"
+#   lazy: true
+#   direction: GZ_TO_ROS
+
+# - topic_name: "/oak/left/image_raw"
+#   ros_type_name: "sensor_msgs/msg/Image"
+#   gz_type_name: "gz.msgs.Image"
+#   lazy: true
+#   direction: GZ_TO_ROS
+
+# - topic_name: "/oak/right/image_raw"
+#   ros_type_name: "sensor_msgs/msg/Image"
+#   gz_type_name: "gz.msgs.Image"
+#   lazy: true
+#   direction: GZ_TO_ROS
+
+# - topic_name: "/oak/rgb/image"
+#   ros_type_name: "sensor_msgs/msg/Image"
+#   gz_type_name: "gz.msgs.Image"
+#   lazy: true
+#   direction: GZ_TO_ROS
+
+# - topic_name: "/oak/rgb/depth_image"
+#   ros_type_name: "sensor_msgs/msg/Image"
+#   gz_type_name: "gz.msgs.Image"
+#   lazy: true
+#   direction: GZ_TO_ROS
+# - ros_topic_name: "/camera/camera_info"
+#   gz_topic_name: "/camera_info"
+#   ros_type_name: "sensor_msgs/msg/CameraInfo"
+#   gz_type_name: "gz.msgs.CameraInfo"
+#   lazy: true
+#   direction: GZ_TO_ROS
+
+# - topic_name: "/rgbd_camera/image"
+#   ros_type_name: "sensor_msgs/msg/Image"
+#   gz_type_name: "gz.msgs.Image"
+#   lazy: true
+#   direction: GZ_TO_ROS
+
+# - topic_name: "/rgbd_camera/depth_image"
+#   ros_type_name: "sensor_msgs/msg/Image"
+#   gz_type_name: "gz.msgs.Image"
+#   lazy: true
+#   direction: GZ_TO_ROS
+
+# - topic_name: "/rgbd_camera/camera_info"
+#   ros_type_name: "sensor_msgs/msg/CameraInfo"
+#   gz_type_name: "gz.msgs.CameraInfo"
+#   lazy: true
+#   direction: GZ_TO_ROS
+
+# - topic_name: "/rgbd_camera/points"
+#   ros_type_name: "sensor_msgs/msg/PointCloud2"
+#   gz_type_name: "gz.msgs.PointCloudPacked"
+#   lazy: true
+#   direction: GZ_TO_ROS
+
+  # IMU configuration.
+# - topic_name: "/imu/data"
+#   ros_type_name: "sensor_msgs/msg/Imu"
+#   gz_type_name: "gz.msgs.IMU"
+#   lazy: true
+#   direction: GZ_TO_ROS

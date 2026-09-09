@@ -44,7 +44,7 @@
         <ros2_control name="GazeboSimSystem" type="system">
       
             <hardware>
-            <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+                <plugin>gz_ros2_control/GazeboSimSystem</plugin>
             </hardware>
     
             <!-- Left Wheel Joint -->
@@ -87,12 +87,12 @@
   
         <!-- Setup Gazebo -->
         <gazebo>
-            <plugin name="gz_ros2_control::GazeboSimROS2ControlPlugin" filename="gz_ros2_control-system">
+            <plugin name="gz_ros2_control::GazeboSimROS2ControlPlugin" filename="libgz_ros2_control-system.so">
                 <!-- Controller Settings -->
-                <parameters>$(find robot_hardware)/bringup/config/robot_hardware_controllers.yaml</parameters>
+                <parameters>$(find robot_hardware)/config/robot_hardware_controllers.yaml</parameters>
 
                 <!-- Enables Sim Time = True -->
-                <parameters>$(find robot_hardware)/bringup/config/gazebo_controller.yaml</parameters>
+                <parameters>$(find robot_hardware)/config/gazebo_controller.yaml</parameters>
             </plugin>
         </gazebo>
 

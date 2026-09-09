@@ -4,7 +4,7 @@ joy_node:
 
 joystick_teleop:
   ros__parameters:
-    use_sim_time: false
+    # use_sim_time: false
     joystick_type: "ps4" 
     # implemented ones are: 
     # "ps4"
@@ -12,4 +12,4 @@ joystick_teleop:
     # "xbox"
 
     max_tangential_velocity: 1.0 # m/s
-    max_angular_velocity: 1.0 # rad/s
+    max_angular_velocity: 3.14 # rad/s

@@ -21,6 +21,20 @@ import xacro
 
 def generate_launch_description():
 
+    # Declare arguments
+    declared_arguments = []
+
+    declared_arguments.append(
+        DeclareLaunchArgument(
+            "use_sim_time",
+            default_value="false",
+            description="Whether or not to use sim time. Defaults to false",
+        )
+    )
+
+    use_sim_time = LaunchConfiguration("use_sim_time")
+    
+
     external_controllers_spawner = Node(
         package="controller_manager",
         executable="spawner",
@@ -29,10 +43,11 @@ def generate_launch_description():
             "--controller-manager", 
             "/controller_manager"
             ],
+        parameters=[{'use_sim_time': use_sim_time}]
     )
    
     nodes = [
         external_controllers_spawner
     ]
 
-    return LaunchDescription(nodes)
+    return LaunchDescription(declared_arguments + nodes)

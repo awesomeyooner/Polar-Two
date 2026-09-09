@@ -4,6 +4,7 @@
 #include "stm32f4xx_hal_gpio.h"
 
 #include "EmbeddedLib/devices/gpio_device.hpp"
+#include "EmbeddedLib/math/control/pid_controller.hpp"
 
 #include "ActionLib/ActionManager.hpp"
 
@@ -46,6 +47,9 @@ DualPWMDriver right_driver = DualPWMDriver(
     TIM_CHANNEL_3,
     TIM_CHANNEL_4
 );
+
+PIDController left_pid = PIDController(0.1, 0, 0, 0.03);
+PIDController right_pid = PIDController(0.1, 0, 0, 0.03);
 
 
 void init()
@@ -146,7 +150,8 @@ void init()
             {
                 System::feed();
 
-                left_driver.set_percent(data);
+                left_pid.m_setpoint = data;
+                // left_driver.set_percent(data);
 
                 return StatusCode::OK;
             }
@@ -183,7 +188,7 @@ void init()
             {
                 System::feed();
 
-                right_driver.set_percent(data);
+                right_pid.m_setpoint = data;
 
                 return StatusCode::OK;
             }
@@ -208,6 +213,67 @@ void init()
             []() -> double
             {
                 return right_encoder.get_velocity();
+            }
+        )
+    );
+
+    // PID STUFF
+    RegisterManager::add_command(
+        Command<double>(
+            106,
+            [](double data) -> StatusCode
+            {
+                left_pid.m_kP = data;
+
+                return StatusCode::OK;
+            }
+        )
+    );
+
+    RegisterManager::add_command(
+        Command<double>(
+            107,
+            [](double data) -> StatusCode
+            {
+                left_pid.m_kI = data;
+
+                return StatusCode::OK;
+            }
+        )
+    );
+
+    RegisterManager::add_command(
+        Command<double>(
+            108,
+            [](double data) -> StatusCode
+            {
+                left_pid.m_kD = data;
+
+                return StatusCode::OK;
+            }
+        )
+    );
+
+    RegisterManager::add_command(
+        Command<double>(
+            109,
+            [](double data) -> StatusCode
+            {
+                left_pid.m_kF = data;
+
+                return StatusCode::OK;
+            }
+        )
+    );
+
+    RegisterManager::add_command(
+        Command<double>(
+            110,
+            [](double data) -> StatusCode
+            {
+                left_pid.m_kV = data;
+
+                return StatusCode::OK;
             }
         )
     );
@@ -243,6 +309,14 @@ void update()
 
         return;
     }
+
+    double now = System::get_seconds(true);
+
+    double left_command = left_pid.calculate(now, left_encoder.get_velocity());
+    left_driver.set_percent(left_command);
+
+    double right_command = right_pid.calculate(now, right_encoder.get_velocity());
+    right_driver.set_percent(right_command);
 
     led.set_low();
 

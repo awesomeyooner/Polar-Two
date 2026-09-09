@@ -22,6 +22,12 @@ using namespace std;
 float left_target = 0;
 float right_target = 0;
 
+float kP = 0;
+float kI = 0;
+float kD = 0;
+float kF = 0;
+float kV = 0;
+
 
 int main(int argc, char* argv[])
 {
@@ -31,7 +37,7 @@ int main(int argc, char* argv[])
 
     serial.init_field("product", "STM32 Virtual ComPort");
 
-    serial.set_timeout_ms(500);
+    serial.set_timeout_ms(1000);
 
     Logger::info("Attempting to enable device...");
 
@@ -68,6 +74,11 @@ int main(int argc, char* argv[])
         );
 
         ImPlotter::push_data(
+            left_target,
+            "Left Setpoint (Radians / sec)"
+        );
+
+        ImPlotter::push_data(
             right_angle_read.value,
             "Right Angle (Radians)"
         );
@@ -78,10 +89,25 @@ int main(int argc, char* argv[])
         );
 
 
-        function<void()> add_inputs = []()
+        function<void()> add_inputs = [&serial]()
         {
-            ImGui::SliderFloat("Left Percent Output", &left_target, -1, 1, "%.3f V");
-            ImGui::SliderFloat("Right Percent Output", &right_target, -1, 1, "%.3f V");
+            ImGui::SliderFloat("Left Velocity Target", &left_target, -40, 40, "%.3f Rads/sec");
+            ImGui::SliderFloat("Right Velocity Target", &right_target, -40, 40, "%.3f Rads/sec");
+
+            // if(ImGui::InputFloat("kP", &kP, 0.0001, 0.0001, "%.9f units"))
+            //     serial.write_data<double>(106, kP);
+
+            // if(ImGui::InputFloat("kI", &kI, 0.0001, 0.0001, "%.9f units"))
+            //     serial.write_data<double>(107, kI);
+
+            // if(ImGui::InputFloat("kD", &kD, 0.0001, 0.0001, "%.9f units"))
+            //     serial.write_data<double>(108, kD);
+
+            // if(ImGui::InputFloat("kF", &kF, 0.0001, 0.0001, "%.9f units"))
+            //     serial.write_data<double>(109, kF);
+
+            // if(ImGui::InputFloat("kV", &kV, 0.0001, 0.0001, "%.9f units"))
+            //     serial.write_data<double>(110, kV);
         };
 
         if(ImPlotter::update(add_inputs) == StatusCode::FAILED)

@@ -1,4 +1,6 @@
 #include <iostream>
+#include <thread>
+#include <chrono>
 
 #include "plib/util/system.hpp"
 #include "plib/util/logger.hpp"
@@ -54,19 +56,19 @@ int main(int argc, char* argv[])
         auto left_angle_read = serial.request_data<double>(101, 500);
         auto left_velocity_read = serial.request_data<double>(102, 500);
 
-        auto right_angle_read = serial.request_data<double>(104, 500);
-        auto right_velocity_read = serial.request_data<double>(105, 500);
+        // auto right_angle_read = serial.request_data<double>(104, 500);
+        // auto right_velocity_read = serial.request_data<double>(105, 500);
 
         if(serial.write_data<double>(100, left_target) != StatusCode::OK)
             Logger::error("Failed to write to left motor!");
 
-        if(serial.write_data<double>(103, right_target) != StatusCode::OK)
-            Logger::error("Failed to write to right motor!");
+        // if(serial.write_data<double>(103, right_target) != StatusCode::OK)
+        //     Logger::error("Failed to write to right motor!");
 
-        ImPlotter::push_data(
-            left_angle_read.value,
-            "Left Angle (Radians)"
-        );
+        // ImPlotter::push_data(
+        //     left_angle_read.value,
+        //     "Left Angle (Radians)"
+        // );
 
         ImPlotter::push_data(
             left_velocity_read.value,
@@ -78,15 +80,15 @@ int main(int argc, char* argv[])
             "Left Setpoint (Radians / sec)"
         );
 
-        ImPlotter::push_data(
-            right_angle_read.value,
-            "Right Angle (Radians)"
-        );
+        // ImPlotter::push_data(
+        //     right_angle_read.value,
+        //     "Right Angle (Radians)"
+        // );
 
-        ImPlotter::push_data(
-            right_velocity_read.value,
-            "Right Velocity (Radians / sec)"
-        );
+        // ImPlotter::push_data(
+        //     right_velocity_read.value,
+        //     "Right Velocity (Radians / sec)"
+        // );
 
 
         function<void()> add_inputs = [&serial]()
@@ -94,25 +96,26 @@ int main(int argc, char* argv[])
             ImGui::SliderFloat("Left Velocity Target", &left_target, -40, 40, "%.3f Rads/sec");
             ImGui::SliderFloat("Right Velocity Target", &right_target, -40, 40, "%.3f Rads/sec");
 
-            // if(ImGui::InputFloat("kP", &kP, 0.0001, 0.0001, "%.9f units"))
-            //     serial.write_data<double>(106, kP);
+            if(ImGui::InputFloat("kP", &kP, 0.01, 0.01, "%.9f units"))
+                serial.write_data<double>(106, kP);
 
-            // if(ImGui::InputFloat("kI", &kI, 0.0001, 0.0001, "%.9f units"))
-            //     serial.write_data<double>(107, kI);
+            if(ImGui::InputFloat("kI", &kI, 0.01, 0.01, "%.9f units"))
+                serial.write_data<double>(107, kI);
 
-            // if(ImGui::InputFloat("kD", &kD, 0.0001, 0.0001, "%.9f units"))
-            //     serial.write_data<double>(108, kD);
+            if(ImGui::InputFloat("kD", &kD, 0.01, 0.01, "%.9f units"))
+                serial.write_data<double>(108, kD);
 
-            // if(ImGui::InputFloat("kF", &kF, 0.0001, 0.0001, "%.9f units"))
-            //     serial.write_data<double>(109, kF);
+            if(ImGui::InputFloat("kF", &kF, 0.01, 0.01, "%.9f units"))
+                serial.write_data<double>(109, kF);
 
-            // if(ImGui::InputFloat("kV", &kV, 0.0001, 0.0001, "%.9f units"))
-            //     serial.write_data<double>(110, kV);
+            if(ImGui::InputFloat("kV", &kV, 0.01, 0.01, "%.9f units"))
+                serial.write_data<double>(110, kV);
         };
 
         if(ImPlotter::update(add_inputs) == StatusCode::FAILED)
             System::shutdown();
 
+        this_thread::sleep_for(chrono::milliseconds(5));
     }
 
     Logger::info("Disabling device...");

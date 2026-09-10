@@ -48,8 +48,19 @@ DualPWMDriver right_driver = DualPWMDriver(
     TIM_CHANNEL_4
 );
 
-PIDController left_pid = PIDController(0.1, 0, 0, 0.03);
-PIDController right_pid = PIDController(0.1, 0, 0, 0.03);
+PIDController left_pid = PIDController(
+    0.1,    // kP
+    0,      // kI
+    0,      // kD
+    0.03    // kV
+);
+
+PIDController right_pid = PIDController(
+    0.1,    // kP
+    0,      // kI
+    0,      // kD
+    0.03    // kV
+);
 
 
 void init()
